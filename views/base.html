@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <title>{% block title %}{% endblock %}  - Penduduk App</title>
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin"
+        rel="stylesheet" type="text/css">
+    <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Core stylesheets -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/pixeladmin.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/widgets.min.css" rel="stylesheet" type="text/css">
+    <link href="../node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+
+    <!-- Theme -->
+    <link href="../css/themes/clean.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Pace.js -->
+    <script src="../pace/pace.min.js"></script>
+    {% block inlinejstop %}
+    {% endblock %}
+    {% block inlinecss %}
+    {% endblock %}
+</head>
+
+<body>
+    <!-- Nav -->
+    <nav class="px-nav px-nav-left">
+        <button type="button" class="px-nav-toggle" data-toggle="px-nav">
+            <span class="px-nav-toggle-arrow"></span>
+            <span class="navbar-toggle-icon"></span>
+            <span class="px-nav-toggle-label font-size-11">HIDE MENU</span>
+        </button>
+
+        <ul class="px-nav-content">
+            <li class="px-nav-box p-a-3 b-b-1" id="demo-px-nav-box">
+                <img src="../demo/avatars/1.jpg" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
+                <div class="font-size-16">
+                    <span class="font-weight-light">Welcome, </span>
+                    <strong>John</strong>
+                </div>
+                <div class="btn-group" style="margin-top: 4px;">
+                    <a href="#" class="btn btn-xs btn-primary btn-outline">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="#" class="btn btn-xs btn-primary btn-outline">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <a href="#" class="btn btn-xs btn-primary btn-outline">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <a href="../login.html" class="btn btn-xs btn-danger btn-outline">
+                        <i class="fa fa-power-off"></i>
+                    </a>
+                </div>
+            </li>
+            <li class="px-nav-item px-nav-dropdown">
+                <a href="#">
+                    <i class="px-nav-icon fa fa-pie-chart"></i>
+                    <span class="px-nav-label">Dashboard</span>
+                </a>
+
+                <ul class="px-nav-dropdown-menu">
+                    <li class="px-nav-item">
+                        <a href="../index.html">
+                            <span class="px-nav-label">Statistik</span>
+                        </a>
+                    </li>
+                    <li class="px-nav-item">
+                        <a href="../analitik.html">
+                            <span class="px-nav-label">Analitik</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="px-nav-item">
+                <a href="../penduduk.html">
+                    <i class="px-nav-icon fa fa-area-chart"></i>
+                    <span class="px-nav-label">Penduduk</span>
+                </a>
+            </li>
+            <li class="px-nav-item px-nav-dropdown">
+                <a href="#">
+                    <i class="px-nav-icon fa fa-users"></i>
+                    <span class="px-nav-label">User</span>
+                </a>
+
+                <ul class="px-nav-dropdown-menu">
+                    <li class="px-nav-item">
+                        <a href="../user.html">
+                            <span class="px-nav-label">Daftar</span>
+                        </a>
+                    </li>
+                    <li class="px-nav-item">
+                        <a href="../user-editor.html">
+                            <span class="px-nav-label">Tambah</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </nav>
+
+    <!-- Navbar -->
+    <nav class="navbar px-navbar">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Mistral Works</a>
+        </div>
+
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#px-navbar-collapse" aria-expanded="false">
+            <i class="navbar-toggle-icon"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="px-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#">Pencarian</a>
+                    </a>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img src="../demo/avatars/1.jpg" alt="" class="px-navbar-image">
+                        <span class="hidden-md">John Doe</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="../pages-profile-v2.html">
+                                <span class="label label-warning pull-xs-right">
+                                    <i class="fa fa-asterisk"></i>
+                                </span>Profile</a>
+                        </li>
+                        <li>
+                            <a href="../pages-account.html">Account</a>
+                        </li>
+                        <li>
+                            <a href="../pages-messages-list.html">
+                                <i class="dropdown-icon fa fa-envelope"></i>&nbsp;&nbsp;Messages</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="../pages-signin-v1.html">
+                                <i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="px-content">
+    	{% block content %}
+    	{% endblock %}
+    </div>
+
+    <!-- Footer -->
+      <footer class="px-footer px-footer-bottom">
+        Copyright © 2017 Mistral Works.
+    </footer>
+    <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyAOyzUWIUMHE3YVx64KicRUjcMCbsn6gZQ",
+          authDomain: "penduduk-app.firebaseapp.com",
+          databaseURL: "https://penduduk-app.firebaseio.com",
+          projectId: "penduduk-app",
+          storageBucket: "penduduk-app.appspot.com",
+          messagingSenderId: "216960976294"
+        };
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+    </script>
+
+    <!-- ==============================================================================
+  |
+  |  SCRIPTS
+  |
+  =============================================================================== -->
+
+    <!-- Load jQuery -->
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../js/index.js"></script>
+
+    <!-- Core scripts -->
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/pixeladmin.min.js"></script>
+
+    <!-- Your scripts -->
+    <script src="../js/app.js"></script>
+    
+    {% block inlinejs  %}
+    {% endblock %}
+    
+</body>
+
+</html>

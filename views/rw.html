@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}
+     RW
+{% endblock %}
+  <!-- Content -->
+{% block content %}
+    <div class="page-header">
+        <p>
+            <span class="text-muted font-weight-light">Indonesia / </span>
+            Provinsi :
+            <select>
+                <option selected>Provinsi 1</option>
+                <option>Provinsi 2</option>
+                <option>Provinsi 3</option>
+            </select> / Kota :
+            <select>
+                <option>Kota 1</option>
+                <option selected>Kota 2</option>
+                <option>Kota 3</option>
+            </select> / Kecamatan :
+            <select>
+                <option>Kecamatan 1</option>
+                <option selected>Kecamatan 2</option>
+                <option>Kecamatan 3</option>
+            </select> / Kelurahan :
+            <select>
+                <option>Kelurahan 1</option>
+                <option selected>Kelurahan 2</option>
+                <option>Kelurahan 3</option>
+            </select> / RT :
+            <select>
+                <option>RT 1</option>
+                <option selected>RT 2</option>
+                <option>RT 3</option>
+            </select> / RW :
+            <select>
+                <option>RW 1</option>
+                <option>RW 2</option>
+                <option selected>RW 3</option>
+            </select>
+        </p>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title">Basic</div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <caption>Optional table caption.</caption>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama</th>
+                        <th>Anggota Keluarga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <a href="penduduk-detail.html">Joko Susilo</a>
+                        </td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>
+                            <a href="penduduk-detail.html">Bambang Yudi</a>
+                        </td>
+                        <td>20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

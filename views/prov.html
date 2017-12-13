@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+     Provinsi
+{% endblock %}
+  <!-- Content -->
+{% block content %}
+    <div class="page-header">
+        <h3>
+            <span class="text-muted font-weight-light">Indonesia / </span>
+            Provinsi :
+            <select>
+                <option>Aceh</option>
+                <option>Jakarta</option>
+            </select>
+        </h3>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title">Basic</div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <caption>Optional table caption.</caption>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <a href="kota.html">Kota 1</a>
+                        </td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>
+                            <a href="kota.html">Kota 2</a>
+                        </td>
+                        <td>20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

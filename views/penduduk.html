@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+  Penduduk
+{% endblock %}
+<!-- Content -->
+{% block content %}
+    <div class="page-header">
+        <h3>
+            <span class="text-muted font-weight-light">Indonesia
+        </h3>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title">Basic</div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <caption>Optional table caption.</caption>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <a href="prov.html">Aceh</a>
+                        </td>
+                        <td>10.000</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>
+                            <a href="prov.html">Jakarta</a>
+                        </td>
+                        <td>10.220</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
