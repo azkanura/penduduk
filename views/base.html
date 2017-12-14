@@ -14,16 +14,16 @@
     <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
 
     <!-- Core stylesheets -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/pixeladmin.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/widgets.min.css" rel="stylesheet" type="text/css">
-    <link href="../node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/pixeladmin.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/widgets.min.css" rel="stylesheet" type="text/css">
+    <link href="/node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
 
     <!-- Theme -->
-    <link href="../css/themes/clean.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/themes/clean.min.css" rel="stylesheet" type="text/css">
 
     <!-- Pace.js -->
-    <script src="../pace/pace.min.js"></script>
+    <script src="/pace/pace.min.js"></script>
     {% block inlinejstop %}
     {% endblock %}
     {% block inlinecss %}
@@ -41,7 +41,7 @@
 
         <ul class="px-nav-content">
             <li class="px-nav-box p-a-3 b-b-1" id="demo-px-nav-box">
-                <img src="../demo/avatars/1.jpg" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
+                <img src="/demo/avatars/1.jpg" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
                 <div class="font-size-16">
                     <span class="font-weight-light">Welcome, </span>
                     <strong>John</strong>
@@ -56,7 +56,7 @@
                     <a href="#" class="btn btn-xs btn-primary btn-outline">
                         <i class="fa fa-cog"></i>
                     </a>
-                    <a href="../login.html" class="btn btn-xs btn-danger btn-outline">
+                    <a href="/login.html" class="btn btn-xs btn-danger btn-outline">
                         <i class="fa fa-power-off"></i>
                     </a>
                 </div>
@@ -69,19 +69,19 @@
 
                 <ul class="px-nav-dropdown-menu">
                     <li class="px-nav-item">
-                        <a href="../index.html">
+                        <a href="/index.html">
                             <span class="px-nav-label">Statistik</span>
                         </a>
                     </li>
                     <li class="px-nav-item">
-                        <a href="../analitik.html">
+                        <a href="/analitik.html">
                             <span class="px-nav-label">Analitik</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li class="px-nav-item">
-                <a href="../penduduk.html">
+                <a href="/penduduk.html">
                     <i class="px-nav-icon fa fa-area-chart"></i>
                     <span class="px-nav-label">Penduduk</span>
                 </a>
@@ -94,12 +94,12 @@
 
                 <ul class="px-nav-dropdown-menu">
                     <li class="px-nav-item">
-                        <a href="../user.html">
+                        <a href="/user.html">
                             <span class="px-nav-label">Daftar</span>
                         </a>
                     </li>
                     <li class="px-nav-item">
-                        <a href="../user-editor.html">
+                        <a href="/user-editor.html">
                             <span class="px-nav-label">Tambah</span>
                         </a>
                     </li>
@@ -129,26 +129,26 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="../demo/avatars/1.jpg" alt="" class="px-navbar-image">
+                        <img src="/demo/avatars/1.jpg" alt="" class="px-navbar-image">
                         <span class="hidden-md">John Doe</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="../pages-profile-v2.html">
+                            <a href="/pages-profile-v2.html">
                                 <span class="label label-warning pull-xs-right">
                                     <i class="fa fa-asterisk"></i>
                                 </span>Profile</a>
                         </li>
                         <li>
-                            <a href="../pages-account.html">Account</a>
+                            <a href="/pages-account.html">Account</a>
                         </li>
                         <li>
-                            <a href="../pages-messages-list.html">
+                            <a href="/pages-messages-list.html">
                                 <i class="dropdown-icon fa fa-envelope"></i>&nbsp;&nbsp;Messages</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="../pages-signin-v1.html">
+                            <a href="/pages-signin-v1.html">
                                 <i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a>
                         </li>
                     </ul>
@@ -181,6 +181,7 @@
         };
         firebase.initializeApp(config);
         var db = firebase.firestore();
+        var penduduk = db.collection('penduduk');
     </script>
 
     <!-- ==============================================================================
@@ -190,15 +191,15 @@
   =============================================================================== -->
 
     <!-- Load jQuery -->
-    <script src="../node_modules/jquery/dist/jquery.js"></script>
-	<script src="../js/index.js"></script>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+	<script src="/js/index.js"></script>
 
     <!-- Core scripts -->
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/pixeladmin.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/pixeladmin.min.js"></script>
 
     <!-- Your scripts -->
-    <script src="../js/app.js"></script>
+    <script src="/js/app.js"></script>
     
     {% block inlinejs  %}
     {% endblock %}

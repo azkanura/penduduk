@@ -7,6 +7,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+// var reload = require('../../reload');
 var nunjucks=require('nunjucks');
 
 // app.use(app.router);
@@ -32,28 +33,53 @@ app.get('/cari',function(req,res){
 	res.render('cari.html');
 });
 
-app.get('/rt',function(req,res){
-	res.render('rt.html');
+app.get('/rt/:provinsi/:kota/:kecamatan/:kelurahan/:rw/:rt',function(req,res){
+	var provinsi = req.params.provinsi;
+	var kota = req.params.kota;
+	var kecamatan = req.params.kecamatan;
+	var kelurahan = req.params.kelurahan;
+	var rw = req.params.rw;
+	var rt = req.params.rt;
+	res.render('rt.html',{provinsi:provinsi,kota:kota,kecamatan:kecamatan,kelurahan:kelurahan,rw:rw,rt:rt});
 });
 
-app.get('/rw',function(req,res){
-	res.render('rw.html');
+app.get('/rw/:provinsi/:kota/:kecamatan/:kelurahan/:rw',function(req,res){
+	var provinsi = req.params.provinsi;
+	var kota = req.params.kota;
+	var kecamatan = req.params.kecamatan;
+	var kelurahan = req.params.kelurahan;
+	var rw = req.params.rw;
+	res.render('rw.html',{provinsi:provinsi,kota:kota,kecamatan:kecamatan,kelurahan:kelurahan,rw:rw});
 });
 
-app.get('/kelurahan',function(req,res){
-	res.render('kel.html');
+app.get('/kelurahan/:provinsi/:kota/:kecamatan/:kelurahan',function(req,res){
+	var provinsi = req.params.provinsi;
+	var kota = req.params.kota;
+	var kecamatan = req.params.kecamatan;
+	var kelurahan = req.params.kelurahan;
+	res.render('kel.html',{provinsi:provinsi,kota:kota,kecamatan:kecamatan,kelurahan:kelurahan});
 });
 
-app.get('/kecamatan',function(req,res){
-	res.render('kec.html');
+app.get('/kecamatan/:provinsi/:kota/:kecamatan',function(req,res){
+	var provinsi = req.params.provinsi;
+	var kota = req.params.kota;
+	var kecamatan = req.params.kecamatan;
+	res.render('kec.html',{provinsi:provinsi,kota:kota,kecamatan:kecamatan});
 });
 
-app.get('/kota',function(req,res){
-	res.render('kota.html');
+app.get('/kota/:provinsi/:kota',function(req,res){
+	var provinsi = req.params.provinsi;
+	var kota = req.params.kota;
+	res.render('kota.html',{provinsi:provinsi,kota:kota});
 });
 
-app.get('/provinsi',function(req,res){
-	res.render('prov.html');
+// app.get('/kota',function(req,res){
+// 	res.render('kota.html');
+// });
+
+app.get('/provinsi/:provinsi',function(req,res){
+	var provinsi = req.params.provinsi;
+	res.render('prov.html',{provinsi:provinsi});
 });
 
 app.get('/penduduk',function(req,res){
@@ -81,10 +107,12 @@ app.get('/test',function(req,res){
 });
 
 
-
+// reload(app);
 app.listen(8080,function(){
 	console.log('App Running on port 8080')
 });
+
+
 // var connect = require('connect');
 // var serveStatic = require('serve-static');
 // connect().use(serveStatic(__dirname)).listen(8080, function(){

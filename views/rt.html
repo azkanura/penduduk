@@ -23,6 +23,11 @@
             <select>
                 <option>Kelurahan 1</option>
                 <option>Kelurahan 2</option>
+            </select> / RW :
+            <select>
+                <option>RTW 1</option>
+                <option selected>RW 2</option>
+                <option>RW 3</option>
             </select> / RT :
             <select>
                 <option>RT 001</option>
@@ -42,26 +47,75 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>Total</th>
+                        <th>Anggota</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <a href="rw.html">RW 1</a>
-                        </td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>
-                            <a href="rw.html">RW 2</a>
-                        </td>
-                        <td>20</td>
-                    </tr>
+                <tbody id="dataContainer">
                 </tbody>
             </table>
         </div>
     </div>
+{% endblock %}
+{% block inlinejs  %}
+    <script type="text/javascript">
+        var penduduk = db.collection('penduduk');
+        var province = '{{provinsi}}';
+        var city ='{{kota}}';
+        var district ='{{kecamatan}}';
+        var subdistrict ='{{kelurahan}}';
+        var rw ='{{rw}}';
+        var rt ='{{rt}}';
+
+        var dataContainer = $('#dataContainer');
+        var counter = 1;
+        var dataArray = [];
+        var selectArray = [];
+        penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).where('kelurahan','==',subdistrict).where('rw','==',rw).where('rt','==',rt).get().then((querySnapshot)=>{
+             querySnapshot.forEach((doc)=>{
+                 if(doc && doc.exists){
+                    data = doc.data();
+                    // var exist = exists(data.rt,dataArray);
+                    // console.log(exist);
+                    // if(!exist){
+                    //     addData(data.rt, dataArray);
+                    // }   
+                    var exist = exists(doc.id,dataArray);  
+                    if(exist){
+                        addData(doc.id,data.nama_lengkap,dataArray);
+                    }    
+                 }
+             });
+
+             dataArray.forEach((data)=>{
+                console.log(data.name);
+                dataContainer.append(
+                    '<tr>'+
+                        '<th  scope="row">'+counter+'</th>'+
+                        '<td><a href="/penduduk-detail/'+data.id+'">'+data.name+'</a></td>'+
+                        '<td>'+data.name+'</td>'+
+                    '</tr>'
+                );
+                counter++;
+            });
+        });
+
+
+        function exists(str, dataArray){
+            var exist = false;
+            dataArray.forEach((data)=>{
+                if(str==data.id){
+                    exist = true;
+                    return exist;
+                }
+            });
+            return exist;
+        }
+
+        function addData( id, str, dataArray){
+            dataArray.push({id:id,name:str});
+        }
+
+        console.log('hahaha');
+        console.log(dataArray);
+    </script>
 {% endblock %}

@@ -1,14 +1,15 @@
-// $(document).ready(function(){
-// 	console.log('hahaha');
-// 	var rootRef = firebase.database().ref().child("penduduk");
-// 	rootRef.on("child_added", function(data) {
-// 		console.log('hahaha');
-// 		alert(data);
-// 		console.log(data);
-// 	});
-// });
+$(document).ready(function(){
+	console.log('hahaha');
+	var rootRef = firebase.database().ref().child("penduduk");
+	rootRef.on("child_added", function(data) {
+		console.log('hahaha');
+		alert(data);
+		console.log(data);
+	});
+});
+var penduduk = db.collection('penduduk');
 var container = $('.px-content');
-db.collection('penduduk').get().then((querySnapshot)=>{
+penduduk.get().then((querySnapshot)=>{
 	querySnapshot.forEach((doc)=>{
 		if(doc && doc.exists){
 			data = doc.data();

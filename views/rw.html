@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-     RW
+     RW {{rw}}
 {% endblock %}
   <!-- Content -->
 {% block content %}
@@ -27,11 +27,6 @@
                 <option>Kelurahan 1</option>
                 <option selected>Kelurahan 2</option>
                 <option>Kelurahan 3</option>
-            </select> / RT :
-            <select>
-                <option>RT 1</option>
-                <option selected>RT 2</option>
-                <option>RT 3</option>
             </select> / RW :
             <select>
                 <option>RW 1</option>
@@ -52,26 +47,71 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>Anggota Keluarga</th>
+                        <th>Total       </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <a href="penduduk-detail.html">Joko Susilo</a>
-                        </td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>
-                            <a href="penduduk-detail.html">Bambang Yudi</a>
-                        </td>
-                        <td>20</td>
-                    </tr>
+                <tbody id="dataContainer">
                 </tbody>
             </table>
         </div>
     </div>
+{% endblock %}
+{% block inlinejs  %}
+    <script type="text/javascript">
+        var penduduk = db.collection('penduduk');
+        var province = '{{provinsi}}';
+        var city ='{{kota}}';
+        var district ='{{kecamatan}}';
+        var subdistrict ='{{kelurahan}}';
+        var rw ='{{rw}}';
+
+        var dataContainer = $('#dataContainer');
+        var counter = 1;
+        var dataArray = [];
+        var selectArray = [];
+        penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).where('kelurahan','==',subdistrict).where('rw','==',rw).get().then((querySnapshot)=>{
+             querySnapshot.forEach((doc)=>{
+                 if(doc && doc.exists){
+                    data = doc.data();
+                    var exist = exists(data.rt,dataArray);
+                    console.log(exist);
+                    if(!exist){
+                        addData(data.rt, dataArray);
+                    }         
+                 }
+             });
+
+             dataArray.forEach((data)=>{
+                console.log(data.name);
+                dataContainer.append(
+                    '<tr>'+
+                        '<th  scope="row">'+counter+'</th>'+
+                        '<td><a href="/rt/'+province+'/'+city+'/'+district+'/'+subdistrict+'/'+rw+'/'+data.name+'">'+data.name+'</a></td>'+
+                        '<td>'+data.count+'</td>'+
+                    '</tr>'
+                );
+                counter++;
+            });
+        });
+
+
+        function exists(str, dataArray){
+            var exist = false;
+            dataArray.forEach((data)=>{
+                if(str==data.name){
+                    data.count=data.count+1;
+                    exist = true;
+                    return exist;
+                }
+            });
+            return exist;
+        }
+
+        function addData( str, dataArray){
+            dataArray.push({name:str,count:1});
+        }
+
+        console.log('hahaha');
+        console.log(dataArray);
+    </script>
 {% endblock %}
