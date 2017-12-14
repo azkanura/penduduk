@@ -243,6 +243,9 @@
             });
         });
 
+        var src = '';
+
+
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
             members.get().then((query)=>{
@@ -264,7 +267,20 @@
                                 '<a href="#" class="widget-followers-username">'+gender+'</a>'+
                             '</div>'
                         );
+                    }).catch((error)=>{
+                        familyInfo.append(
+                            '<div class="widget-followers-item">'+
+                                '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                '<div class="widget-followers-controls">'+
+                                    '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                '</div>'+
+                                '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                            '</div>'
+                        );
                     });
+
+                    
                 });
             });
         });
