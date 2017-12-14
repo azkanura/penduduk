@@ -30,7 +30,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     var providerData = user.providerData;
 
     console.log(email);
-    $('display-user-name').html(email);
+    $('.display-username').html(email);
     // ...
   } else {
     // User is signed out.
