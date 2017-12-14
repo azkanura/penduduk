@@ -41,10 +41,10 @@
 
         <ul class="px-nav-content">
             <li class="px-nav-box p-a-3 b-b-1" id="demo-px-nav-box">
-                <img src="/demo/avatars/1.jpg" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
+                <img src="/demo/avatars/account.png" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
                 <div class="font-size-16">
                     <span class="font-weight-light">Welcome, </span>
-                    <strong>John</strong>
+                    <strong class="display-username"><span style="background: #fff;color:#fff">Username</span></strong>
                 </div>
                 <div class="btn-group" style="margin-top: 4px;">
                     <a href="#" class="btn btn-xs btn-primary btn-outline">
@@ -69,12 +69,12 @@
 
                 <ul class="px-nav-dropdown-menu">
                     <li class="px-nav-item">
-                        <a href="/index.html">
+                        <a href="/">
                             <span class="px-nav-label">Statistik</span>
                         </a>
                     </li>
                     <li class="px-nav-item">
-                        <a href="/analitik.html">
+                        <a href="/analitik">
                             <span class="px-nav-label">Analitik</span>
                         </a>
                     </li>
@@ -129,8 +129,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="/demo/avatars/1.jpg" alt="" class="px-navbar-image">
-                        <span class="hidden-md">John Doe</span>
+                        <img src="/demo/avatars/account.png" alt="" class="px-navbar-image">
+                        <span class="hidden-md" class="display-username"><span style="background: #fff;color:#fff">Username</span></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
@@ -148,7 +148,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="/pages-signin-v1.html">
+                            <a href="#" id="logoutBtn">
                                 <i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a>
                         </li>
                     </ul>
@@ -181,6 +181,7 @@
         };
         firebase.initializeApp(config);
         var db = firebase.firestore();
+        var storage = firebase.storage();
         var penduduk = db.collection('penduduk');
     </script>
 

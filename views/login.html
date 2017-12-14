@@ -96,13 +96,13 @@
   <div class="page-signin-container" id="page-signin-form">
     <h2 class="m-t-0 m-b-4 text-xs-center font-weight-semibold font-size-20">Sign In to your Account</h2>
 
-    <form action="index.html" class="panel p-a-4">
+    <!-- <form action="/" class="panel p-a-4"> -->
       <fieldset class=" form-group form-group-lg">
-        <input type="text" class="form-control" placeholder="Username or Email">
+        <input type="text" name="email" class="form-control" placeholder="Username or Email">
       </fieldset>
 
       <fieldset class=" form-group form-group-lg">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" name="password" class="form-control" placeholder="Password">
       </fieldset>
 
       <div class="clearfix">
@@ -111,11 +111,11 @@
           <span class="custom-control-indicator"></span>
           Remember me
         </label>
-        <a href="#" class="font-size-12 text-muted pull-xs-right" id="page-signin-forgot-link">Forgot your password?</a>
+        <a href="" class="font-size-12 text-muted pull-xs-right" id="page-signin-forgot-link">Forgot your password?</a>
       </div>
 
-      <button type="submit" class="btn btn-block btn-lg btn-primary m-t-3">Sign In</button>
-    </form>
+      <a class="btn btn-block btn-lg btn-primary m-t-3" id="loginBtn">Sign In</a>
+    <!-- </form> -->
 
   </div>
 
@@ -128,7 +128,7 @@
 
     <form action="index.html" class="panel p-a-4">
       <fieldset class="form-group form-group-lg">
-        <input type="email" class="form-control" placeholder="Your Email">
+        <input type="email" class="form-control" placeholder="Your Email" name="email">
       </fieldset>
 
       <button type="submit" class="btn btn-block btn-lg btn-primary m-t-3">Send password reset link</button>
@@ -163,7 +163,29 @@
 
   <!-- jQuery -->
   <script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="js/index.js"></script>
+  <script src="js/index.js"></script>
+  <script type="text/javascript">
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          $(location).attr('href','/');
+        } 
+      });
+
+      $('#loginBtn').on('click',function(){
+          var email = $('[name="email"]').val();
+          var password = $('[name="password"]').val();
+
+          firebase.auth().signInWithEmailAndPassword(email, password).then(()=>{
+              $(location).attr('href','/');
+          })
+            .catch(function(error){
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log('Error '+errorCode+': '+errorMessage);
+            alert('Error '+errorCode+': '+errorMessage);
+          });
+      });
+  </script>
 
   <script src="js/bootstrap.min.js"></script>
   <script src="js/pixeladmin.min.js"></script>
