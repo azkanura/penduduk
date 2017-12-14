@@ -77,7 +77,8 @@
     <hr class="page-wide-block visible-xs visible-sm">
 
     <div class="col-md-8 col-lg-9">
-        <h1 class="font-size-20 m-y-4">Sutinah
+        <h1 class="font-size-20 m-y-4">
+            <span id="profileName"></span>
             <span class="font-weight-normal">'s profile</span>
         </h1>
 
@@ -104,14 +105,7 @@
                 <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>
             </div>
             <div class="tab-pane fade" id="familyInfo">
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Anak Laki-Laki</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Robert</a>
-                    <a href="#" class="widget-followers-username">@rjang</a>
-                </div>
+                <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>   
             </div>
             <div class="tab-pane fade" id="assetInfo">
                 <div class="widget-followers-item">
@@ -175,6 +169,7 @@
                 if(doc && doc.exists){
                     var data = doc.data();
                     var name = data.nama_lengkap;
+                    $('#profileName').html(name);
                     var gender = data.jenis_kelamin;
                     var income = data.kirasan_penghasilan;
                     var job = data.pekerjaan;
@@ -242,10 +237,20 @@
 
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
-            members.get().then((query)=>{ 
+            members.get().then((query)=>{
+                familyInfo.html(''); 
                 query.forEach((doc)=>{
                     data=doc.data();
-
+                    familyInfo.append(
+                        '<div class="widget-followers-item">'+
+                            '<img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">'+
+                            '<div class="widget-followers-controls">'+
+                                '<a href="#" class="btn btn-sm btn-outline">'+data.jenis+'</a>'+
+                            '</div>'+
+                            '<a href="#" class="widget-followers-name">'+data.nama_lengkap+'</a>'+
+                            '<a href="#" class="widget-followers-username">'+data.jenis_kelamin+'</a>'+
+                        '</div>'
+                    );
                 });
             });
         });
