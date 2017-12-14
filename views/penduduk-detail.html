@@ -16,7 +16,7 @@
 <div class="row m-t-1">
     <div class="col-md-4 col-lg-3">
         <div class="text-xs-center">
-            <img src="demo/avatars/5.jpg" alt="" class="page-profile-v1-avatar border-round">
+            <img src="/demo/avatars/5.jpg" alt="" class="page-profile-v1-avatar border-round">
         </div>
         <div class="m-y-3 text-xs-center">
             <a href="#" class="btn btn-success">
@@ -83,30 +83,27 @@
 
         <ul class="nav nav-tabs" id="profile-tabs">
             <li class="active">
-                <a href="#profile-board" data-toggle="tab">
+                <a href="#profileInfo" data-toggle="tab" id="profileInfoBtn">
                     Data Pribadi
                 </a>
             </li>
             <li>
-                <a href="#profile-followers" data-toggle="tab">
+                <a href="#familyInfo" data-toggle="tab" id="familyInfoBtn">
                     Data Keluarga
                 </a>
             </li>
             <li>
-                <a href="#profile-following" data-toggle="tab">
+                <a href="#assetInfo" data-toggle="tab" id="assetInfoBtn">
                     Data Aset
                 </a>
             </li>
         </ul>
 
         <div class="tab-content tab-content-bordered p-a-0 bg-white">
-            <div class="tab-pane fade in active" id="profile-board">
-
-
-
+            <div class="tab-pane fade in active" id="profileInfo">
+                <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>
             </div>
-            <div class="tab-pane fade" id="profile-followers">
-
+            <div class="tab-pane fade" id="familyInfo">
                 <div class="widget-followers-item">
                     <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
                     <div class="widget-followers-controls">
@@ -115,19 +112,8 @@
                     <a href="#" class="widget-followers-name">Robert</a>
                     <a href="#" class="widget-followers-username">@rjang</a>
                 </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/3.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Anak Perempuan</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Masitoh Broz</a>
-                    <a href="#" class="widget-followers-username">@mbortz</a>
-                </div>
-
-
             </div>
-            <div class="tab-pane fade" id="profile-following">
+            <div class="tab-pane fade" id="assetInfo">
                 <div class="widget-followers-item">
                     <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
                     <div class="widget-followers-controls">
@@ -145,138 +131,133 @@
                     </div>
                     <a href="#" class="widget-followers-name">Michelle Bortz</a>
                     <a href="#" class="widget-followers-username">@mbortz</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/4.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Timothy Owens</a>
-                    <a href="#" class="widget-followers-username">@towens</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/5.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Denise Steiner</a>
-                    <a href="#" class="widget-followers-username">@dsteiner</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-success">
-                            <i class="fa fa-check"></i>&nbsp;&nbsp;Following</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Robert Jang</a>
-                    <a href="#" class="widget-followers-username">@rjang</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/3.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Michelle Bortz</a>
-                    <a href="#" class="widget-followers-username">@mbortz</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/4.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Timothy Owens</a>
-                    <a href="#" class="widget-followers-username">@towens</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/5.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Denise Steiner</a>
-                    <a href="#" class="widget-followers-username">@dsteiner</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-success">
-                            <i class="fa fa-check"></i>&nbsp;&nbsp;Following</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Robert Jang</a>
-                    <a href="#" class="widget-followers-username">@rjang</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/3.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Michelle Bortz</a>
-                    <a href="#" class="widget-followers-username">@mbortz</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/4.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Timothy Owens</a>
-                    <a href="#" class="widget-followers-username">@towens</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/5.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Denise Steiner</a>
-                    <a href="#" class="widget-followers-username">@dsteiner</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/2.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-success">
-                            <i class="fa fa-check"></i>&nbsp;&nbsp;Following</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Robert Jang</a>
-                    <a href="#" class="widget-followers-username">@rjang</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/3.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Michelle Bortz</a>
-                    <a href="#" class="widget-followers-username">@mbortz</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/4.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Timothy Owens</a>
-                    <a href="#" class="widget-followers-username">@towens</a>
-                </div>
-
-                <div class="widget-followers-item">
-                    <img src="demo/avatars/5.jpg" alt="" class="widget-followers-avatar">
-                    <div class="widget-followers-controls">
-                        <a href="#" class="btn btn-sm btn-outline">Follow</a>
-                    </div>
-                    <a href="#" class="widget-followers-name">Denise Steiner</a>
-                    <a href="#" class="widget-followers-username">@dsteiner</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block inlinejs  %}
+    <script type="text/javascript">
+        var profileInfo = $('#profileInfo');
+        var familyInfo = $('#familyInfo');
+        var assetInfo = $('#assetInfo');
+        var id = '{{id}}';
+
+        var penduduk = db.collection('penduduk');
+        var person = penduduk.doc(id);
+
+        var dataContainer = $('#dataContainer');
+        var counter = 1;
+        var dataArray = [];
+        var selectArray = [];
+        var result = null;
+
+        console.log(dataArray);
+
+        $(function(){
+            $('#profileInfoBtn').click();
+        });
+
+        function addData(id,name,count){
+            dataContainer.append(
+            '<tr>'+
+                '<th  scope="row">'+counter+'</th>'+
+                '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
+                '<td>'+count+'</td>'+
+            '</tr>'
+            );
+            counter++;
+        }
+        
+        $('#profileInfoBtn').on('click',function(){
+                person.get().then((doc)=>{
+                if(doc && doc.exists){
+                    var data = doc.data();
+                    var name = data.nama_lengkap;
+                    var gender = data.jenis_kelamin;
+                    var income = data.kirasan_penghasilan;
+                    var job = data.pekerjaan;
+                    var education = data.pendidikan;
+                    var nationality = data.kewarganegaraan;
+                    var marriage = data.status_perkawinan;
+                    var birthPlace = data.tempat_lahir;
+                    var birthDate = data.tanggal_lahir;
+                    var idPicture = data.foto_ktp;
+                    var profilePicture = data.foto_orang;
+                    var province = data.provinsi;
+                    var city = data.kota;
+                    var district = data.kecamatan;
+                    var subdistrict = data.kelurahan;
+                    var rw = data.rw;
+                    var rt = data.rt;
+
+                    var arrayData = [
+                        {title:'Nama Lengkap', content:name},
+                        {title:'Jenis Kelamin', content:gender},
+                        {title:'Kisaran Penghasilan', content:income},
+                        {title:'Pekerjaan', content:job},
+                        {title:'Pendidikan', content:education},
+                        {title:'Kewarganegaraan', content:nationality},
+                        {title:'Status Perkawinan', content:marriage},
+                        {title:'Tempat dan Tanggal Lahir', content:birthPlace+', '+birthDate},
+                        {title:'Provinsi', content:province},
+                        {title:'Kota/Kabupaten', content:city},
+                        {title:'Kecamatan', content:district},
+                        {title:'Kelurahan', content:subdistrict},
+                        {title:'RT/RW', content:rt+'/'+rw},
+                    ];
+
+                    console.log(arrayData);
+
+                    var toAppend = '';
+                    arrayData.forEach((data)=>{
+                        toAppend+='<tr>'+
+                                    '<td style="padding:20px">'+
+                                      '<div class="box m-a-0 bg-transparent">'+
+                                        '<span class="page-messages-item-from box-cell text-default">'+
+                                            data.title+
+                                        '</span>'+
+                                        '<div class="page-messages-item-subject box-cell">'+
+                                            '<span class="text-default font-weight-bold">'+
+                                                data.content+
+                                            '</span>'+
+                                        '</div>'+
+                                      '</div>'+
+                                    '</td>'+
+                                  '</tr>';
+                    });
+
+                    profileInfo.html('');
+                    profileInfo.append(
+                        '<table class="page-messages-items table table-striped m-a-0">'+
+                                '<tbody>'+
+                                    toAppend+
+                                '</tbody>'+
+                        '</table>'
+                    );
+                }
+            });
+        });
+
+        $('#familyInfoBtn').on('click',function(){
+            var members = person.collection('anggota');
+            members.get().then((query)=>{ 
+                query.forEach((doc)=>{
+                    data=doc.data();
+
+                });
+            });
+        });
+
+        $('#assetInfoBtn').on('click',function(){
+
+        });
+
+
+
+
+
+        
+    </script>
 {% endblock %}

@@ -38,6 +38,7 @@
                     </tr>
                 </thead>
                 <tbody id="dataContainer">
+                    <tr><td></td><td>Loading Data..</td><td></td></tr>
                 </tbody>
             </table>
         </div>
@@ -56,7 +57,7 @@
         penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).get().then((querySnapshot)=>{
              querySnapshot.forEach((doc)=>{
                  if(doc && doc.exists){
-                    data = doc.data();
+                    var data = doc.data();
                     var exist = exists(data.kelurahan,dataArray);
                     console.log(exist);
                     if(!exist){
@@ -65,8 +66,10 @@
                  }
              });
 
-             dataArray.forEach((data)=>{
+             dataContainer.html('');
+dataArray.forEach((data)=>{
                 console.log(data.name);
+
                 dataContainer.append(
                     '<tr>'+
                         '<th  scope="row">'+counter+'</th>'+

@@ -51,6 +51,7 @@
                     </tr>
                 </thead>
                 <tbody id="dataContainer">
+                    <tr><td></td><td>Loading Data..</td><td></td></tr>
                 </tbody>
             </table>
         </div>
@@ -70,52 +71,39 @@
         var counter = 1;
         var dataArray = [];
         var selectArray = [];
+        var result = null;
+
         penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).where('kelurahan','==',subdistrict).where('rw','==',rw).where('rt','==',rt).get().then((querySnapshot)=>{
+             dataContainer.html('');
              querySnapshot.forEach((doc)=>{
                  if(doc && doc.exists){
-                    data = doc.data();
-                    // var exist = exists(data.rt,dataArray);
-                    // console.log(exist);
-                    // if(!exist){
-                    //     addData(data.rt, dataArray);
-                    // }   
-                    var exist = exists(doc.id,dataArray);  
-                    if(exist){
-                        addData(doc.id,data.nama_lengkap,dataArray);
-                    }    
-                 }
+                    var data = doc.data();
+                    var name = data.nama_lengkap;
+                    var id = doc.id;
+                    var members = penduduk.doc(id).collection('anggota');
+                    members.get().then((query)=>{ 
+                        var count = query.size;
+                        addData(id,name,count);
+                    });
+                }
+                 
              });
 
-             dataArray.forEach((data)=>{
-                console.log(data.name);
-                dataContainer.append(
-                    '<tr>'+
-                        '<th  scope="row">'+counter+'</th>'+
-                        '<td><a href="/penduduk-detail/'+data.id+'">'+data.name+'</a></td>'+
-                        '<td>'+data.name+'</td>'+
-                    '</tr>'
-                );
-                counter++;
-            });
         });
-
-
-        function exists(str, dataArray){
-            var exist = false;
-            dataArray.forEach((data)=>{
-                if(str==data.id){
-                    exist = true;
-                    return exist;
-                }
-            });
-            return exist;
-        }
-
-        function addData( id, str, dataArray){
-            dataArray.push({id:id,name:str});
-        }
-
-        console.log('hahaha');
         console.log(dataArray);
+            
+
+        function addData(id,name,count){
+            dataContainer.append(
+            '<tr>'+
+                '<th  scope="row">'+counter+'</th>'+
+                '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
+                '<td>'+count+'</td>'+
+            '</tr>'
+            );
+            counter++;
+        }
+
+        
     </script>
 {% endblock %}

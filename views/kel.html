@@ -42,6 +42,7 @@
                         </tr>
                     </thead>
                     <tbody id="dataContainer">
+                        <tr><td></td><td>Loading Data..</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -70,8 +71,10 @@
                  }
              });
 
+             dataContainer.html('');
              dataArray.forEach((data)=>{
                 console.log(data.name);
+
                 dataContainer.append(
                     '<tr>'+
                         '<th  scope="row">'+counter+'</th>'+

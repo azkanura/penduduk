@@ -73,10 +73,6 @@ app.get('/kota/:provinsi/:kota',function(req,res){
 	res.render('kota.html',{provinsi:provinsi,kota:kota});
 });
 
-// app.get('/kota',function(req,res){
-// 	res.render('kota.html');
-// });
-
 app.get('/provinsi/:provinsi',function(req,res){
 	var provinsi = req.params.provinsi;
 	res.render('prov.html',{provinsi:provinsi});
@@ -86,8 +82,9 @@ app.get('/penduduk',function(req,res){
 	res.render('penduduk.html');
 });
 
-app.get('/penduduk-detail',function(req,res){
-	res.render('penduduk-detail.html');
+app.get('/penduduk-detail/:id',function(req,res){
+	var id = req.params.id;
+	res.render('penduduk-detail.html',{id:id});
 });
 
 app.get('/user',function(req,res){
