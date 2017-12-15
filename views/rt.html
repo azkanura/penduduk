@@ -8,45 +8,38 @@
         <p>
             <span class="text-muted font-weight-light">Penduduk / </span>
             Provinsi :
-            <select>
-                <option>Aceh</option>
-                <option selected>Jakarta</option>
+            <select id="selectProvince">
+                <option>Loading Data..</option>
             </select> / Kota :
-            <select>
-                <option>Jakarta Utara</option>
-                <option>Jakarta Selatan</option>
+            <select id="selectCity" >
+                <option>Loading Data..</option>
             </select> / Kecamatan :
-            <select>
-                <option>Kecamatan 1</option>
-                <option>Kecamata 2</option>
+            <select id="selectDistrict">
+                <option>Loading Data..</option>
             </select> / Kelurahan :
-            <select>
-                <option>Kelurahan 1</option>
-                <option>Kelurahan 2</option>
+            <select id="selectSubdistrict">
+                <option>Loading Data..</option>
             </select> / RW :
-            <select>
-                <option>RTW 1</option>
-                <option selected>RW 2</option>
-                <option>RW 3</option>
+            <select id="selectRW">
+                <option>Loading Data..</option>
             </select> / RT :
-            <select>
-                <option>RT 001</option>
-                <option>RT 002</option>
+            <select id="selectRT">
+                <option>Loading Data..</option>
             </select>
         </p>
     </div>
 
     <div class="panel">
         <div class="panel-heading">
-            <div class="panel-title">Basic</div>
+            <div class="panel-title">Daftar Penduduk</div>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
-                <caption>Optional table caption.</caption>
+                <caption>Berdasarkan Kepala Keluarga</caption>
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama</th>
+                        <th>Nama Kepala Keluarga</th>
                         <th>Anggota</th>
                     </tr>
                 </thead>
@@ -73,7 +66,97 @@
         var selectArray = [];
         var result = null;
 
-        penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).where('kelurahan','==',subdistrict).where('rw','==',rw).where('rt','==',rt).get().then((querySnapshot)=>{
+        // for filtering
+        var arrayProvince = [];
+        var arrayCity = [];
+        var arrayDistrict = [];
+        var arraySubdistrict = [];
+        var arrayRW = [];
+        var arrayRT = [];
+        // Filtering Category DOM
+        var selectProvince = $('#selectProvince');
+        var selectCity = $('#selectCity');
+        var selectDistrict = $('#selectDistrict');
+        var selectSubdistrict = $('#selectSubdistrict');
+        var selectRW = $('#selectRW');
+        var selectRT = $('#selectRT');
+        // for filtering
+
+        // penduduk.where('provinsi','==',province).where('kota','==',city).where('kecamatan','==',district).where('kelurahan','==',subdistrict).where('rw','==',rw).where('rt','==',rt).get().then((querySnapshot)=>{
+        //      dataContainer.html('');
+        //      querySnapshot.forEach((doc)=>{
+        //          if(doc && doc.exists){
+        //             var data = doc.data();
+        //             var name = data.nama_lengkap;
+        //             var id = doc.id;
+        //             var members = penduduk.doc(id).collection('anggota');
+        //             members.get().then((query)=>{ 
+        //                 var count = query.size;
+        //                 addData(id,name,count);
+        //             });
+        //         } 
+        //      });
+        // });
+        
+        //for filtering, get provinces data
+        // penduduk.get().then((querySnapshot)=>{
+        //     querySnapshot.forEach((doc)=>{
+        //         if(doc && doc.exists){
+        //             var data = doc.data();
+        //             var name = data.provinsi;
+        //             var exist = exists(name,arrayProvince);
+        //             if(!exist){
+        //                 arrayProvince.push(name);
+        //             }
+        //         }
+        //     });
+
+        //     selectProvince.html('');
+        //     arrayProvince.forEach((data)=>{
+        //         selectProvince.append('<option value="'+data+'">'+data+'</option>');
+        //     });
+
+        //     selectProvince.val(province);
+        //     selectProvince.trigger('change');
+        // });
+
+        // selectProvince.on('change',function(){
+        //     var selectedProvince = $(this).val();
+
+        //     penduduk.where('provinsi','==',selectedProvince).get().then((querySnapshot)=>{
+        //         arrayCity = [];
+        //         querySnapshot.forEach((doc)=>{
+        //             if(doc && doc.exists){
+        //                 var data = doc.data();
+        //                 var name = data.kota;
+        //                 var exist = exists(name,arrayCity);
+        //                 if(!exist){
+        //                     arrayCity.push(name);
+        //                 }
+        //             }
+        //         });
+
+        //         selectCity.html('');
+        //         arrayCity.forEach((data)=>{
+        //             selectCity.append('<option value="'+data+'">'+data+'</option>');
+        //         });
+        //     });
+
+        // });
+
+        populateData (penduduk, [], arrayProvince, selectProvince, 'province');
+        var clauseArray = [{title:'provinsi',value:province}];
+        populateData (penduduk, clauseArray,arrayCity,selectCity,'city');
+        clauseArray.push({title:'kota',value:city});
+        populateData (penduduk, clauseArray,arrayDistrict, selectDistrict,'district');
+        clauseArray.push({title:'kecamatan',value:district});
+        populateData (penduduk, clauseArray,arraySubdistrict, selectSubdistrict,'subdistrict');
+        clauseArray.push({title:'kelurahan',value:subdistrict});
+        populateData (penduduk, clauseArray,arrayRW, selectRW,'rw');
+        clauseArray.push({title:'rw',value:rw});
+        populateData (penduduk, clauseArray,arrayRT, selectRT,'rt');
+        clauseArray.push({title:'rt',value:rt});
+        whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
              dataContainer.html('');
              querySnapshot.forEach((doc)=>{
                  if(doc && doc.exists){
@@ -85,13 +168,171 @@
                         var count = query.size;
                         addData(id,name,count);
                     });
-                }
-                 
+                } 
              });
-
         });
-        console.log(dataArray);
-            
+        
+        // setTimeout(function(){
+        //     selectProvince.val(province);
+        //     selectProvince.trigger('change');
+        //     selectCity.val(city);
+        //     selectCity.trigger('change');
+        //     selectDistrict.val(district);
+        //     selectDistrict.trigger('change');
+        //     selectSubdistrict.val(subdistrict);
+        //     selectSubdistrict.trigger('change');
+        //     selectRW.val(rw);
+        //     selectRW.trigger('change');
+        //     selectRT.val(rt);
+        //     selectRT.trigger('change');
+        // },10000);        
+
+        selectProvince.on('change',function(){
+            var selectedProvince = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince}
+            ];
+
+            populateData(penduduk,arrayClause,arrayCity, selectCity, 'city');
+        });
+
+        selectCity.on('change',function(){
+            var selectedProvince = selectProvince.val();
+            var selectedCity = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince},
+                {title:'kota',value:selectedCity}
+            ];
+            populateData(penduduk,arrayClause,arrayDistrict, selectDistrict, 'district');
+        });
+
+        selectDistrict.on('change',function(){
+            var selectedProvince = selectProvince.val();
+            var selectedCity = selectCity.val();
+            var selectedDistrict = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince},
+                {title:'kota',value:selectedCity},
+                {title:'kecamatan',value:selectedDistrict}
+            ];
+            populateData(penduduk,arrayClause,arraySubdistrict, selectSubdistrict, 'subdistrict');
+        });
+
+        selectSubdistrict.on('change',function(){
+            var selectedProvince = selectProvince.val();
+            var selectedCity = selectCity.val();
+            var selectedDistrict = selectDistrict.val();
+            var selectedSubdistrict = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince},
+                {title:'kota',value:selectedCity},
+                {title:'kecamatan',value:selectedDistrict},
+                {title:'kelurahan',value:selectedSubdistrict}
+            ];
+            populateData(penduduk,arrayClause,arrayRW, selectRW, 'rw');
+        });
+
+        selectRW.on('change',function(){
+            var selectedProvince = selectProvince.val();
+            var selectedCity = selectCity.val();
+            var selectedDistrict = selectDistrict.val();
+            var selectedSubdistrict = selectSubdistrict.val();
+            var selectedRW = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince},
+                {title:'kota',value:selectedCity},
+                {title:'kecamatan',value:selectedDistrict},
+                {title:'kelurahan',value:selectedSubdistrict},
+                {title:'rw',value:selectedRW}
+            ];
+            populateData(penduduk,arrayClause,arrayRT, selectRT, 'rt');
+        });
+
+        selectRT.on('change',function(){
+            var selectedProvince = selectProvince.val();
+            var selectedCity = selectCity.val();
+            var selectedDistrict = selectDistrict.val();
+            var selectedSubdistrict = selectSubdistrict.val();
+            var selectedRW = selectRW.val();
+            var selectedRT = $(this).val();
+            var arrayClause = [
+                {title:'provinsi',value:selectedProvince},
+                {title:'kota',value:selectedCity},
+                {title:'kecamatan',value:selectedDistrict},
+                {title:'kelurahan',value:selectedSubdistrict},
+                {title:'rw',value:selectedRW},
+                {title:'rt',value:selectedRT}
+            ];
+
+            whereClause(penduduk,arrayClause).get().then((querySnapshot)=>{
+                 counter = 1;
+                 dataContainer.html('');
+                 querySnapshot.forEach((doc)=>{
+                     if(doc && doc.exists){
+                        var data = doc.data();
+                        var name = data.nama_lengkap;
+                        var id = doc.id;
+                        var members = penduduk.doc(id).collection('anggota');
+                        members.get().then((query)=>{ 
+                            var count = query.size;
+                            addData(id,name,count);
+                        });
+                    } 
+                 });
+            });
+        });
+
+
+        function whereClause(doc,array){
+            if(array.length){
+                array.forEach((data)=>{
+                    doc = doc.where(data.title,'==',data.value);
+                });
+            }
+            return doc;
+        }
+
+        function populateData (doc, arrayClause, arrayData, selectData, typeData){
+            whereClause(doc,arrayClause).get().then((querySnapshot)=>{
+                arrayData = [];
+                querySnapshot.forEach((d)=>{
+                    if(d && d.exists){
+                        var data = d.data();
+                        var name ;
+                        switch(typeData){
+                            case 'province':
+                                name = data.provinsi;
+                                break;
+                            case 'city':
+                                name = data.kota;
+                                break;
+                            case 'district':
+                                name = data.kecamatan;
+                                break;
+                            case 'subdistrict':
+                                name = data.kelurahan;
+                                break;
+                            case 'rw':
+                                name = data.rw;
+                                break;
+                            case 'rt':
+                                name = data.rt;
+                                break;
+                        }
+                        var exist = exists(name,arrayData);
+                        if(!exist){
+                            arrayData.push(name);
+                        }
+                    }
+                });
+
+                selectData.html('<option readOnly>Pilih Data</option>');
+                arrayData.forEach((data)=>{
+                    selectData.append('<option value="'+data+'">'+data+'</option>');
+                });
+            });
+        }
+        //for filtering            
 
         function addData(id,name,count){
             dataContainer.append(
@@ -103,6 +344,47 @@
             );
             counter++;
         }
+
+
+        // function addDataProvince(name){
+        //     arrayProvince.push(name);
+        // }
+
+        // function addDataCity(name){
+        //     arrayCity.push(name);
+        // }
+
+        // function addDataDistrict(name){
+        //     arrayDistrict.push(name);
+        // }
+
+        // function addDataSubdistrict(name){
+        //     arrayDistrict.push(name);
+        // }
+
+        // function addDataRW(name){
+        //     arrayRW.push(name);
+        // }
+
+        // function addDataRT(name){
+        //     arrayRW.push(name);
+        // }
+
+        function exists(name,array){
+            var size = array.length;
+            var exist = false;
+            if(size){
+                for(var i=0;i<(size+1)/2;i++){
+                    if(name.toLowerCase()==array[i].toLowerCase() || name.toLowerCase()==array[size-i-1].toLowerCase()){
+                        exist = true;
+                        return exist;
+                    }
+                }
+            }
+            return exist;
+        }
+
+        // kalau genap, misal 6, jadinya 0-2 0-5 1-4 2-3 kalau misal ganjil 5, jadinya 0-4 1-3 2-2
 
         
     </script>
