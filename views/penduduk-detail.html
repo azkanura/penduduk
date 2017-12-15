@@ -78,8 +78,8 @@
 
     <div class="col-md-8 col-lg-9">
         <h1 class="font-size-20 m-y-4">
-            <span id="profileName"><span style="background: #fff;color:#fff;">Nama Penduduk</span></span>
-            <span class="font-weight-normal">'s profile</span>
+            <span id="profileName"><span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profil</span></span>
+            
         </h1>
 
         <ul class="nav nav-tabs" id="profile-tabs">
@@ -170,7 +170,7 @@
                 if(doc && doc.exists){
                     var data = doc.data();
                     var name = data.nama_lengkap;
-                    $('#profileName').html(name);
+                    $('#profileName').html(name+'<span class="font-weight-normal">\'s profile</span>');
                     var gender = data.jenis_kelamin;
                     var income = data.kirasan_penghasilan;
                     var job = data.pekerjaan;
@@ -248,7 +248,7 @@
 
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
-            if(members && members.exists){
+            // if(members && members.exists){
                 members.get().then((query)=>{
                     familyInfo.html(''); 
                     query.forEach((doc)=>{
@@ -284,10 +284,8 @@
                         
                     });
                 });
-            }
-            else{
-                familyInfo.append('<h4 class="text-center" style="padding: 30px;">Tidak ada data anggota</h4>');
-            }
+            // }
+            
             
         });
 
