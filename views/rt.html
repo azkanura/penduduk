@@ -5,33 +5,56 @@
   <!-- Content -->
 {% block content %}
     <div class="page-header">
-        <p>
-            <span class="text-muted font-weight-light">Penduduk / </span>
-            Provinsi :
-            <select id="selectProvince">
-                <option>Loading Data..</option>
-            </select> / Kota :
-            <select id="selectCity" >
-                <option>Loading Data..</option>
-            </select> / Kecamatan :
-            <select id="selectDistrict">
-                <option>Loading Data..</option>
-            </select> / Kelurahan :
-            <select id="selectSubdistrict">
-                <option>Loading Data..</option>
-            </select> / RW :
-            <select id="selectRW">
-                <option>Loading Data..</option>
-            </select> / RT :
-            <select id="selectRT">
-                <option>Loading Data..</option>
-            </select>
-        </p>
+        <p id="pageTitle"><strong>Cakupan Wilayah</strong></p>
+        <div class="form-group">
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label class="control-label">Provinsi</label>
+                    <select class="form-control" id="selectProvince">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label">Kota/Kabupaten</label>
+                    <select class="form-control" id="selectCity">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label">Kecamatan</label>
+                    <select class="form-control" id="selectDistrict">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label">Kelurahan</label>
+                    <select class="form-control" id="selectSubdistrict">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label">RW</label>
+                    <select class="form-control" id="selectRW">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="control-label">RT</label>
+                    <select class="form-control" id="selectRT">
+                        <option>Loading Data..</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="panel">
         <div class="panel-heading">
-            <div class="panel-title">Daftar Penduduk</div>
+            <div class="panel-title">
+                Daftar Penduduk 
+            </div>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
@@ -64,7 +87,6 @@
         var counter = 1;
         var dataArray = [];
         var selectArray = [];
-        var result = null;
 
         // for filtering
         var arrayProvince = [];
@@ -81,17 +103,17 @@
         var selectRW = $('#selectRW');
         var selectRT = $('#selectRT');
 
-        populateData (penduduk, [], arrayProvince, selectProvince, 'province');
+        initiateData (penduduk, [], arrayProvince, selectProvince, 'province',province);
         var clauseArray = [{title:'provinsi',value:province}];
-        populateData (penduduk, clauseArray,arrayCity,selectCity,'city');
+        initiateData (penduduk, clauseArray,arrayCity,selectCity,'city',city);
         clauseArray.push({title:'kota',value:city});
-        populateData (penduduk, clauseArray,arrayDistrict, selectDistrict,'district');
+        initiateData (penduduk, clauseArray,arrayDistrict, selectDistrict,'district',district);
         clauseArray.push({title:'kecamatan',value:district});
-        populateData (penduduk, clauseArray,arraySubdistrict, selectSubdistrict,'subdistrict');
+        initiateData (penduduk, clauseArray,arraySubdistrict, selectSubdistrict,'subdistrict',subdistrict);
         clauseArray.push({title:'kelurahan',value:subdistrict});
-        populateData (penduduk, clauseArray,arrayRW, selectRW,'rw');
+        initiateData (penduduk, clauseArray,arrayRW, selectRW,'rw',rw);
         clauseArray.push({title:'rw',value:rw});
-        populateData (penduduk, clauseArray,arrayRT, selectRT,'rt');
+        initiateData (penduduk, clauseArray,arrayRT, selectRT,'rt',rt);
         clauseArray.push({title:'rt',value:rt});
         whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
              dataContainer.html('');
@@ -107,22 +129,8 @@
                     });
                 } 
              });
-        });
-        
-        // setTimeout(function(){
-        //     selectProvince.val(province);
-        //     selectProvince.trigger('change');
-        //     selectCity.val(city);
-        //     selectCity.trigger('change');
-        //     selectDistrict.val(district);
-        //     selectDistrict.trigger('change');
-        //     selectSubdistrict.val(subdistrict);
-        //     selectSubdistrict.trigger('change');
-        //     selectRW.val(rw);
-        //     selectRW.trigger('change');
-        //     selectRT.val(rt);
-        //     selectRT.trigger('change');
-        // },10000);        
+             $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province+' > '+city+' > '+district+' > '+subdistrict+' > RW '+rw+' > RT '+rt);
+        });        
 
         selectProvince.on('change',function(){
             var selectedProvince = $(this).val();
@@ -217,6 +225,9 @@
                     } 
                  });
             });
+
+            $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+selectedProvince+' > '+selectedCity+' > '+selectedDistrict+' > '+selectedSubdistrict+' > RW '+selectedRW+' > RT '+selectedRT);
+
         });
 
 
@@ -244,6 +255,32 @@
                 case 'rt':
                     return data.rt;
             }
+        }
+
+        function initiateData (doc, arrayClause, arrayData, selectData, typeData, initialData){
+            whereClause(doc,arrayClause).get().then((querySnapshot)=>{
+                arrayData = [];
+                querySnapshot.forEach((d)=>{
+                    if(d && d.exists){
+                        var data = d.data();
+                        var name = filterType(data,typeData);
+                        var exist = exists(name,arrayData);
+                        if(!exist){
+                            arrayData.push(name);
+                        }
+                    }
+                });
+
+                selectData.html('<option readOnly>Pilih Data</option>');
+                arrayData.forEach((data)=>{
+                    if(data.toLowerCase()==initialData.toLowerCase()){
+                        selectData.append('<option value="'+data+'" selected>'+data+'</option>');
+                    }
+                    else{
+                        selectData.append('<option value="'+data+'">'+data+'</option>');
+                    }
+                });
+            });
         }
 
         function populateData (doc, arrayClause, arrayData, selectData, typeData){

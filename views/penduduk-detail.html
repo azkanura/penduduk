@@ -248,41 +248,47 @@
 
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
-            members.get().then((query)=>{
-                familyInfo.html(''); 
-                query.forEach((doc)=>{
-                    data=doc.data();
-                    var type = data.jenis;
-                    var name = data.nama_lengkap;
-                    var gender = data.jenis_kelamin;
-                    var profilePicture = data.foto_orang;
-                    storageRef.child(profilePicture).getDownloadURL().then((url)=>{
-                        familyInfo.append(
-                            '<div class="widget-followers-item">'+
-                                '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
-                                '<div class="widget-followers-controls">'+
-                                    '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                '</div>'+
-                                '<a href="#" class="widget-followers-name">'+name+'</a>'+
-                                '<a href="#" class="widget-followers-username">'+gender+'</a>'+
-                            '</div>'
-                        );
-                    }).catch((error)=>{
-                        familyInfo.append(
-                            '<div class="widget-followers-item">'+
-                                '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
-                                '<div class="widget-followers-controls">'+
-                                    '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                '</div>'+
-                                '<a href="#" class="widget-followers-name">'+name+'</a>'+
-                                '<a href="#" class="widget-followers-username">'+gender+'</a>'+
-                            '</div>'
-                        );
-                    });
+            if(members && members.exists){
+                members.get().then((query)=>{
+                    familyInfo.html(''); 
+                    query.forEach((doc)=>{
+                        data=doc.data();
+                        var type = data.jenis;
+                        var name = data.nama_lengkap;
+                        var gender = data.jenis_kelamin;
+                        var profilePicture = data.foto_orang;
+                        storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+                            familyInfo.append(
+                                '<div class="widget-followers-item">'+
+                                    '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
+                                    '<div class="widget-followers-controls">'+
+                                        '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                    '</div>'+
+                                    '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                    '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                '</div>'
+                            );
+                        }).catch((error)=>{
+                            familyInfo.append(
+                                '<div class="widget-followers-item">'+
+                                    '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                    '<div class="widget-followers-controls">'+
+                                        '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                    '</div>'+
+                                    '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                    '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                '</div>'
+                            );
+                        });
 
-                    
+                        
+                    });
                 });
-            });
+            }
+            else{
+                familyInfo.append('<h4 class="text-center" style="padding: 30px;">Tidak ada data anggota</h4>');
+            }
+            
         });
 
         $('#assetInfoBtn').on('click',function(){
