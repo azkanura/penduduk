@@ -18,31 +18,31 @@
 <div class="page-wide-block">
   <div class="box m-a-0 border-radius-0" id="metrics">
     <div class="box-row valign-top">
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Agama</div>
-        <div id="agama-chart" style="height: 120px"></div>
+        <div id="agama-chart" style="min-height: 120px"></div>
       </div>
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Golongan Darah</div>
-        <div id="goldar-chart" style="height: 120px"></div>
+        <div id="goldar-chart" style="min-height: 120px"></div>
       </div>
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Pernikahan</div>
-        <div id="nikah-chart" style="height: 120px"></div>
+        <div id="marriageChart" style="min-height: 120px"></div>
       </div>
     </div>
     <div class="box-row valign-top">
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Jenis Kelamin</div>
-        <div id="gender-chart" style="height: 120px"></div>
+        <div id="genderChart" style="min-height: 120px"></div>
       </div>
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Pekerjaan</div>
-        <div id="job-chart" style="height: 120px"></div>
+        <div id="jobChart" style="min-height: 120px"></div>
       </div>
-      <div class="box-cell col-md-4 p-x-4 p-t-3 p-b-4">
+      <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Jenjang Studi</div>
-        <div id="studi-chart" style="height: 120px"></div>
+        <div id="studyChart" style="min-height: 120px"></div>
       </div>
     </div>
   </div>
@@ -51,154 +51,84 @@
 
 {% block inlinejs %}
 <script type="text/javascript">
-$(function () {
+$(function(){
+
   var chartColors = pxDemo.getRandomColors(12);
-  var curColorIndex = 0;
 
-  $('#monthly-sales-graph, #monthly-income-graph, #monthly-visits-graph, #monthly-signups-graph')
-    .each(function () {
-      var data = [
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-        pxDemo.getRandomData(300, 100),
-      ];
+  var penduduk = db.collection('penduduk');
 
-      var options = this.id === 'monthly-income-graph' || this.id === 'monthly-signups-graph' ? {
-        type: 'bar',
-        barColor: chartColors[curColorIndex],
-        barSpacing: 2,
-      } : {
-          type: 'line',
-          fillColor: null,
-          lineColor: chartColors[curColorIndex],
-          lineWidth: 1,
-          spotColor: null,
-          minSpotColor: null,
-          maxSpotColor: null,
-          highlightSpotColor: chartColors[curColorIndex + 1],
-          highlightLineColor: chartColors[curColorIndex + 1],
-          spotRadius: 3,
-        };
+  var marriageArray = [];
+  var genderArray = [];
+  var jobArray = [];
+  var studyArray = [];
 
-      $(this).pxSparkline(data, $.extend({
-        width: '100%',
-        height: '70px',
-      }, options));
+  generateData('marriage',marriageArray,'#marriageChart',chartColors);
+  generateData('gender',genderArray, '#genderChart',chartColors);
+  generateData('job',jobArray, '#jobChart',chartColors);
+  generateData('study',studyArray, '#studyChart',chartColors);
 
-      curColorIndex += 2;
-    });
-
-  (function () {
-    var dataAgama = {
-      columns: [
-        ['Islam', 750],
-        ['Kristen', 100],
-        ['Hindu', 100],
-        ['Budha', 50]
-      ],
-      type: 'pie',
-    };
-
-    var dataGoldar = {
-      columns: [
-        ['A', pxDemo.getRandomData(300, 50)],
-        ['B', pxDemo.getRandomData(300, 50)],
-        ['AB', pxDemo.getRandomData(300, 50)],
-        ['O', pxDemo.getRandomData(300, 50)],
-      ],
-      type: 'pie',
-    };
-
-    var dataGender = {
-      columns: [
-        ['Pria', pxDemo.getRandomData(300, 50)],
-        ['Wanita', pxDemo.getRandomData(300, 50)],
-      ],
-      type: 'pie',
-    };
-
-    var dataNikah = {
-      columns: [
-        ['Sudah', pxDemo.getRandomData(300, 50)],
-        ['Belum', pxDemo.getRandomData(300, 50)],
-      ],
-      type: 'pie',
-    };
-
-    var dataJob = {
-      columns: [
-        ['Wirausaha', pxDemo.getRandomData(300, 50)],
-        ['Karyawan Swasta', pxDemo.getRandomData(300, 50)],
-        ['Pegawai Negeri Sipil', pxDemo.getRandomData(300, 50)],
-        ['Belum Bekerja', pxDemo.getRandomData(300, 50)],
-        ['Lainnya', pxDemo.getRandomData(300, 50)],
-      ],
-      type: 'pie',
-    };
-
-    var dataStudi = {
-      columns: [
-        ['Sarjana', pxDemo.getRandomData(300, 50)],
-        ['SMA', pxDemo.getRandomData(300, 50)],
-        ['Diploma 1', pxDemo.getRandomData(300, 50)],
-        ['Master', pxDemo.getRandomData(300, 50)],
-        ['SMP', pxDemo.getRandomData(300, 50)],
-      ],
-      type: 'pie',
-    };
-
-    c3.generate({
-      bindto: '#agama-chart',
-      color: { pattern: [chartColors[8], chartColors[9], chartColors[10], chartColors[11]] },
-      data: dataAgama,
-      legend: { position: 'right' }
-    });
-
-    c3.generate({
-      bindto: '#goldar-chart',
-      color: { pattern: [chartColors[8], chartColors[9], chartColors[10], chartColors[7]] },
-      data: dataGoldar,
-      legend: { position: 'right' }
-    });
-
-    c3.generate({
-      bindto: '#nikah-chart',
-      color: { pattern: [chartColors[8], chartColors[9]] },
-      data: dataNikah,
-      legend: { position: 'right' }
-    });
-
-    c3.generate({
-      bindto: '#gender-chart',
-      color: { pattern: [chartColors[8], chartColors[9], chartColors[10]] },
-      data: dataGender,
-      legend: { position: 'right' }
-    });
-
-    c3.generate({
-      bindto: '#job-chart',
-      color: { pattern: [chartColors[8], chartColors[9], chartColors[10]] },
-      data: dataJob,
-      legend: { position: 'right' }
-    });
-
-    c3.generate({
-      bindto: '#studi-chart',
-      color: { pattern: [chartColors[8], chartColors[9], chartColors[10], chartColors[1], chartColors[3]] },
-      data: dataStudi,
-      legend: { position: 'right' }
-    });
-
-  })();
 });
+
+function generateData(property,dataArray,objectId,chartColors){
+  penduduk.get().then((querySnapshot)=>{
+    querySnapshot.forEach((doc)=>{
+      if(doc && doc.exists){
+        var data;
+        switch(property){
+          case 'marriage':
+            data = doc.data().status_perkawinan;
+            break;
+          case 'gender':
+            data = doc.data().jenis_kelamin;
+            break;
+          case 'job':
+            data = doc.data().pekerjaan;
+            break;
+          case 'study':
+            data = doc.data().pendidikan;
+            break;
+        }
+        var exist = dataExists(data,dataArray);
+        if(!exist){
+          addData(data, dataArray)
+        }
+
+        // var members = doc.collection('anggota').
+      }
+    });
+
+    var chartData = {
+      columns : dataArray,
+      type : 'pie'
+    };
+
+    c3.generate({
+      size:{
+        height: 300
+      },
+      bindto : objectId,
+      color: { pattern: chartColors },
+      data: chartData,
+      legend: { position: 'bottom' }
+    });
+
+  });
+}
+
+function dataExists(str, dataArray){
+  var exist = false;
+  dataArray.forEach((data)=>{
+      if(str.toLowerCase()==data[0].toLowerCase()){
+          data[1]=data[1]+1;
+          exist = true;
+          return exist;
+      }
+  });
+  return exist;
+}
+
+function addData( str, dataArray){
+  dataArray.push([str,1]);
+}
 </script>
 {% endblock %}
