@@ -12,26 +12,84 @@
 
     <div class="row">
         <div class="col-md-6">
-            <form class="panel">
+            <form class="panel" action="/save-user" method="POST">
                 <div class="panel-heading">
                     <div class="panel-title">Editor</div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label class="control-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" name="full_name" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Email</label>
-                        <input type="email" class="form-control" />
+                        <input type="email" class="form-control" name="email" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Password</label>
-                        <input type="password" class="form-control" />
+                        <input type="password" class="form-control" name="password"required />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Ulangi Password</label>
-                        <input type="password" class="form-control" />
+                        <input type="password" class="form-control" name="repeat_password"required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Role
+                        </label>
+                        <select name="role" class="form-control">
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Tingkatan
+                        </label>
+                        <select name="level" class="form-control">
+                            <option value="subdistrict">Kelurahan</option>
+                            <option value="district">Kecamatan</option>
+                            <option value="city">Kota/Kabupaten</option>
+                            <option value="province">Provinsi</option>
+                            <option value="national">Nasional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Pilih Area
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Provinsi
+                        </label>
+                        <select name="province" class="form-control">
+                            <option value="">Loading data...</option>
+                       </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Kota/Kabupaten
+                        </label>
+                        <select name="city" class="form-control">
+                            <option value="">Loading data...</option>
+                       </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Kecamatan
+                        </label>
+                        <select name="district" class="form-control">
+                            <option value="">Loading data...</option>
+                       </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            Kelurahan
+                        </label>
+                        <select name="subdistrict" class="form-control">
+                            <option value="">Loading data...</option>
+                       </select>
                     </div>
                 </div>
                 <div class="panel-footer">
@@ -40,4 +98,69 @@
             </form>
         </div>
     </div>
+{% endblock %}
+{% block inlinejs %}
+    <script src="/"></script>
+    <script type="text/javascript">
+        $(function(){
+            var provinces = [];
+            var selectProvince = $('[name="province"]');
+            var cities = [];
+            var selectCity = $('[name="city"]');
+
+            var districts = [];
+            var selectDistrict = $('[name="district"]');
+
+            var subdistricts = [];
+            var selectSubdistrict = $('[name="subdistrict"]');
+
+            $.getJSON("/province.json", function (data) {
+                selectProvince.html('<option value="" readonly>Pilih Provinsi</option>');
+                $.each(data, function (index, value) {
+                   selectProvince.append('<option id_prov="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');
+                });
+            });
+
+            selectProvince.on('change',function(){
+                var idProv = parseInt($(this).children(':selected').attr('id_prov'));
+                $.getJSON("/city.json",function(data){
+                    selectCity.html('<option value="" readonly>Pilih Kota/Kabupaten</option>');
+                    $.each(data, function (index,value){
+                        if(value.id_prov==idProv){
+                            selectCity.append('<option id_kabkota="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');    
+                        }
+                        
+                    });
+                });
+            });
+
+            selectCity.on('change',function(){
+                var idKabKota = parseInt($(this).children(':selected').attr('id_kabkota'));
+                $.getJSON("/district.json",function(data){
+                    selectDistrict.html('<option value="" readonly>Kecamatan</option>');
+                    $.each(data, function (index,value){
+                        if(value.id_kabkota==idKabKota){
+                            selectDistrict.append('<option id_kecamatan="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');    
+                        }
+                        
+                    });
+                });
+            });
+
+            selectDistrict.on('change',function(){
+                var idKecamatan = parseInt($(this).children(':selected').attr('id_kecamatan'));
+                $.getJSON("/subdistrict.json",function(data){
+                    selectSubdistrict.html('<option value="" readonly>Pilih Kota/Kelurahan</option>');
+                    $.each(data, function (index,value){
+                        if(value.id_kecamatan==idKecamatan){
+                            selectSubdistrict.append('<option value="'+value.nama+'">'+value.nama+'</option>');    
+                        }
+                        
+                    });
+                });
+            });
+
+
+        });
+    </script>
 {% endblock %}

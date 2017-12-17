@@ -9,8 +9,10 @@ var app = express();
 var path = require('path');
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
+var bodyParser = require('body-parser');
 // initialize firebase in serverside
 var firebase = require("firebase");
+require("firebase/firestore");
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyAOyzUWIUMHE3YVx64KicRUjcMCbsn6gZQ",
@@ -27,7 +29,8 @@ if(!firebase){
 }
 
 
-// var db = firebase.firestore();
+var db = firebase.firestore();
+var users = db.collection('users');
 // var storage = firebase.storage();
 // var penduduk = db.collection('penduduk');
 // initialize firebase in serverside
@@ -38,6 +41,9 @@ nunjucks.configure('views',{
 	autoescape: true,
 	express: app
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/',function(req,res){
 	res.render('index.html');
@@ -119,6 +125,63 @@ app.get('/user-detail',function(req,res){
 
 app.get('/user-editor',function(req,res){
 	res.render('user-editor.html');
+});
+
+app.post('/save-user',function(req,res){
+	console.log(req.body);
+	var fullname=req.body.full_name;
+	var email=req.body.email;
+	console.log(email);
+	var password=req.body.password;
+	var role=req.body.role;
+	var level=req.body.level;
+	var province='';
+	var city='';
+	var district='';
+	var subdistrict='';
+	if(req.province){
+		province = req.body.province;
+	}
+	if(req.city){
+		city = req.body.city;
+	}
+	if(req.district){
+		district = req.body.district;
+	}
+	if(req.subdistrict){
+		subdistrict = req.body.subdistrict;
+	}
+
+	var area = {
+		country:'Indonesia',
+		province:province,
+		city:city,
+		district:district,
+		subdistrict:subdistrict
+	}
+	firebase.auth().createUserWithEmailAndPassword(email, password).then(()=>{
+		users.add({
+			full_name : fullname,
+			email : email,
+			role : role,
+			level : level,
+			area : area
+		})
+		.then(function(docRef) {
+			res.redirect('/user');
+		    console.log("Document written with ID: ", docRef.id);
+		})
+		.catch(function(error) {
+			alert('error! cannot save user')
+		    console.error("Error adding document: ", error);
+		});
+	}).catch(function(error) {
+	  // Handle Errors here.
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	  alert('Error '+errorCode+': '+errorMessage);
+	  // ...
+	});
 });
 
 app.get('/test',function(req,res){
