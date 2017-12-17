@@ -257,29 +257,44 @@
                         var name = data.nama_lengkap;
                         var gender = data.jenis_kelamin;
                         var profilePicture = data.foto_orang;
-                        storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+
+                        if(profilePicture){
+                            storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+                                familyInfo.append(
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                            }).catch((error)=>{
+                                familyInfo.append(
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                            });
+                        }
+                        else{
                             familyInfo.append(
-                                '<div class="widget-followers-item">'+
-                                    '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
-                                    '<div class="widget-followers-controls">'+
-                                        '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                    '</div>'+
-                                    '<a href="#" class="widget-followers-name">'+name+'</a>'+
-                                    '<a href="#" class="widget-followers-username">'+gender+'</a>'+
-                                '</div>'
-                            );
-                        }).catch((error)=>{
-                            familyInfo.append(
-                                '<div class="widget-followers-item">'+
-                                    '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
-                                    '<div class="widget-followers-controls">'+
-                                        '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                    '</div>'+
-                                    '<a href="#" class="widget-followers-name">'+name+'</a>'+
-                                    '<a href="#" class="widget-followers-username">'+gender+'</a>'+
-                                '</div>'
-                            );
-                        });
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="#" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                        }
 
                         
                     });

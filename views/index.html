@@ -20,11 +20,11 @@
     <div class="box-row valign-top">
       <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Agama</div>
-        <div id="agama-chart" style="min-height: 120px"></div>
+        <div id="religionChart" style="min-height: 120px"></div>
       </div>
       <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Golongan Darah</div>
-        <div id="goldar-chart" style="min-height: 120px"></div>
+        <div id="bloodtypeChart" style="min-height: 120px"></div>
       </div>
       <div class="box-cell col-md-12 p-x-4 p-t-3 p-b-4">
         <div class="m-b-1 text-muted font-weight-semibold font-size-11">Pernikahan</div>
@@ -57,43 +57,71 @@ $(function(){
 
   var penduduk = db.collection('penduduk');
 
+  var religionArray = [];
+  var bloodtypeArray = [];
   var marriageArray = [];
   var genderArray = [];
   var jobArray = [];
   var studyArray = [];
 
+  generateData('religion',religionArray,'#religionChart',chartColors);
+  generateData('bloodtype',bloodtypeArray,'#bloodtypeChart',chartColors);
+  generateData('gender',genderArray, '#genderChart',chartColors);
   generateData('marriage',marriageArray,'#marriageChart',chartColors);
   generateData('gender',genderArray, '#genderChart',chartColors);
   generateData('job',jobArray, '#jobChart',chartColors);
   generateData('study',studyArray, '#studyChart',chartColors);
 
+  setTimeout(function(){
+    console.log(religionArray);
+    console.log(bloodtypeArray);
+    console.log(marriageArray);
+    console.log(genderArray);
+    console.log(jobArray);
+    console.log(studyArray);
+  },5000);
+
 });
+
+function getPropertyData(property,data){
+  switch(property){
+          case 'religion':
+            return data.agama;
+          case 'bloodtype':
+            return data.golongan_darah;
+          case 'marriage':
+            return data.status_perkawinan;
+          case 'gender':
+            return data.jenis_kelamin;
+          case 'job':
+            return data.pekerjaan;
+          case 'study':
+            return data.pendidikan;
+  }
+}
 
 function generateData(property,dataArray,objectId,chartColors){
   penduduk.get().then((querySnapshot)=>{
     querySnapshot.forEach((doc)=>{
       if(doc && doc.exists){
-        var data;
-        switch(property){
-          case 'marriage':
-            data = doc.data().status_perkawinan;
-            break;
-          case 'gender':
-            data = doc.data().jenis_kelamin;
-            break;
-          case 'job':
-            data = doc.data().pekerjaan;
-            break;
-          case 'study':
-            data = doc.data().pendidikan;
-            break;
-        }
+        var id = doc.id;
+        var data = getPropertyData(property,doc.data());
         var exist = dataExists(data,dataArray);
         if(!exist){
-          addData(data, dataArray)
+          addData(data, dataArray);
         }
-
-        // var members = doc.collection('anggota').
+        var members = penduduk.doc(id).collection('anggota');
+        if(members && members.exists){
+          members.get().then((query)=>{
+            query.forEach((member)=>{
+              var memberData = getPropertyData(property,memberData);
+              var memberExist = dataExists(memberData,dataArray);
+              if(!memberExist){
+                addData(memberData, dataArray);
+              }
+            });
+          });        
+        }
       }
     });
 
@@ -101,16 +129,17 @@ function generateData(property,dataArray,objectId,chartColors){
       columns : dataArray,
       type : 'pie'
     };
-
-    c3.generate({
-      size:{
-        height: 300
-      },
-      bindto : objectId,
-      color: { pattern: chartColors },
-      data: chartData,
-      legend: { position: 'bottom' }
-    });
+    setTimeout(function(){
+      c3.generate({
+        size:{
+          height: 300
+        },
+        bindto : objectId,
+        color: { pattern: chartColors },
+        data: chartData,
+        legend: { position: 'bottom' }
+      });
+    },2000);
 
   });
 }
@@ -129,6 +158,7 @@ function dataExists(str, dataArray){
 
 function addData( str, dataArray){
   dataArray.push([str,1]);
-}
+} 
+
 </script>
 {% endblock %}

@@ -9,6 +9,28 @@ var app = express();
 var path = require('path');
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
+// initialize firebase in serverside
+var firebase = require("firebase");
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAOyzUWIUMHE3YVx64KicRUjcMCbsn6gZQ",
+  authDomain: "penduduk-app.firebaseapp.com",
+  databaseURL: "https://penduduk-app.firebaseio.com",
+  projectId: "penduduk-app",
+  storageBucket: "penduduk-app.appspot.com",
+  messagingSenderId: "216960976294"
+};
+firebase.initializeApp(config);
+
+if(!firebase){
+    alert('Cannot connect to database. Please check your internet connection!')
+}
+
+
+// var db = firebase.firestore();
+// var storage = firebase.storage();
+// var penduduk = db.collection('penduduk');
+// initialize firebase in serverside
 
 // app.use(app.router);
 app.use(express.static(__dirname));
@@ -106,7 +128,8 @@ app.get('/test',function(req,res){
 
 // reload(app);
 app.listen(8080,function(){
-	console.log('App Running on port 8080')
+	console.log('App Running on port 8080');
+	// console.log(firebase);
 });
 
 
