@@ -94,7 +94,7 @@ function getPropertyData(property,data){
           case 'gender':
             return data.jenis_kelamin;
           case 'job':
-            return data.pekerjaan;
+            return data.bidang_pekerjaan;
           case 'study':
             return data.pendidikan;
   }
@@ -134,7 +134,7 @@ function generateData(property,dataArray,objectId,chartColors){
     setTimeout(function(){
       c3.generate({
         size:{
-          height: 300
+          height: 400
         },
         bindto : objectId,
         color: { pattern: chartColors },
