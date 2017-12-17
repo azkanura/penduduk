@@ -1,20 +1,26 @@
 // $(function(){
 // 	$('select').select2();
 // });
-
+var storageRef=storage.ref();
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-    var displayName = user.displayName;
     var email = user.email;
-    var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
-    var isAnonymous = user.isAnonymous;
-    var uid = user.uid;
-    var providerData = user.providerData;
+    var users = db.collection('users');
+    users.where('email','==',email).limit(1).get().then((querySnapshot)=>{
+        querySnapshot.forEach((doc)=>{
+            data = doc.data();
+            var firstname=data.full_name.split(" ")[0];
+
+            $('#displayFirstname').html(firstname);
+            $('#displayUsername').html(data.full_name);
+            storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
+                $('.profile-picture').attr('src',url);
+            });
+        });
+    });
 
     console.log(email);
-    $('.display-username').html(email);
     // ...
   } else {
     // User is signed out.

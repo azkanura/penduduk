@@ -139,16 +139,16 @@ app.post('/save-user',function(req,res){
 	var city='';
 	var district='';
 	var subdistrict='';
-	if(req.province){
+	if(req.body.province){
 		province = req.body.province;
 	}
-	if(req.city){
+	if(req.body.city){
 		city = req.body.city;
 	}
-	if(req.district){
+	if(req.body.district){
 		district = req.body.district;
 	}
-	if(req.subdistrict){
+	if(req.body.subdistrict){
 		subdistrict = req.body.subdistrict;
 	}
 

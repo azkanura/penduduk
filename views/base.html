@@ -43,10 +43,10 @@
 
         <ul class="px-nav-content">
             <li class="px-nav-box p-a-3 b-b-1" id="demo-px-nav-box">
-                <img src="/demo/avatars/account.png" alt="" class="pull-xs-left m-r-2 border-round" style="width: 54px; height: 54px;">
+                <img src="/demo/avatars/account.png" alt="" class="pull-xs-left m-r-2 border-round profile-picture" style="width: 54px; height: 54px;">
                 <div class="font-size-16">
                     <span class="font-weight-light">Welcome, </span>
-                    <strong class="display-username"><span style="background: #dddddd;color:transparent;border-radius:3px">Username</span></strong>
+                    <strong id="displayFirstname"><span style="background: #dddddd;color:transparent;border-radius:3px">Username</span></strong>
                 </div>
                 <div class="btn-group" style="margin-top: 4px;">
                     <a href="#" class="btn btn-xs btn-primary btn-outline">
@@ -131,8 +131,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="/demo/avatars/account.png" alt="" class="px-navbar-image">
-                        <span class="hidden-md display-username"><span style="background: #3d4a70;color:transparent;border-radius:3px">Username</span></span>
+                        <img src="/demo/avatars/account.png" alt="" class="px-navbar-image profile-picture">
+                        <span id="displayUsername" class="hidden-md"><span style="background: #3d4a70;color:transparent;border-radius:3px">Username</span></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
