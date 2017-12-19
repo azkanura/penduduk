@@ -27,11 +27,11 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Password</label>
-                        <input type="password" class="form-control" name="password"required />
+                        <input type="password" class="form-control" name="password" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Ulangi Password</label>
-                        <input type="password" class="form-control" name="repeat_password"required />
+                        <input type="password" class="form-control" name="repeat_password" required />
                     </div>
                     <div class="form-group">
                         <label class="control-label">
@@ -54,43 +54,46 @@
                             <option value="national">Nasional</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            Pilih Area
-                        </label>
+                    <div id="selectArea" >
+                        <div class="form-group" >
+                            <label class="control-label">
+                                Pilih Area
+                            </label>
+                        </div>
+                        <div class="form-group" id="selectProvinceContainer">
+                            <label class="control-label">
+                                Provinsi
+                            </label>
+                            <select name="province" class="form-control" required>
+                                <option value="">Loading data...</option>
+                           </select>
+                        </div>
+                        <div class="form-group" id="selectCityContainer">
+                            <label class="control-label">
+                                Kota/Kabupaten
+                            </label>
+                            <select name="city" class="form-control" required>
+                                <option value="">Loading data...</option>
+                           </select>
+                        </div>
+                        <div class="form-group" id="selectDistrictContainer">
+                            <label class="control-label">
+                                Kecamatan
+                            </label>
+                            <select name="district" class="form-control" required>
+                                <option value="">Loading data...</option>
+                           </select>
+                        </div>
+                        <div class="form-group" id="selectSubdistrictContainer">
+                            <label class="control-label">
+                                Kelurahan
+                            </label>
+                            <select name="subdistrict" class="form-control" required>
+                                <option value="">Loading data...</option>
+                           </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            Provinsi
-                        </label>
-                        <select name="province" class="form-control">
-                            <option value="">Loading data...</option>
-                       </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            Kota/Kabupaten
-                        </label>
-                        <select name="city" class="form-control">
-                            <option value="">Loading data...</option>
-                       </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            Kecamatan
-                        </label>
-                        <select name="district" class="form-control">
-                            <option value="">Loading data...</option>
-                       </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            Kelurahan
-                        </label>
-                        <select name="subdistrict" class="form-control">
-                            <option value="">Loading data...</option>
-                       </select>
-                    </div>
+
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -103,22 +106,88 @@
     <script src="/"></script>
     <script type="text/javascript">
         $(function(){
-            var provinces = [];
+            var password = $('[name="password"]')[0];
+            var repeatPassword = $('[name="repeat_password"]')[0];
+            var selectLevel = $('[name="level"]');
+            var selectArea = $('#selectArea');
+            
+            var provinceContainer = $('#selectProvinceContainer');
             var selectProvince = $('[name="province"]');
-            var cities = [];
+
+            var cityContainer = $('#selectCityContainer');
             var selectCity = $('[name="city"]');
-
-            var districts = [];
+            
+            var districtContainer = $('#selectDistrictContainer');
             var selectDistrict = $('[name="district"]');
-
-            var subdistricts = [];
+            
+            var subdistrictContainer = $('#selectSubdistrictContainer');
             var selectSubdistrict = $('[name="subdistrict"]');
+
+            password.onchange = validatePassword;
+            repeatPassword.onchange = validatePassword;
+            password.onkeyup = validatePassword;
+            repeatPassword.onkeyup = validatePassword;
 
             $.getJSON("/province.json", function (data) {
                 selectProvince.html('<option value="" readonly>Pilih Provinsi</option>');
                 $.each(data, function (index, value) {
                    selectProvince.append('<option id_prov="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');
                 });
+            });
+
+            selectLevel.on('change',function(){
+                var selectedLevel = $(this).val();
+                switch(selectedLevel){
+                    case 'national':
+                        selectArea.hide();
+
+                        disableSelect(selectProvince,provinceContainer);
+                        disableSelect(selectCity,cityContainer);
+                        disableSelect(selectDistrict,districtContainer);
+                        disableSelect(selectSubdistrict,subdistrictContainer);
+
+                        break;
+
+                    case 'province':
+                        selectArea.show();
+                        
+                        enableSelect(selectProvince,provinceContainer);
+                        disableSelect(selectCity,cityContainer);
+                        disableSelect(selectDistrict,districtContainer);
+                        disableSelect(selectSubdistrict,subdistrictContainer);
+
+                        break;
+
+                    case 'city':
+                        selectArea.show();
+                        
+                        enableSelect(selectProvince,provinceContainer);
+                        enableSelect(selectCity,cityContainer);
+                        disableSelect(selectDistrict,districtContainer);
+                        disableSelect(selectSubdistrict,subdistrictContainer);
+                        
+                        break;
+
+                    case 'district':
+                        selectArea.show();
+                        
+                        enableSelect(selectProvince,provinceContainer);
+                        enableSelect(selectCity,cityContainer);
+                        enableSelect(selectDistrict,districtContainer);
+                        disableSelect(selectSubdistrict,subdistrictContainer);
+                        
+                        break;
+
+                    case 'subdistrict':
+                        selectArea.show();
+                        
+                        enableSelect(selectProvince,provinceContainer);
+                        enableSelect(selectCity,cityContainer);
+                        enableSelect(selectDistrict,districtContainer);
+                        enableSelect(selectSubdistrict,subdistrictContainer);
+                        
+                        break;
+                }
             });
 
             selectProvince.on('change',function(){
@@ -160,7 +229,29 @@
                 });
             });
 
+            function enableSelect(selector,container){
+                container.show();
+                selector.attr('required',true);
+                selector.val('');
+                selector.trigger('change');
+            }
 
+            function disableSelect(selector,container){
+                container.hide();
+                selector.removeAttr('required');
+                selector.val('');
+                selector.trigger('change');
+            }
+
+            function validatePassword(){
+                if(password.value==repeatPassword.value){
+                    repeatPassword.setCustomValidity('');
+                }
+
+                else{
+                    repeatPassword.setCustomValidity('Ulangi dengan password yang sesuai');
+                }
+            }
         });
     </script>
 {% endblock %}
