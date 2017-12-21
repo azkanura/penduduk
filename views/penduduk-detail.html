@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-     User
+     Detail Penduduk
 {% endblock %}
 
 {% block inlinecss %}
@@ -18,68 +18,30 @@
         <div class="text-xs-center">
             <img src="/demo/avatars/account.png" alt="" class="page-profile-v1-avatar border-round" id="profilePicture">
         </div>
+        <div class="panel panel-transparent">
+            <div class="panel-heading p-x-1">
+                <p class="text-center" id="profileSummary">
+                    <span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profilnya</span>
+                </p>
+            </div>
+        </div>
         <div class="m-y-3 text-xs-center">
             <a href="#" class="btn btn-success">
-                <i class="fa fa-check"></i>&nbsp;&nbsp;Kepala Keluarga</a>&nbsp;&nbsp;
+                <i class="fa fa-check"></i>&nbsp;&nbsp;Kepala Keluarga</a>
             <!-- <a href="#" class="btn">
                 <i class="fa fa-envelope"></i>
             </a> -->
         </div>
-        <!-- <div class="panel panel-transparent">
-            <div class="panel-heading p-x-1">
-                <span class="panel-title">About me</span>
-            </div>
-            <div class="panel-body p-a-1">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                <a href="#">dolore magna</a> aliqua.
-            </div>
-        </div>
-        <div class="panel panel-transparent">
-            <div class="panel-heading p-x-1">
-                <span class="panel-title">Statistics</span>
-            </div>
-            <div class="list-group m-y-1">
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <strong>126</strong> Likes</a>
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <strong>579</strong> Followers</a>
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <strong>100</strong> Following</a>
-            </div>
-        </div>
-        <div class="panel panel-transparent">
-            <div class="panel-heading p-x-1">
-                <span class="panel-title">Skills</span>
-            </div>
-            <div class="panel-body p-a-1">
-                <span class="label label-primary">UI/UX</span>
-                <span class="label label-primary">Web design</span>
-                <span class="label label-primary">Photoshop</span>
-                <span class="label label-primary">HTML</span>
-                <span class="label label-primary">CSS</span>
-            </div>
-        </div>
-        <div class="panel panel-transparent">
-            <div class="panel-heading p-x-1">
-                <span class="panel-title">Social</span>
-            </div>
-            <div class="list-group m-t-1">
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <i class="fa fa-twitter" style="color: #4ab6d5"></i>&nbsp;&nbsp;&nbsp;@dsteiner</a>
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <i class="fa fa-facebook-square" style="color: #1a7ab9"></i>&nbsp;&nbsp;&nbsp;Denise Steiner</a>
-                <a href="#" class="list-group-item p-x-1 b-a-0">
-                    <i class="fa fa-envelope" style="color: #888"></i>&nbsp;&nbsp;&nbsp;dsteiner@example.com</a>
-            </div>
-        </div> -->
+        
     </div>
 
     <hr class="page-wide-block visible-xs visible-sm">
 
     <div class="col-md-8 col-lg-9">
         <h1 class="font-size-20 m-y-4">
-            <span id="profileName"><span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profil</span></span>
-            
+            <span id="profileName">
+                Detail Penduduk
+            </span> 
         </h1>
 
         <ul class="nav nav-tabs" id="profile-tabs">
@@ -98,6 +60,11 @@
                     Data Aset
                 </a>
             </li>
+            <li>
+                <a href="#documentInfo" data-toggle="tab" id="documentInfoBtn">
+                    Data Dokumen
+                </a>
+            </li>
         </ul>
 
         <div class="tab-content tab-content-bordered p-a-0 bg-white">
@@ -107,10 +74,13 @@
             <div class="tab-pane fade" id="familyInfo">
                 <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>   
             </div>
-            <div class="tab-pane fade" id="assetInfo">
-                <h4 class="text-center" style="padding: 30px;">
-                    Tidak ada data aset
+            <div class="tab-pane fade" id="assetInfo" style="padding: 30px;">
+                <h4 class="text-center">
+                    Loading Data..
                 </h4>  
+            </div>
+            <div class="tab-pane fade" id="documentInfo" style="padding: 30px;">
+                <h4 class="text-center">Loading Data..</h4>
             </div>
         </div>
     </div>
@@ -121,6 +91,7 @@
         var profileInfo = $('#profileInfo');
         var familyInfo = $('#familyInfo');
         var assetInfo = $('#assetInfo');
+        var documentInfo = $('#documentInfo');
         var id = '{{id}}';
 
         var penduduk = db.collection('penduduk');
@@ -155,11 +126,16 @@
                 if(doc && doc.exists){
                     var data = doc.data();
                     var name = data.nama_lengkap;
-                    $('#profileName').html(name+'<span class="font-weight-normal">\'s profile</span>');
+                    // $('#profileName').html(name+'<span class="font-weight-normal">\'s profile</span>');
                     var gender = data.jenis_kelamin;
                     var income = data.kirasan_penghasilan;
+
+                    var jobField = data.bidang_pekerjaan;
+                    var bloodType = data.golongan_darah;
+
                     var job = data.pekerjaan;
                     var education = data.pendidikan;
+                    $('#profileSummary').html('<strong><h4 style="margin-top:0;border-top:1px solid #eee;padding-top:20px">'+name+'</h4></strong>'+job+' | '+education)
                     var nationality = data.kewarganegaraan;
                     var marriage = data.status_perkawinan;
                     var birthPlace = data.tempat_lahir;
@@ -172,6 +148,8 @@
                     var subdistrict = data.kelurahan;
                     var rw = data.rw;
                     var rt = data.rt;
+                    var religion = data.agama;
+
 
                     storageRef.child(profilePicture).getDownloadURL().then((url)=>{
                         var image = $('#profilePicture');
@@ -184,9 +162,15 @@
                         {title:'Nama Lengkap', content:name},
                         {title:'Jenis Kelamin', content:gender},
                         {title:'Kisaran Penghasilan', content:income},
+                        {title:'Bidang Pekerjaan', content:jobField},
+
                         {title:'Pekerjaan', content:job},
                         {title:'Pendidikan', content:education},
                         {title:'Kewarganegaraan', content:nationality},
+
+                        {title:'Agama', content:religion},
+                        {title:'Golongan Darah', content:bloodType},
+
                         {title:'Status Perkawinan', content:marriage},
                         {title:'Tempat dan Tanggal Lahir', content:birthPlace+', '+birthDate},
                         {title:'Provinsi', content:province},
@@ -238,6 +222,7 @@
                     familyInfo.html(''); 
                     query.forEach((doc)=>{
                         data=doc.data();
+                        var anggotaId = doc.id;
                         var type = data.jenis;
                         var name = data.nama_lengkap;
                         var gender = data.jenis_kelamin;
@@ -249,10 +234,10 @@
                                     '<div class="widget-followers-item">'+
                                         '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
                                         '<div class="widget-followers-controls">'+
-                                            '<a href="#" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
                                         '</div>'+
-                                        '<a href="#" class="widget-followers-name">'+name+'</a>'+
-                                        '<a href="#" class="widget-followers-username">'+gender+'</a>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
                                     '</div>'
                                 );
                             }).catch((error)=>{
@@ -290,7 +275,176 @@
         });
 
         $('#assetInfoBtn').on('click',function(){
+                var asset = person.collection('rumah');
 
+                var assetData = asset.doc('data');
+                var assetImage = asset.doc('gambar');
+
+                assetData.get().then((doc)=>{
+                    if(doc && doc.exists){
+                        var data = doc.data();
+
+                        var arrayData = [
+                            {title:'Luas lantai bangunan tempat tinggal dengan satuan', content:data.luas_lantai},
+                            {title:'Jenis lantai tempat tinggal yang terluas', content:data.jenis_lantai},
+                            {title:'Jenis dinding tempat tinggal yang terluas', content:data.jenis_dinding},
+                            {title:'Fasilitas tempat buang air besar', content:data.fasilitas},
+                            {title:'Sumber air minum', content:data.sumber_air},
+                            {title:'Sumber penerangan utama', content:data.sumber_penerangan},
+                            {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:data.berapa_kali_seminggu},
+                            {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:data.berapa_kali_sekali},
+                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:''},
+                            {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:data.anggota_sakit},
+                            {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:data.list_barang},
+                            {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:data.kredit_usaha},
+                            {title:'Status penguasaan bangunan tempat tinggal yang ditempati', content:data.status_bangunan},
+                        ];
+
+                        var toAppend = '';
+                        arrayData.forEach((data)=>{
+                            toAppend+='<div class="row form-group">'+
+                                        '<label class="control-label col-md-6">'+data.title+'</label>'+
+                                        '<p class="col-md-6">'
+                                            +data.content+
+                                        '</p>'+
+                                    '</div><hr>';
+                        });
+
+                        assetInfo.html('');
+                        assetInfo.append(toAppend);
+                    }
+                });
+                
+                assetImage.get().then((doc)=>{
+                    assetInfo.append(
+                        '<br>'+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Kepala Keluarga</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<img src="/images/no-image.png" id="photoFamilyHead" style="width:70%;display:block"/>'+
+                        '</div><hr>'+
+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Depan Rumah</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<img src="/images/no-image.png" id="photoTerrace" style="width:70%;display:block"/>'+
+                        '</div><hr>'+
+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Ruang Tamu</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<img src="/images/no-image.png" id="photoLivingroom" style="width:70%;display:block"/>'+
+                        '</div><hr>'+
+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Dapur</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<img src="/images/no-image.png" id="photoKitchen" style="width:70%;display:block"/>'+
+                        '</div><hr>'+
+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Belakang Rumah</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<img src="/images/no-image.png" id="photoBackyard" style="width:70%;display:block"/>'+
+                        '</div>'
+                    );
+
+                    if(doc && doc.exists){
+                        var data = doc.data();
+
+                        var photoFamilyHead = data.foto_kepala_keluarga;
+                        var photoTerrace = data.foto_depan_rumah;
+                        var photoLivingroom = data.foto_ruang_tamu;
+                        var photoKitchen = data.foto_dapur;
+                        var photoBackyard = data.foto_belakang_rumah;
+
+                        storageRef.child(photoFamilyHead).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoFamilyHead');
+                            image.attr('src',url);
+                        });
+
+                        storageRef.child(photoTerrace).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoTerrace');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoLivingroom).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoLivingroom');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoKitchen).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoKitchen');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoBackyard).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoBackyard');
+                            image.attr('src',url);
+
+                        });
+                    }
+                });
+
+
+        });
+
+        
+        $('#documentInfoBtn').on('click',function(){
+
+                var documents = person.collection('dokumen');
+
+                documents.get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=>{
+                        var data = doc.data();
+                        var arrayData = [
+                            {title:'Nomor Kartu Keluarga', content:data.nomor_kk},
+                            {title:'Provinsi', content:data.provinsi},
+                            {title:'Kota / Kabupaten', content:data.kota},
+                            {title:'Kecamatan', content:data.kecamatan},
+                            {title:'Kelurahan', content:data.kelurahan},
+                            {title:'RT/RW', content:data.rt+'/'+data.rw},
+                            {title:'Alamat', content:data.alamat}
+                        ];
+
+                        var toAppend = '';
+                        arrayData.forEach((data)=>{
+                            toAppend+='<div class="row form-group">'+
+                                        '<label class="control-label col-md-5">'+data.title+'</label>'+
+                                        '<p class="col-md-7">'
+                                            +data.content+
+                                        '</p>'+
+                                    '</div>';
+                        });
+
+                        documentInfo.html('');
+                        documentInfo.append(toAppend);
+
+                        documentInfo.append(
+                            '<br>'+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Kartu Keluarga</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<img src="/images/no-image.png" id="kkPhoto" style="width:70%;display:block"/>'+
+                            '</div><hr>'
+                        );
+
+                        storageRef.child(data.foto_kk).getDownloadURL().then((url)=>{
+                            var image = documentInfo.find('#kkPhoto');
+                            image.attr('src',url);
+                        });
+                    });
+                });
+                
         });
 
         

@@ -2,7 +2,7 @@ foto_ktp
 
 foto_orang
 
-jenis_kelamin
+V jenis_kelamin
 
 kecamatan
 
@@ -16,9 +16,9 @@ kota
 
 nama_lengkap
 
-pekerjaan
+V pekerjaan
 
-pendidikan
+V pendidikan
 
 provinsi
 
@@ -26,7 +26,7 @@ rt
 
 rw
 
-status_perkawinan
+V status_perkawinan
 
 tanggal_lahir
 

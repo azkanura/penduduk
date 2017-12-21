@@ -29,74 +29,17 @@
                     <tr>
                         <th>#</th>
                         <th>Kota/Kabupaten</th>
-                        <th>Total Penduduk</th>
+                        <th>Total Keluarga</th>
                     </tr>
                 </thead>
                 <tbody id="dataContainer">
-      <tr><td></td><td>Loading Data..</td><td></td></tr>
+                    <tr><td></td><td>Loading Data..</td><td></td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 {% endblock %}
 {% block inlinejs  %}
-    <!-- <script type="text/javascript">
-        var penduduk = db.collection('penduduk');
-        var province = '{{provinsi}}';
-
-        console.log('provinsi: '+province);
-
-        var dataContainer = $('#dataContainer');
-        var counter = 1;
-        var dataArray = [];
-        var selectArray = [];
-        penduduk.where('provinsi','==',province).get().then((querySnapshot)=>{
-             querySnapshot.forEach((doc)=>{
-                 if(doc && doc.exists){
-                    var data = doc.data();
-                    var exist = exists(data.kota,dataArray);
-                    console.log(exist);
-                    if(!exist){
-                        addData(data.kota, dataArray);
-                    }         
-                 }
-             });
-
-             dataContainer.html('');
-        dataArray.forEach((data)=>{
-                console.log(data.name);
-
-                dataContainer.append(
-                    '<tr>'+
-                        '<th  scope="row">'+counter+'</th>'+
-                        '<td><a href="/kota/'+province+'/'+data.name+'">'+data.name+'</a></td>'+
-                        '<td>'+data.count+'</td>'+
-                    '</tr>'
-                );
-                counter++;
-            });
-        });
-
-
-        function exists(str, dataArray){
-            var exist = false;
-            dataArray.forEach((data)=>{
-                if(str==data.name){
-                    data.count=data.count+1;
-                    exist = true;
-                    return exist;
-                }
-            });
-            return exist;
-        }
-
-        function addData( str, dataArray){
-            dataArray.push({name:str,count:1});
-        }
-
-        console.log('hahaha');
-        console.log(dataArray);
-    </script> -->
     <script type="text/javascript">
         var penduduk = db.collection('penduduk');
         var province = '{{provinsi}}';

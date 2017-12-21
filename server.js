@@ -7,12 +7,16 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var cors = require('cors')({origin:true});
+
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
 var bodyParser = require('body-parser');
+var flash = require('connect-flash');
 // initialize firebase in serverside
 var firebase = require("firebase");
 require("firebase/firestore");
+
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyAOyzUWIUMHE3YVx64KicRUjcMCbsn6gZQ",
@@ -34,8 +38,14 @@ var users = db.collection('users');
 // var storage = firebase.storage();
 // var penduduk = db.collection('penduduk');
 // initialize firebase in serverside
+// app.configure(function() {
+  // app.use(express.cookieParser('keyboard cat'));
+  // app.use(express.session({ cookie: { maxAge: 60000 }}));
+// app.use(flash());
+// });
 
 // app.use(app.router);
+// app.use(cors());
 app.use(express.static(__dirname));
 nunjucks.configure('views',{
 	autoescape: true,
@@ -115,6 +125,12 @@ app.get('/penduduk-detail/:id',function(req,res){
 	res.render('penduduk-detail.html',{id:id});
 });
 
+app.get('/anggota-detail/:kkId/:id',function(req,res){
+	var id = req.params.id;
+	var kkId = req.params.kkId;
+	res.render('anggota-detail.html',{kkId:kkId,id:id});
+});
+
 app.get('/user',function(req,res){
 	res.render('user.html');
 });
@@ -172,15 +188,17 @@ app.post('/save-user',function(req,res){
 		    console.log("Document written with ID: ", docRef.id);
 		})
 		.catch(function(error) {
-			alert('error! cannot save user')
+			alert('error! cannot save user');
 		    console.error("Error adding document: ", error);
 		});
 	}).catch(function(error) {
 	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  alert('Error '+errorCode+': '+errorMessage);
+	  // var errorCode = error.code;
+	  // var errorMessage = error.message;
+	  // alert('Error '+errorCode+': '+errorMessage);
 	  // ...
+	  // req.flash('info', 'Flash is back!');
+  	  res.redirect('/');
 	});
 });
 
