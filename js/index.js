@@ -7,6 +7,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     // User is signed in.
     var email = user.email;
     var users = db.collection('users');
+    var level = '';
     users.where('email','==',email).limit(1).get().then((querySnapshot)=>{
         querySnapshot.forEach((doc)=>{
             data = doc.data();
@@ -17,12 +18,24 @@ firebase.auth().onAuthStateChanged(function(user) {
             storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
                 $('.profile-picture').attr('src',url);
             });
+            console.log('role'+data.role);
+            console.log('level'+data.level);
+
+            if(data.role=='user'){
+                console.log(data.role);
+               $('#userMenu').hide(); 
+            }
+            else if(data.role=='admin'){
+                console.log(data.role);
+               $('#userMenu').show();  
+            }
+
         });
     });
-
-    console.log(email);
     // ...
-  } else {
+  } 
+
+  else {
     // User is signed out.
     // ...
     $(location).attr('href','/login');
