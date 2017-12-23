@@ -12,7 +12,7 @@
 <!-- Content -->
 {% block content %}
 <div class="page-header">
-  <h1>Dashboard</h1>
+  <h1>Statistik Penduduk <small id="area"></small></h1>
 </div>
 
 <div class="page-wide-block">
@@ -52,6 +52,28 @@
 {% block inlinejs %}
 <script type="text/javascript">
 $(function(){
+  setTimeout(()=>{
+    console.log('current User: '+currentUser.email);
+    var province = currentUser.area.province;
+    var city = currentUser.area.city;
+    var district = currentUser.area.district;
+    var subdistrict = currentUser.area.subdistrict;
+    switch(currentUser.level){
+        case 'province':
+            $('#filterProvince').hide();
+            break;
+        case 'city':
+            $('#filter').hide();
+            break;
+        case 'district':
+            $(location).attr('href','/kecamatan/'+province+'/'+city+'/'+district);
+            break;
+        case 'subdistrict':
+            $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
+            break;
+    }
+    
+  },7000);
 
   var chartColors = pxDemo.getRandomColors(12);
 
@@ -71,15 +93,6 @@ $(function(){
   generateData('gender',genderArray, '#genderChart',chartColors);
   generateData('job',jobArray, '#jobChart',chartColors);
   generateData('study',studyArray, '#studyChart',chartColors);
-
-  // setTimeout(function(){
-  //   console.log(religionArray);
-  //   console.log(bloodtypeArray);
-  //   console.log(marriageArray);
-  //   console.log(genderArray);
-  //   console.log(jobArray);
-  //   console.log(studyArray);
-  // },20000);
 
 });
 
@@ -144,6 +157,32 @@ function generateData(property,dataArray,objectId,chartColors){
     },2000);
 
   });
+}
+
+function whereClause(doc,array){
+    if(array.length){
+        array.forEach((data)=>{
+            doc = doc.where(data.title,'==',data.value);
+        });
+    }
+    return doc;
+}
+
+function filterType(data, typeData){
+    switch(typeData){
+        case 'province':
+            return data.provinsi;
+        case 'city':
+            return data.kota;
+        case 'district':
+            return data.kecamatan;
+        case 'subdistrict':
+            return data.kelurahan;
+        case 'rw':
+            return data.rw;
+        case 'rt':
+            return data.rt;
+    }
 }
 
 function dataExists(str, dataArray){
