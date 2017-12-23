@@ -6,21 +6,21 @@
   {% block content %}
     <div class="page-header">
         <p id="pageTitle"><strong>Cakupan Wilayah</strong></p>
-        <div class="form-group">
+        <div class="form-group" id="filter">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-3" id="filterProvince">
                     <label class="control-label">Provinsi</label>
                     <select class="form-control" id="selectProvince">
                         <option>Loading Data..</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" id="filterCity">
                     <label class="control-label">Kota/Kabupaten</label>
                     <select class="form-control" id="selectCity">
                         <option>Loading Data..</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3" id="filterDistrict">
                     <label class="control-label">Kecamatan</label>
                     <select class="form-control" id="selectDistrict">
                         <option>Loading Data..</option>
@@ -59,65 +59,86 @@
 {% endblock %}
 {% block inlinejs  %}
     <script type="text/javascript">
-        var penduduk = db.collection('penduduk');
-        var province = '{{provinsi}}';
-        var city ='{{kota}}';
-        var district ='{{kecamatan}}';
-        var subdistrict ='{{kelurahan}}';
+        setTimeout(()=>{
+            switch(currentUser.level){
+                case 'province':
+                    $('#filterProvince').hide();
+                    break;
+                case 'city':
+                    $('#filterProvince').hide();
+                    $('#filterCity').hide();
+                    break;
+                case 'district':
+                    $('#filterProvince').hide();
+                    $('#filterCity').hide();
+                    $('#filterDistrict').hide();
+                    break;
+                case 'subdistrict':
+                    $('#filter').hide();
+                    break;
+            }
 
-        var dataContainer = $('#dataContainer');
-        var counter = 1;
-        var dataArray = [];
-        var selectArray = [];
+            var penduduk = db.collection('penduduk');
+            var province = '{{provinsi}}';
+            var city ='{{kota}}';
+            var district ='{{kecamatan}}';
+            var subdistrict ='{{kelurahan}}';
 
-        // for filtering
-        var arrayProvince = [];
-        var arrayCity = [];
-        var arrayDistrict = [];
-        var arraySubdistrict = [];
-        // Filtering Category DOM
-        var selectProvince = $('#selectProvince');
-        var selectCity = $('#selectCity');
-        var selectDistrict = $('#selectDistrict');
-        var selectSubdistrict = $('#selectSubdistrict');
+            var dataContainer = $('#dataContainer');
+            var counter = 1;
+            var dataArray = [];
+            var selectArray = [];
 
-        initiateData (penduduk, [], arrayProvince, selectProvince, 'province',province);
-        var clauseArray = [{title:'provinsi',value:province}];
-        initiateData (penduduk, clauseArray,arrayCity,selectCity,'city',city);
-        clauseArray.push({title:'kota',value:city});
-        initiateData (penduduk, clauseArray,arrayDistrict, selectDistrict,'district',district);
-        clauseArray.push({title:'kecamatan',value:district});
-        initiateData (penduduk, clauseArray,arraySubdistrict, selectSubdistrict,'subdistrict',subdistrict);
-        clauseArray.push({title:'kelurahan',value:subdistrict});
-        whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
-             dataContainer.html('');
-             querySnapshot.forEach((doc)=>{
-                 if(doc && doc.exists){
-                    var data = doc.data();
-                    var exist = dataExists(data.rw,dataArray);
-                    if(!exist){
-                        addData(data.rw, dataArray);
-                    }
-                } 
-             });
+            // for filtering
+            var arrayProvince = [];
+            var arrayCity = [];
+            var arrayDistrict = [];
+            var arraySubdistrict = [];
+            // Filtering Category DOM
+            var selectProvince = $('#selectProvince');
+            var selectCity = $('#selectCity');
+            var selectDistrict = $('#selectDistrict');
+            var selectSubdistrict = $('#selectSubdistrict');
 
-            dataContainer.html('');
-            dataArray.forEach((data)=>{
-                console.log(data.name);
+            initiateData (penduduk, [], arrayProvince, selectProvince, 'province',province);
+            var clauseArray = [{title:'provinsi',value:province}];
+            initiateData (penduduk, clauseArray,arrayCity,selectCity,'city',city);
+            clauseArray.push({title:'kota',value:city});
+            initiateData (penduduk, clauseArray,arrayDistrict, selectDistrict,'district',district);
+            clauseArray.push({title:'kecamatan',value:district});
+            initiateData (penduduk, clauseArray,arraySubdistrict, selectSubdistrict,'subdistrict',subdistrict);
+            clauseArray.push({title:'kelurahan',value:subdistrict});
+            whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
+                 dataContainer.html('');
+                 querySnapshot.forEach((doc)=>{
+                     if(doc && doc.exists){
+                        var data = doc.data();
+                        var exist = dataExists(data.rw,dataArray);
+                        if(!exist){
+                            addData(data.rw, dataArray);
+                        }
+                    } 
+                 });
 
-                dataContainer.append(
-                    '<tr>'+
-                        '<th  scope="row">'+counter+'</th>'+
-                        '<td><a href="/rw/'+province+'/'+city+'/'+district+'/'+subdistrict+'/'+data.name+'">'+data.name+'</a></td>'+
-                        '<td>'+data.count+'</td>'+
-                    '</tr>'
-                );
-                counter++;
-            });
+                dataContainer.html('');
+                dataArray.forEach((data)=>{
+                    console.log(data.name);
 
-             $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province+' > '+city+' > '+district+' > '+subdistrict);
-        });        
+                    dataContainer.append(
+                        '<tr>'+
+                            '<th  scope="row">'+counter+'</th>'+
+                            '<td><a href="/rw/'+province+'/'+city+'/'+district+'/'+subdistrict+'/'+data.name+'">'+data.name+'</a></td>'+
+                            '<td>'+data.count+'</td>'+
+                        '</tr>'
+                    );
+                    counter++;
+                });
 
+                 $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province+' > '+city+' > '+district+' > '+subdistrict);
+            });        
+
+        },7000);
+        
         selectProvince.on('change',function(){
             var selectedProvince = $(this).val();
             var arrayClause = [

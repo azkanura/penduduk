@@ -6,7 +6,7 @@
 {% block content %}
     <div class="page-header">
         <p id="pageTitle"><strong>Cakupan Wilayah</strong></p>
-        <div class="form-group">
+        <div class="form-group" id="filter">
             <div class="row">
                 <div class="col-md-4">
                     <label class="control-label">Provinsi</label>
@@ -48,6 +48,9 @@
             var district = currentUser.area.district;
             var subdistrict = currentUser.area.subdistrict;
             switch(currentUser.level){
+                case 'province':
+                    $('#filter').hide();
+                    break;
                 case 'city':
                     $(location).attr('href','/kota/'+province+'/'+city);
                     break;
@@ -58,52 +61,54 @@
                     $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
                     break;
             }
+
+            var penduduk = db.collection('penduduk');
+            var province = '{{provinsi}}';
+
+            var dataContainer = $('#dataContainer');
+            var counter = 1;
+            var dataArray = [];
+            var selectArray = [];
+
+            // for filtering
+            var arrayProvince = [];
+            // Filtering Category DOM
+            var selectProvince = $('#selectProvince');
+
+            initiateData (penduduk, [], arrayProvince, selectProvince, 'province',province);
+            var clauseArray = [{title:'provinsi',value:province}];
+            whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
+                 dataContainer.html('');
+                 querySnapshot.forEach((doc)=>{
+                     if(doc && doc.exists){
+                        var data = doc.data();
+                        var exist = dataExists(data.kota
+                            ,dataArray);
+                        if(!exist){
+                            addData(data.kota, dataArray);
+                        }
+                    } 
+                 });
+
+                dataContainer.html('');
+                dataArray.forEach((data)=>{
+                        console.log(data.name);
+
+                        dataContainer.append(
+                            '<tr>'+
+                                '<th  scope="row">'+counter+'</th>'+
+                                '<td><a href="/kota/'+province+'/'+data.name+'">'+data.name+'</a></td>'+
+                                '<td>'+data.count+'</td>'+
+                            '</tr>'
+                        );
+                        counter++;
+                    });
+
+                     $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province);
+            }); 
+
         },7000);
-
-        var penduduk = db.collection('penduduk');
-        var province = '{{provinsi}}';
-
-        var dataContainer = $('#dataContainer');
-        var counter = 1;
-        var dataArray = [];
-        var selectArray = [];
-
-        // for filtering
-        var arrayProvince = [];
-        // Filtering Category DOM
-        var selectProvince = $('#selectProvince');
-
-        initiateData (penduduk, [], arrayProvince, selectProvince, 'province',province);
-        var clauseArray = [{title:'provinsi',value:province}];
-        whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
-             dataContainer.html('');
-             querySnapshot.forEach((doc)=>{
-                 if(doc && doc.exists){
-                    var data = doc.data();
-                    var exist = dataExists(data.kota
-                        ,dataArray);
-                    if(!exist){
-                        addData(data.kota, dataArray);
-                    }
-                } 
-             });
-
-            dataContainer.html('');
-            dataArray.forEach((data)=>{
-                console.log(data.name);
-
-                dataContainer.append(
-                    '<tr>'+
-                        '<th  scope="row">'+counter+'</th>'+
-                        '<td><a href="/kota/'+province+'/'+data.name+'">'+data.name+'</a></td>'+
-                        '<td>'+data.count+'</td>'+
-                    '</tr>'
-                );
-                counter++;
-            });
-
-             $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province);
-        });        
+       
 
         selectProvince.on('change',function(){
             var selectedProvince = $(this).val();

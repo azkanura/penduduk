@@ -53,37 +53,39 @@
                     $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
                     break;
             }
-        },7000);
-        var penduduk = db.collection('penduduk');
-        var dataContainer = $('#dataContainer');
-        var counter = 1;
-        var dataArray = [];
-        penduduk.get().then((querySnapshot)=>{
-             querySnapshot.forEach((doc)=>{
-                 if(doc && doc.exists){
-                    var data = doc.data();
-                    var exist = exists(data.provinsi,dataArray);
-                    console.log(exist);
-                    if(!exist){
-                        addData(data.provinsi, dataArray);
-                    }         
-                 }
-             });
 
-             dataContainer.html('');
-                dataArray.forEach((data)=>{
-                console.log(data.name);
+            var penduduk = db.collection('penduduk');
+            var dataContainer = $('#dataContainer');
+            var counter = 1;
+            var dataArray = [];
+            penduduk.get().then((querySnapshot)=>{
+                 querySnapshot.forEach((doc)=>{
+                     if(doc && doc.exists){
+                        var data = doc.data();
+                        var exist = exists(data.provinsi,dataArray);
+                        console.log(exist);
+                        if(!exist){
+                            addData(data.provinsi, dataArray);
+                        }         
+                     }
+                 });
 
-                dataContainer.append(
-                    '<tr>'+
-                        '<th  scope="row">'+counter+'</th>'+
-                        '<td><a href="/provinsi/'+data.name+'">'+data.name+'</a></td>'+
-                        '<td>'+data.count+'</td>'+
-                    '</tr>'
-                );
-                counter++;
+                 dataContainer.html('');
+                    dataArray.forEach((data)=>{
+                    console.log(data.name);
+
+                    dataContainer.append(
+                        '<tr>'+
+                            '<th  scope="row">'+counter+'</th>'+
+                            '<td><a href="/provinsi/'+data.name+'">'+data.name+'</a></td>'+
+                            '<td>'+data.count+'</td>'+
+                        '</tr>'
+                    );
+                    counter++;
+                });
             });
-        });
+
+        },7000);
 
 
         function exists(str, dataArray){
