@@ -43,6 +43,12 @@
         var users = db.collection('users');
         var dataContainer = $('#dataContainer');
         var counter = 1;
+        setTimeout(()=>{
+            console.log('current User: '+currentUser.email);
+            if(currentUser.role=='user'){
+                $(location).attr('href','/');
+            }
+        },7000);
         users.get().then((querySnapshot)=>{
             dataContainer.html('');
             querySnapshot.forEach((doc)=>{

@@ -33,6 +33,27 @@
 {% endblock %}
 {% block inlinejs  %}
     <script type="text/javascript">
+        setTimeout(()=>{
+            console.log('current User: '+currentUser.email);
+            var province = currentUser.area.province;
+            var city = currentUser.area.city;
+            var district = currentUser.area.district;
+            var subdistrict = currentUser.area.subdistrict;
+            switch(currentUser.level){
+                case 'province':
+                    $(location).attr('href','/provinsi/'+province);
+                    break;
+                case 'city':
+                    $(location).attr('href','/kota/'+province+'/'+city);
+                    break;
+                case 'district':
+                    $(location).attr('href','/kecamatan/'+province+'/'+city+'/'+district);
+                    break;
+                case 'subdistrict':
+                    $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
+                    break;
+            }
+        },7000);
         var penduduk = db.collection('penduduk');
         var dataContainer = $('#dataContainer');
         var counter = 1;

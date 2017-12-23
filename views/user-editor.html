@@ -109,6 +109,12 @@
     <script src="/"></script>
     <script type="text/javascript">
         $(function(){
+            setTimeout(()=>{
+            console.log('current User: '+currentUser.email);
+                if(currentUser.role=='user'){
+                    $(location).attr('href','/');
+                }
+            },7000);
             var password = $('[name="password"]')[0];
             var repeatPassword = $('[name="repeat_password"]')[0];
             var selectLevel = $('[name="level"]');

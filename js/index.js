@@ -2,6 +2,7 @@
 // 	$('select').select2();
 // });
 var storageRef=storage.ref();
+var currentUser;
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
@@ -15,12 +16,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             $('#displayFirstname').html(firstname);
             $('#displayUsername').html(data.full_name);
-            storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
-                $('.profile-picture').attr('src',url);
-            });
-            console.log('role'+data.role);
-            console.log('level'+data.level);
-
             if(data.role=='user'){
                 console.log(data.role);
                $('#userMenu').hide(); 
@@ -29,6 +24,11 @@ firebase.auth().onAuthStateChanged(function(user) {
                 console.log(data.role);
                $('#userMenu').show();  
             }
+            setCurrentUser(data);
+            storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
+                $('.profile-picture').attr('src',url);
+            });
+            
 
         });
     });
@@ -52,4 +52,7 @@ $('#logoutBtn').on('click',function(){
 	});
 });
 
+function setCurrentUser(data){
+    currentUser = data;
+}
 
