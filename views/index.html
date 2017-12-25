@@ -12,7 +12,7 @@
 <!-- Content -->
 {% block content %}
 <div class="page-header">
-  <h1>Statistik Penduduk<small id="area"></small></h1>
+  <h1 style="display: block;">Statistik Penduduk<small id="area" style="line-height: 30px" class="pull-right"></small></h1>
 </div>
 
 <div class="page-wide-block">
@@ -51,30 +51,8 @@
 
 {% block inlinejs %}
 <script type="text/javascript">
-$(function(){
-  setTimeout(()=>{
-    console.log('current User: '+currentUser.email);
-    var province = currentUser.area.province;
-    var city = currentUser.area.city;
-    var district = currentUser.area.district;
-    var subdistrict = currentUser.area.subdistrict;
-    switch(currentUser.level){
-        case 'province':
-            $('#filterProvince').hide();
-            break;
-        case 'city':
-            $('#filter').hide();
-            break;
-        case 'district':
-            $(location).attr('href','/kecamatan/'+province+'/'+city+'/'+district);
-            break;
-        case 'subdistrict':
-            $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
-            break;
-    }
-    
-  },7000);
-
+  
+function init(){
   var chartColors = pxDemo.getRandomColors(12);
 
   var penduduk = db.collection('penduduk');
@@ -85,16 +63,48 @@ $(function(){
   var genderArray = [];
   var jobArray = [];
   var studyArray = [];
+  var clauseArray = [];
 
-  generateData('religion',religionArray,'#religionChart',chartColors);
-  generateData('bloodtype',bloodtypeArray,'#bloodtypeChart',chartColors);
-  generateData('gender',genderArray, '#genderChart',chartColors);
-  generateData('marriage',marriageArray,'#marriageChart',chartColors);
-  generateData('gender',genderArray, '#genderChart',chartColors);
-  generateData('job',jobArray, '#jobChart',chartColors);
-  generateData('study',studyArray, '#studyChart',chartColors);
+  console.log('current User: '+currentUser.email);
+  var province = currentUser.area.province;
+  var city = currentUser.area.city;
+  var district = currentUser.area.district;
+  var subdistrict = currentUser.area.subdistrict;
+  switch(currentUser.level){
+      case 'province':
+          clauseArray.push({title:'provinsi',value:province});
+          $('#area').html('Indonesia / '+province);
+          break;
+      case 'city':
+          clauseArray.push({title:'provinsi',value:province});
+          clauseArray.push({title:'kota',value:city});
+          $('#area').html('Indonesia / '+province+' / '+city);
+          break;
+      case 'district':
+          clauseArray.push({title:'provinsi',value:province});
+          clauseArray.push({title:'kota',value:city});
+          clauseArray.push({title:'kecamatan',value:district});
+          $('#area').html('Indonesia / '+province+' / '+city+' / '+district);
+          break;
+      case 'subdistrict':
+          clauseArray.push({title:'provinsi',value:province});
+          clauseArray.push({title:'kota',value:city});
+          clauseArray.push({title:'kecamatan',value:district});
+          clauseArray.push({title:'kelurahan',value:subdistrict});
+          $('#area').html('Indonesia / '+province+' / '+city+' / '+district+' / '+subdistrict);            
+          break;
+      default:
+          $('#area').html('Indonesia');
+  }
 
-});
+  generateData('religion',religionArray,'#religionChart',chartColors,clauseArray);
+  generateData('bloodtype',bloodtypeArray,'#bloodtypeChart',chartColors,clauseArray);
+  generateData('gender',genderArray, '#genderChart',chartColors,clauseArray);
+  generateData('marriage',marriageArray,'#marriageChart',chartColors,clauseArray);
+  generateData('gender',genderArray, '#genderChart',chartColors,clauseArray);
+  generateData('job',jobArray, '#jobChart',chartColors,clauseArray);
+  generateData('study',studyArray, '#studyChart',chartColors,clauseArray);
+}
 
 function getPropertyData(property,data){
   switch(property){
@@ -113,8 +123,8 @@ function getPropertyData(property,data){
   }
 }
 
-function generateData(property,dataArray,objectId,chartColors){
-  penduduk.get().then((querySnapshot)=>{
+function generateData(property,dataArray,objectId,chartColors,clauseArray){
+   whereClause(penduduk,clauseArray).get().then((querySnapshot)=>{
     querySnapshot.forEach((doc)=>{
       if(doc && doc.exists){
         var id = doc.id;
@@ -166,23 +176,6 @@ function whereClause(doc,array){
         });
     }
     return doc;
-}
-
-function filterType(data, typeData){
-    switch(typeData){
-        case 'province':
-            return data.provinsi;
-        case 'city':
-            return data.kota;
-        case 'district':
-            return data.kecamatan;
-        case 'subdistrict':
-            return data.kelurahan;
-        case 'rw':
-            return data.rw;
-        case 'rt':
-            return data.rt;
-    }
 }
 
 function dataExists(str, dataArray){

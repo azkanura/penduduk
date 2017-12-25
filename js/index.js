@@ -11,6 +11,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     var level = '';
     users.where('email','==',email).limit(1).get().then((querySnapshot)=>{
         querySnapshot.forEach((doc)=>{
+
             data = doc.data();
             var firstname=data.full_name.split(" ")[0];
 
@@ -25,6 +26,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                $('#userMenu').show();  
             }
             setCurrentUser(data);
+            init();
             storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
                 $('.profile-picture').attr('src',url);
             });

@@ -170,20 +170,33 @@
         } 
       });
 
-      $('#loginBtn').on('click',function(){
-          var email = $('[name="email"]').val();
-          var password = $('[name="password"]').val();
+      $()
 
-          firebase.auth().signInWithEmailAndPassword(email, password).then(()=>{
-              $(location).attr('href','/');
-          })
-            .catch(function(error){
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log('Error '+errorCode+': '+errorMessage);
-            alert('Error '+errorCode+': '+errorMessage);
-          });
+      $('#loginBtn').on('click',function(){
+          login();
       });
+
+      $(document).keypress(function(e) {
+          if(e.which == 13) {
+              login();
+          }
+      });
+
+
+      function login(){
+        var email = $('[name="email"]').val();
+        var password = $('[name="password"]').val();
+
+        firebase.auth().signInWithEmailAndPassword(email, password).then(()=>{
+            $(location).attr('href','/');
+        })
+          .catch(function(error){
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log('Error '+errorCode+': '+errorMessage);
+          alert('Error '+errorCode+': '+errorMessage);
+        });
+      }
   </script>
 
   <script src="js/bootstrap.min.js"></script>

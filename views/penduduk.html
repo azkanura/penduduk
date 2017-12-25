@@ -33,7 +33,12 @@
 {% endblock %}
 {% block inlinejs  %}
     <script type="text/javascript">
-        setTimeout(()=>{
+        var penduduk = db.collection('penduduk');
+        var dataContainer = $('#dataContainer');
+        var counter = 1;
+        var dataArray = [];
+            
+        function init(){
             console.log('current User: '+currentUser.email);
             var province = currentUser.area.province;
             var city = currentUser.area.city;
@@ -54,10 +59,6 @@
                     break;
             }
 
-            var penduduk = db.collection('penduduk');
-            var dataContainer = $('#dataContainer');
-            var counter = 1;
-            var dataArray = [];
             penduduk.get().then((querySnapshot)=>{
                  querySnapshot.forEach((doc)=>{
                      if(doc && doc.exists){
@@ -85,7 +86,7 @@
                 });
             });
 
-        },7000);
+        }
 
 
         function exists(str, dataArray){
