@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  
+
   <title>Login - Penduduk App</title>
 
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
@@ -65,7 +65,7 @@
     .page-signin-container {
       width: auto;
       margin: 30px 10px;
-      background: rgba(0,0,0,.5);
+      background: rgba(61,74,93,.8);
       padding: 30px;
       border-radius: 5px;
     }
@@ -78,7 +78,7 @@
     @media (min-width: 544px) {
       .page-signin-container {
         width: 350px;
-        margin: 60px auto;
+        margin: 10% auto;
       }
     }
 
@@ -176,7 +176,7 @@
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           $(location).attr('href','/');
-        } 
+        }
       });
 
       $()

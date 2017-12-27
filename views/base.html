@@ -23,6 +23,20 @@
 
     <!-- Theme -->
     <link href="/css/themes/clean.min.css" rel="stylesheet" type="text/css">
+    <style>
+      select.form-control{
+          margin-bottom: 15px;
+      }
+      #pageTitle{
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        color: #3d4a5d;
+      }
+      .control-label{
+        color:#707070;
+      }
+    </style>
 
     <!-- Pace.js -->
     <script src="/pace/pace.min.js"></script>
@@ -149,6 +163,11 @@
                                 <i class="dropdown-icon fa fa-envelope"></i>&nbsp;&nbsp;Messages</a>
                         </li>
                         <li class="divider"></li> -->
+                        <li style="display:none">
+                            <a href="#" id="uploadJSON" style="background:#1abc9c;color:#fff,padding:8px;margin:10px">
+                                Upload JSON
+                            </a>
+                        </li>
                         <li>
                             <a href="#" id="logoutBtn">
                                 <i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a>
@@ -198,7 +217,108 @@
 
     <!-- Load jQuery -->
     <script src="/node_modules/jquery/dist/jquery.js"></script>
-	<script src="/js/index.js"></script>
+	  <script src="/js/index.js"></script>
+    <script type="text/javascript">
+      var kk = [];
+      var anggota = [];
+      $('#uploadJSON').on('click',function(){
+        console.log('debugging');
+         $.getJSON("/dst.json",function(data){
+           console.log('debugging2');
+           $.each(data, function (index,value){
+              var kepalaKel = value["HubKepalaKeluarga"].toLowerCase();
+              var kepalaRumta = value["HubKepalaRumahTangga"].toLowerCase();
+
+              if((kepalaKel=='kepala keluarga'||kepalaKel=='kepala rumah tangga')||(kepalaRumta=='kepala keluarga'||kepalaRumta=='kepala rumah tangga')){
+                kk.push(value);
+              }
+              else{
+                anggota.push(value);
+              }
+           });
+
+           console.log('Kepala Keluarga:');
+           console.log(kk);
+           console.log(anggota);
+           var counter=1;
+           kk.forEach((data)=>{
+             penduduk.add({
+               nomor_kk: data.NomorKK,
+               nama_lengkap: data.NamaLengkap,
+               pekerjaan: data.StatusPekerjaanKepala,
+               jenis_kelamin: data.JenisKelamin,
+               provinsi: data.Provinsi,
+               kota: data.KabupatenKota,
+               kecamatan: data.Kecamatan,
+               kelurahan: data.Kelurahan,
+               rw: data.RW,
+               rt:data.RT,
+               nama_jalan:data.NamaJalan,
+               tanggal_lahir:data.BulanLahirKepala+' '+data.TahunLahirKepala,
+             }).then(function(docRef) {
+                  console.log("("+counter+")Document written with ID: ", docRef.id);
+                  counter++;
+              })
+              .catch(function(error) {
+                  console.error("Error adding document: ", error);
+              });
+           });
+
+
+           setTimeout(function(){
+             var counter=1;
+             kk.forEach((data)=>{
+               penduduk.where('nomor_kk','==',data.NomorKK).limit(1).get().then((querySnapshot)=>{
+                 querySnapshot.forEach((doc)=>{
+                   var document = penduduk.doc(doc.id).collection('dokumen');
+                   document.add({
+                     nomor_kk: data.NomorKK,
+                     alamat: data.NamaJalan,
+                     provinsi: data.Provinsi,
+                     kota: data.KabupatenKota,
+                     kecamatan: data.Kecamatan,
+                     kelurahan: data.Kelurahan,
+                     rw: data.RW,
+                     rt: data.RT
+                   }).then(function(docRef) {
+                        console.log("("+counter+")Dokumennya ditulis dengan ID: ", docRef.id);
+                        counter++;
+                    })
+                    .catch(function(error) {
+                        console.error("Error adding document: ", error);
+                    });
+
+                 });
+               });
+             });
+            var countera=1;
+             anggota.forEach((data)=>{
+               penduduk.where('nomor_kk','==',data.NomorKK).limit(1).get().then((querySnapshot)=>{
+                 querySnapshot.forEach((doc)=>{
+                   var member = penduduk.doc(doc.id).collection('anggota');
+                   member.add({
+                     nama_lengkap:data.NamaLengkap,
+                     jenis_kelamin:data.JenisKelamin,
+                     jenis: data.HubKepalaKeluarga
+                   }).then(function(docRef) {
+                        console.log("("+countera+")Anggota ditulis dengan ID: ", docRef.id);
+                        countera++;
+                    })
+                    .catch(function(error) {
+                        console.error("Error adding document: ", error);
+                    });
+                 });
+
+               });
+             });
+          },20000);
+
+         }).catch((error)=>{
+           console.log(error);
+         });
+      });
+
+    </script>
 
     <!-- Core scripts -->
     <script src="/js/bootstrap.min.js"></script>
@@ -207,10 +327,10 @@
 
     <!-- Your scripts -->
     <script src="/js/app.js"></script>
-    
+
     {% block inlinejs  %}
     {% endblock %}
-    
+
 </body>
 
 </html>

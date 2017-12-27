@@ -112,16 +112,16 @@
         var repeatPassword = $('[name="repeat_password"]')[0];
         var selectLevel = $('[name="level"]');
         var selectArea = $('#selectArea');
-        
+
         var provinceContainer = $('#selectProvinceContainer');
         var selectProvince = $('[name="province"]');
 
         var cityContainer = $('#selectCityContainer');
         var selectCity = $('[name="city"]');
-        
+
         var districtContainer = $('#selectDistrictContainer');
         var selectDistrict = $('[name="district"]');
-        
+
         var subdistrictContainer = $('#selectSubdistrictContainer');
         var selectSubdistrict = $('[name="subdistrict"]');
 
@@ -144,7 +144,7 @@
 
                 case 'province':
                     selectArea.show();
-                    
+
                     enableSelect(selectProvince,provinceContainer);
                     disableSelect(selectCity,cityContainer);
                     disableSelect(selectDistrict,districtContainer);
@@ -154,32 +154,32 @@
 
                 case 'city':
                     selectArea.show();
-                    
+
                     enableSelect(selectProvince,provinceContainer);
                     enableSelect(selectCity,cityContainer);
                     disableSelect(selectDistrict,districtContainer);
                     disableSelect(selectSubdistrict,subdistrictContainer);
-                    
+
                     break;
 
                 case 'district':
                     selectArea.show();
-                    
+
                     enableSelect(selectProvince,provinceContainer);
                     enableSelect(selectCity,cityContainer);
                     enableSelect(selectDistrict,districtContainer);
                     disableSelect(selectSubdistrict,subdistrictContainer);
-                    
+
                     break;
 
                 case 'subdistrict':
                     selectArea.show();
-                    
+
                     enableSelect(selectProvince,provinceContainer);
                     enableSelect(selectCity,cityContainer);
                     enableSelect(selectDistrict,districtContainer);
                     enableSelect(selectSubdistrict,subdistrictContainer);
-                    
+
                     break;
             }
         });
@@ -190,9 +190,9 @@
                 selectCity.html('<option value="" readonly>Pilih Kota/Kabupaten</option>');
                 $.each(data, function (index,value){
                     if(value.id_prov==idProv){
-                        selectCity.append('<option id_kabkota="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');    
+                        selectCity.append('<option id_kabkota="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');
                     }
-                    
+
                 });
             });
         });
@@ -200,12 +200,12 @@
         selectCity.on('change',function(){
             var idKabKota = parseInt($(this).children(':selected').attr('id_kabkota'));
             $.getJSON("/district.json",function(data){
-                selectDistrict.html('<option value="" readonly>Kecamatan</option>');
+                selectDistrict.html('<option value="" readonly>Pilih Kecamatan</option>');
                 $.each(data, function (index,value){
                     if(value.id_kabkota==idKabKota){
-                        selectDistrict.append('<option id_kecamatan="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');    
+                        selectDistrict.append('<option id_kecamatan="'+value.id+'" value="'+value.nama+'">'+value.nama+'</option>');
                     }
-                    
+
                 });
             });
         });
@@ -213,12 +213,12 @@
         selectDistrict.on('change',function(){
             var idKecamatan = parseInt($(this).children(':selected').attr('id_kecamatan'));
             $.getJSON("/subdistrict.json",function(data){
-                selectSubdistrict.html('<option value="" readonly>Pilih Kota/Kelurahan</option>');
+                selectSubdistrict.html('<option value="" readonly>Pilih Desa/Kelurahan</option>');
                 $.each(data, function (index,value){
                     if(value.id_kecamatan==idKecamatan){
-                        selectSubdistrict.append('<option value="'+value.nama+'">'+value.nama+'</option>');    
+                        selectSubdistrict.append('<option value="'+value.nama+'">'+value.nama+'</option>');
                     }
-                    
+
                 });
             });
         });
@@ -286,7 +286,7 @@
                     $('#selectSubdistrict').val(subdistrict);
                     $('#selectSubdistrict').trigger('change');
                     break;
-                    
+
             }
 
 
