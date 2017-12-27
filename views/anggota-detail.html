@@ -33,7 +33,7 @@
                 <i class="fa fa-envelope"></i>
             </a> -->
         </div>
-        
+
     </div>
 
     <hr class="page-wide-block visible-xs visible-sm">
@@ -43,7 +43,7 @@
             <span id="profileName">
                 <a href="/penduduk-detail/{{kkId}}">Detail Penduduk</a> > Detail Anggota Keluarga
             </span>
-            
+
         </h1>
 
         <ul class="nav nav-tabs" id="profile-tabs">
@@ -82,9 +82,9 @@
 
         console.log(dataArray);
 
-        $(function(){
+        function init(){
             $('#profileInfoBtn').click();
-        });
+        }
 
         function addData(id,name,count){
             dataContainer.append(
@@ -96,32 +96,62 @@
             );
             counter++;
         }
-        
+
         $('#profileInfoBtn').on('click',function(){
                 person.get().then((doc)=>{
                 if(doc && doc.exists){
                     var data = doc.data();
-                    var name = data.nama_lengkap;
+
+                    var name='';
+                    if(data.nama_lengkap){
+                      name = data.nama_lengkap;
+                    }
                     // $('#profileName').html(name+'<span class="font-weight-normal">\'s profile</span>');
-                    var gender = data.jenis_kelamin;
-                    var income = data.kirasan_penghasilan;
-                    var job = data.pekerjaan;
+
+                    var gender = '';
+                    if(data.jenis_kelamin){
+                      gender = data.jenis_kelamin;
+                    }
+
                     var status = data.jenis;
                     $('#memberStatus').html('<i class="fa fa-check"></i>&nbsp;&nbsp;'+status);
 
-                    var jobField = data.bidang_pekerjaan;
-                    var bloodType = data.golongan_darah;
-                    
-                    var education = data.pendidikan;
-                    $('#profileSummary').html('<strong><h4 style="margin-top:0;border-top:1px solid #eee;padding-top:20px">'+name+'</h4></strong>'+job+' | '+education)
-                    var nationality = data.kewarganegaraan;
-                    var marriage = data.status_perkawinan;
-                    var birthPlace = data.tempat_lahir;
-                    var birthDate = data.tanggal_lahir;
-                    var idPicture = data.foto_ktp;
-                    var profilePicture = data.foto_orang;
+                    var income = '';
+                    if(data.kirasan_penghasilan){income = data.kirasan_penghasilan;}
 
-                    var religion = data.agama;
+                    var jobField = '';
+                    if(data.bidang_pekerjaan){jobField = data.bidang_pekerjaan;}
+
+                    var bloodType = '';
+                    if(data.golongan_darah){bloodType = data.golongan_darah;}
+
+                    var job='';
+                    if(data.pekerjaan){job = data.pekerjaan;}
+
+                    var education = '';
+                    if(data.pendidikan){education = data.pendidikan;}
+
+                    $('#profileSummary').html('<strong><h4 style="margin-top:0;border-top:1px solid #eee;padding-top:20px">'+name+'</h4></strong>'+job+' | '+education)
+                    var nationality = '';
+                    if(data.kewarganegaraan){nationality = data.kewarganegaraan;}
+
+                    var marriage = '';
+                    if(data.status_perkawinan){marriage = data.status_perkawinan;}
+
+                    var birthPlace = '';
+                    if(data.tempat_lahir){birthPlace = data.tempat_lahir;}
+
+                    var birthDate = '';
+                    if(data.tanggal_lahir){birthDate = data.tanggal_lahir;}
+
+                    var idPicture = '';
+                    if(data.foto_ktp){idPicture = data.foto_ktp;}
+
+                    var profilePicture = '';
+                    if(data.foto_orang){profilePicture = data.foto_orang;}
+
+                    var religion ='';
+                    if(data.agama){religion = data.agama;}
                     // var province = data.provinsi;
                     // var city = data.kota;
                     // var district = data.kecamatan;
@@ -129,18 +159,20 @@
                     // var rw = data.rw;
                     // var rt = data.rt;
 
-                    storageRef.child(profilePicture).getDownloadURL().then((url)=>{
-                        var image = $('#profilePicture');
-                        image.attr('src',url);
-                    }).catch(function(error){
-
-                    });
+                    if(profilePicture){
+                      storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+                          var image = $('#profilePicture');
+                          image.attr('src',url);
+                      }).catch(function(error){
+                          console.log('Cannot get picture!');
+                      });
+                    }
 
                     var arrayData = [
                         {title:'Nama Lengkap', content:name},
                         {title:'Jenis Kelamin', content:gender},
                         {title:'Kisaran Penghasilan', content:income},
-                        
+
                         {title:'Bidang Pekerjaan', content:jobField},
                         {title:'Pekerjaan', content:job},
 
@@ -192,6 +224,6 @@
             });
         });
 
-        
+
     </script>
 {% endblock %}

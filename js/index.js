@@ -19,23 +19,23 @@ firebase.auth().onAuthStateChanged(function(user) {
             $('#displayUsername').html(data.full_name);
             if(data.role=='user'){
                 console.log(data.role);
-               $('#userMenu').hide(); 
+               $('#userMenu').hide();
             }
             else if(data.role=='admin'){
                 console.log(data.role);
-               $('#userMenu').show();  
+               $('#userMenu').show();
             }
             setCurrentUser(data);
             init();
             storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
                 $('.profile-picture').attr('src',url);
             });
-            
+
 
         });
     });
     // ...
-  } 
+  }
 
   else {
     // User is signed out.
@@ -57,4 +57,3 @@ $('#logoutBtn').on('click',function(){
 function setCurrentUser(data){
     currentUser = data;
 }
-
