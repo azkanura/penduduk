@@ -133,6 +133,11 @@ app.get('/penduduk-detail/:id',function(req,res){
 	res.render('penduduk-detail.html',{id:id});
 });
 
+app.get('/penduduk-edit/:id',function(req,res){
+	var id = req.params.id;
+	res.render('penduduk-edit.html',{id:id});
+});
+
 app.get('/anggota-detail/:kkId/:id',function(req,res){
 	var id = req.params.id;
 	var kkId = req.params.kkId;
