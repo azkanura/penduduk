@@ -59,6 +59,14 @@ app.get('/',function(req,res){
 	res.render('index.html');
 });
 
+app.get('/laporan',function(req,res){
+	res.render('laporan.html');
+});
+
+app.get('/survey',function(req,res){
+	res.render('survey.html');
+});
+
 app.get('/login',function(req,res){
 	res.render('login.html');
 });

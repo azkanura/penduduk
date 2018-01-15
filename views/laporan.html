@@ -1,0 +1,140 @@
+{% extends 'base.html' %} {% block title %} Laporan {% endblock %} {% block inlinecss %}
+<link href="css/custom.css" rel="stylesheet" type="text/css"> {% endblock %}
+<!-- Content -->
+{% block content %}
+<div class="page-header m-b-0">
+    <h1 style="display: block;">Laporan
+        <small id="area" style="line-height: 30px" class="pull-right"></small>
+    </h1>
+</div>
+<div class="page-wide-block">
+    <div class="box border-radius-0 m-a-0">
+
+        <div class="box-cell" style="height: 600px;">
+            <div class="widget-maps" id="map"></div>
+            <!-- Main content -->
+    <section class="content" style="margin:0; padding:0; height:91vh;">
+            <!-- Small boxes (Stat box) -->
+            <div class="wide-wrap">
+                <div class="col-md-3 dashb-1st">
+                    <p><i class="fa fa-users"></i> Jumlah Penduduk</p>
+                    <h2>169,376 Jiwa</h2>
+                </div>
+                <div class="col-md-3 dashb-2nd">
+                    <div>
+                        <div class="col-md-4">
+                            <span>Keluarga</span>
+                            <span class="dashb-count">4,213</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Laki - Laki</span>
+                            <span class="dashb-count">5,654</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Perempuan</span>
+                            <span class="dashb-count">6,031</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-md-4">
+                            <span>Jumlah RW</span>
+                            <span class="dashb-count">19</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Jumlah RT</span>
+                            <span class="dashb-count">188</span>
+                        </div>
+                        <div class="col-md-4 bg-yellow">
+                            <span>Kemiskinan</span>
+                            <span class="dashb-count">127 (6%)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 dashb-3rd">
+                    <div class="col-md-6 chart-responsive">
+                        <div class="chart" id="bar-chart" style="height: 130px; position: relative;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="title-sm">Usia Penduduk</h4>
+                        <ul class="chart-legend clearfix">
+                            <li>
+                                <i class="fa fa-circle text-red"></i> Balita (0-5) :
+                                <b>43</b>
+                            </li>
+                            <li>
+                                <i class="fa fa-circle text-green"></i> Sekolah (6-17) :
+                                <b>93</b>
+                            </li>
+                            <li>
+                                <i class="fa fa-circle text-yellow"></i> Dewasa (18-55) :
+                                <b>269</b>
+                            </li>
+                            <li>
+                                <i class="fa fa-circle text-aqua"></i> Manula (56+) :
+                                <b>0</b>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 dashb-4th">
+                    <div class="col-md-6 chart-responsive">
+                        <div class="chart" id="sales-chart" style="height: 110px; position: relative;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="title-sm">Status Penduduk</h4>
+                        <ul class="chart-legend clearfix">
+                            <li>
+                                <i class="fa fa-circle text-red"></i> Menetap</li>
+                            <li>
+                                <i class="fa fa-circle text-green"></i> Menetap Non-Residen</li>
+                            <li>
+                                <i class="fa fa-circle text-yellow"></i> Residen</li>
+                            <li>
+                                <i class="fa fa-circle text-aqua"></i> Tidak Diketahui</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ticker-wrap">
+                    <h4>Update Warga</h4>
+                    <ul>
+                        <li>
+                            <a href="#">3 Januari 2015 - Lorem Ipsum Dolor Sit Amet</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+        </section>
+        <!-- /.content -->
+        </div>
+
+
+    </div>
+    
+</div>
+
+
+{% endblock %} {% block inlinejstop %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHtdj4L66c05v1UZm-nte1FzUEAN6GKBI&callback=initMap&sensor=false"
+    async defer></script> {% endblock %} {% block inlinejs %}
+<script>
+    function init() {
+
+    }
+    function initMap() {
+        var coordinates = { lat: 34.151327, lng: -118.254657 };
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: coordinates,
+            scrollwheel: false,
+        });
+
+        var marker = new google.maps.Marker({
+            map: map,
+            position: coordinates,
+            title: '',
+        });
+    }
+
+</script> {% endblock %}

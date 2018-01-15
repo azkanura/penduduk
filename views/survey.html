@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block title %} Data Survey {% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="page-header m-b-0">
+    <h1 style="display: block;">Data Survey
+        <small id="area" style="line-height: 30px" class="pull-right"></small>
+    </h1>
+</div>
+<div class="page-header panel m-b-0 p-y-0 b-a-0 border-radius-0">
+    <form action="" method="GET" class="input-group input-group-lg p-y-3">
+        <input type="text" name="s" class="form-control" placeholder="Cari berdasarkan nama">
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </form>
+
+    <hr class="page-wide-block m-y-0">
+
+    
+</div>
+<div class="page-wide-block">
+    <div>
+
+    </div>
+    <div class="box border-radius-0 m-a-0">
+        
+        <div class="box-cell" style="height: 600px;">
+            <div class="widget-maps" id="map"></div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} {% block inlinejstop %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHtdj4L66c05v1UZm-nte1FzUEAN6GKBI&callback=initMap&sensor=false"
+    async defer></script> {% endblock %} {% block inlinejs %}
+<script>
+    function init() {
+
+    }
+    function initMap() {
+        var coordinates = { lat: 34.151327, lng: -118.254657 };
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: coordinates,
+            scrollwheel: false,
+        });
+
+        var marker = new google.maps.Marker({
+            map: map,
+            position: coordinates,
+            title: '',
+        });
+    }
+
+</script> {% endblock %}
