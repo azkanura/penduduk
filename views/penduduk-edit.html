@@ -26,15 +26,15 @@
             </div>
         </div>
         <div class="m-y-3 text-xs-center">
-            <a href="#" class="btn btn-success">
-                <i class="fa fa-check"></i>&nbsp;&nbsp;Kepala Keluarga</a>
+            <span class="badge badge-success">
+                Kepala Keluarga</span>
             <!-- <a href="#" class="btn">
                 <i class="fa fa-envelope"></i>
             </a> -->
         </div>
         <div class="m-y-3 text-xs-center">
-            <a href="/penduduk-edit/{{ id }}" class="btn btn-default">
-                <i class="fa fa-pencil fa-fw"></i> Ubah</a>
+            <a href="/penduduk-detail/{{ id }}" class="btn btn-success">
+                <i class="fa fa-check fa-fw"></i> Selesai Ubah</a>
             <!-- <a href="#" class="btn">
                 <i class="fa fa-envelope"></i>
             </a> -->
@@ -47,7 +47,7 @@
     <div class="col-md-8 col-lg-9">
         <h1 class="font-size-20 m-y-4">
             <span id="profileName">
-                Detail Penduduk
+                Ubah Detail Penduduk
             </span>
         </h1>
 
@@ -57,11 +57,11 @@
                     Data Pribadi
                 </a>
             </li>
-            <li>
+            <!-- <li>
                 <a href="#familyInfo" data-toggle="tab" id="familyInfoBtn">
                     Data Keluarga
                 </a>
-            </li>
+            </li> -->
             <li>
                 <a href="#assetInfo" data-toggle="tab" id="assetInfoBtn">
                     Data Aset
@@ -76,14 +76,13 @@
 
         <div class="tab-content tab-content-bordered p-a-0 bg-white">
             <div class="tab-pane fade in active" id="profileInfo">
-                <h4 class="text-center" id="profileLoading" style="padding: 30px;">Loading Data..</h4>
-                
+                <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>
             </div>
             <div class="tab-pane fade" id="familyInfo">
-                <h4 class="text-center" id="familyLoading" style="padding: 30px;">Loading Data..</h4>
+                <h4 class="text-center" style="padding: 30px;">Loading Data..</h4>
             </div>
             <div class="tab-pane fade" id="assetInfo" style="padding: 30px;">
-                <h4 class="text-center" id="assetLoading">
+                <h4 class="text-center">
                     Loading Data..
                 </h4>
             </div>
@@ -95,10 +94,571 @@
 </div>
 {% endblock %}
 {% block inlinejs  %}
-    <script>
-        var profileLoading = $('#profileLoading');
-        var familyLoading = $('#familyLoading');
-        var assetLoading = $('#assetLoading');
-        profileLoading.hide();
+    <script type="text/javascript">
+        var profileInfo = $('#profileInfo');
+        var familyInfo = $('#familyInfo');
+        var assetInfo = $('#assetInfo');
+        var documentInfo = $('#documentInfo');
+        var id = '{{id}}';
+
+        var penduduk = db.collection('penduduk');
+        var person = penduduk.doc(id);
+        var storageRef = storage.ref();
+
+        var dataContainer = $('#dataContainer');
+        var counter = 1;
+        var dataArray = [];
+        var selectArray = [];
+        var result = null;
+
+        var optionObject = {
+          affirmative: ['Iya','Tidak'],
+          marriage : ['Belum Kawin','Kawin','Cerai Hidup','Cerai Mati'],
+          education : ['Tidak / Belum Sekolah','Belum tamat SD','SD','SLTP / Sederajad','SLTA / Sederajad','Diploma I / II','Diploma III / Sarjana Muda','Strata I','Strata II','Strata III'],
+          status : ['Suami','Istri','Anak Laki-Laki','Anak Perempuan'],
+          religion : ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Kong Hu Cu'],
+          bloodType : ['A','B','AB','O'],
+          gender:['Pria','wanita'],
+          jobField : ['Pelayanan Jasa Kesehatan','Pelayanan Jasa Transportasi','Jasa Perbaikan Alat Transportasi','Usaha Pariwisata','Jasa Pos dan Telekomunikasi','Jasa Penyediaan Tenaga Listrik','Jasa Jaringan Pelayanan Air Bersih (PAM)','Jasa Penyediaan Bahan Bakar Minyak dan Gas Bumi','Usaha Swalayan, Pusat Perbelanjaan, dan sejenisnya','Usaha Pusat Perbelanjaan, dan sejenisnya','Media Masa','Pengamanan','Lembaga Konservasi'],
+          income:['Tidak Berpenghasilan','Dibawah Rp. 500.000','Rp 500.001 hingga Rp 2.000.000','Rp 2.000.001 hingga Rp 5.000.000','Rp 5.000.001 hingga Rp 10.000.000','Rp 10.000.001 hingga Rp 25.000.000','Diatas Rp 25.000.000'],
+          nationality:['Indonesia','Warga Negara Asing'],
+          area : ['0 – 100 m2 ','101 – 500 m2','501 – 1000m2 ','>1001m2'],
+          floor : ['Keramik','Semen','Kayu keadaan jelek','Kayu keadaan bagus','Bambu kualitas rendah','Bambu kualitas tinggi'],
+          wall : ['Bambu','Tembok','Kayu keadaan jelek','Kayu keadaan bagus'],
+          goods: ['Tabungan','Ternak','Emas','Sepeda Motor','Tv Berwarna','Tidak mempunyai satupun'],
+          houseStatus: ['Milik sendiri / bebas sewa','Tidak'],
+          facility : ['Bersama / umum','Lainnya'],
+          water : ['Sumur atau air mata tak terlindung','Air sungai','Air hujan','Air kemasan','Air ledeng','Pompa','Mata air terlindung'],
+          electricity : ['Bukan listrik','Listrik PLN'],
+          cooking: ['Kayu/Arang','Minyak tanah','Gas / Listrik'],
+          meat: ['Dua kali dan lebih','Satu kali','Tidak pernah membeli'],
+          meal : ['Tiga kali dan lebih','Dua kali','Satu kali'],
+          clothing : ['Dua stel dan lebih','Satu stel','Tidak pernah membeli']
+        };
+
+        console.log(dataArray);
+
+        $('#profileInfoBtn').on('click',function(){
+                person.get().then((doc)=>{
+                if(doc && doc.exists){
+                    var data = doc.data();
+
+                    var name='';
+                    if(data.nama_lengkap){
+                      name = data.nama_lengkap;
+                    }
+                    // $('#profileName').html(name+'<span class="font-weight-normal">\'s profile</span>');
+
+                    var gender = '';
+                    if(data.jenis_kelamin){
+                      gender = data.jenis_kelamin;
+                    }
+
+                    var income = '';
+                    if(data.kirasan_penghasilan){income = data.kirasan_penghasilan;}
+
+                    var jobField = '';
+                    if(data.bidang_pekerjaan){jobField = data.bidang_pekerjaan;}
+
+                    var bloodType = '';
+                    if(data.golongan_darah){bloodType = data.golongan_darah;}
+
+                    var job='';
+                    if(data.pekerjaan){job = data.pekerjaan;}
+
+                    var education = '';
+                    if(data.pendidikan){education = data.pendidikan;}
+
+                    $('#profileSummary').html('<strong><h4 style="margin-top:0;border-top:1px solid #eee;padding-top:20px">'+name+'</h4></strong>'+job+' | '+education)
+
+                    var nationality = '';
+                    if(data.kewarganegaraan){nationality = data.kewarganegaraan;}
+
+                    var marriage = '';
+                    if(data.status_perkawinan){marriage = data.status_perkawinan;}
+
+                    var birthPlace = '';
+                    if(data.tempat_lahir){birthPlace = data.tempat_lahir;}
+
+                    var birthDate = '';
+                    if(data.tanggal_lahir){birthDate = data.tanggal_lahir;}
+
+                    var idPicture = '';
+                    if(data.foto_ktp){idPicture = data.foto_ktp;}
+
+                    var profilePicture = '';
+                    if(data.foto_orang){profilePicture = data.foto_orang;}
+
+                    var province = '';
+                    if(data.provinsi){province = data.provinsi;}
+
+                    var city = '';
+                    if(data.kota){city = data.kota;}
+
+                    var district = '';
+                    if(data.kecamatan){district = data.kecamatan;}
+
+                    var subdistrict = '';
+                    if(data.kelurahan){subdistrict = data.kelurahan;}
+
+                    var rw='';
+                    if(data.rw){rw = data.rw;}
+
+                    var rt='';
+                    if(data.rt){rt = data.rt;}
+
+                    var religion ='';
+                    if(data.agama){religion = data.agama;}
+
+                    if(profilePicture){
+                      storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+                          var image = $('#profilePicture');
+                          image.attr('src',url);
+                      }).catch(function(error){
+                          console.log('Cannot get picture!');
+                      });
+                    }
+
+
+                    var arrayData = [
+                        {title:'Nama Lengkap',name:'name', content:name},
+                        {title:'Jenis Kelamin', name:'gender',content:gender,options:optionObject.gender},
+                        {title:'Kisaran Penghasilan', name:'income',content:income,options:optionObject.income},
+                        {title:'Bidang Pekerjaan', name:'job_field',content:jobField,options:optionObject.jobField},
+
+                        {title:'Pekerjaan', name:'job',content:job},
+                        {title:'Pendidikan', name:'education',content:education,options:optionObject.education},
+                        {title:'Kewarganegaraan', name:'nationality', content:nationality,options:optionObject.nationality},
+
+                        {title:'Agama', name:'religion', content:religion,options:optionObject.religion},
+                        {title:'Golongan Darah', name:'blood_type', content:bloodType,options:optionObject.bloodType},
+
+                        {title:'Status Perkawinan', name:'marriage', content:marriage,options:optionObject.marriage},
+                        {title:'Tempat Lahir', name:'birth_place', content:birthPlace},
+                        {title:'Tanggal Lahir', name:'birth_date', content:birthDate},
+                        {title:'Provinsi', name:'province', content:province},
+                        {title:'Kota/Kabupaten', name:'city', content:city},
+                        {title:'Kecamatan', name:'district', content:district},
+                        {title:'Kelurahan', name:'subdistrict', content:subdistrict},
+                        {title:'RW', name:'rw', content:rw},
+                        {title:'RT', name:'rt', content:rt},
+                    ];
+
+                    console.log(arrayData);
+
+                    var toAppend = '';
+                    arrayData.forEach((data)=>{
+                      var input = '';
+                      if(!data.options){
+                        input = '<input name="'+data.name+'" class="text-default form-control" value="'+data.content+'">';
+                      }
+                      else{
+                        var options = '';
+                        data.options.forEach((option)=>{
+                          if(option.toLowerCase()==data.content.toLowerCase()){
+                            options+='<option selected>'+option+'</option>';
+                          }
+                          else{
+                            options+='<option>'+option+'</option>';
+                          }
+                        });
+                        input = '<select name="'+data.name+'" class="select2 form-control">'+options+'</select>';
+                      }
+
+                      toAppend+='<tr>'+
+                                  '<td style="padding:20px">'+
+                                    '<div class="box m-a-0 bg-transparent">'+
+                                      '<span class="page-messages-item-from box-cell text-default">'+
+                                          data.title+
+                                      '</span>'+
+                                      '<div class="page-messages-item-subject box-cell">'+
+                                          input+
+                                      '</div>'+
+                                    '</div>'+
+                                  '</td>'+
+                                '</tr>';
+                    });
+
+                    profileInfo.html('');
+                    profileInfo.append(
+                        '<form action="/penduduk-personal-save" method="POST">'+
+                        '<input type="hidden" value="'+id+'" name="id">'+
+                        '<table class="page-messages-items table m-a-0">'+
+                                '<tbody>'+
+                                    toAppend+
+                                '</tbody>'+
+                        '</table>'+
+                        '<input style="margin:20px" class="btn btn-success pull-right" type="submit" value="Simpan">'+
+                        '</form>'
+                    );
+                }
+            });
+        });
+
+        var src = '';
+
+        $('#familyInfoBtn').on('click',function(){
+            var members = person.collection('anggota');
+            // if(members && members.exists){
+                members.get().then((query)=>{
+                    familyInfo.html('');
+                    query.forEach((doc)=>{
+                        data=doc.data();
+                        var anggotaId = doc.id;
+                        var type = data.jenis;
+                        var name = data.nama_lengkap;
+                        var gender = data.jenis_kelamin;
+                        var profilePicture = data.foto_orang;
+
+                        if(profilePicture){
+                            storageRef.child(profilePicture).getDownloadURL().then((url)=>{
+                                familyInfo.append(
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                            }).catch((error)=>{
+                                familyInfo.append(
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                            });
+                        }
+                        else{
+                            familyInfo.append(
+                                    '<div class="widget-followers-item">'+
+                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                        '<div class="widget-followers-controls">'+
+                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                        '</div>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                    '</div>'
+                                );
+                        }
+
+
+                    });
+                });
+            // }
+
+
+        });
+
+        $('#assetInfoBtn').on('click',function(){
+                var asset = person.collection('rumah');
+
+                var assetData = asset.doc('data');
+                var assetImage = asset.doc('gambar');
+                console.log('Asset data:');
+                console.log(assetData);
+                console.log('asset image:');
+                console.log(assetImage);
+                assetData.get().then((doc)=>{
+                    if(doc && doc.exists){
+                        var data = doc.data();
+                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan='-';
+                        if(data.luas_lantai){luas_lantai=data.luas_lantai}
+                        if(data.jenis_lantai){jenis_lantai=data.jenis_lantai}
+                        if(data.jenis_dinding){jenis_dinding=data.jenis_dinding}
+                        if(data.fasilitas){fasilitas=data.fasilitas}
+                        if(data.sumber_air){sumber_air=data.sumber_air}
+                        if(data.sumber_penerangan){sumber_penerangan=data.sumber_penerangan}
+                        if(data.berapa_kali_seminggu){berapa_kali_seminggu=data.berapa_kali_seminggu}
+                        if(data.berapa_kali_sekali){berapa_kali_sekali=data.berapa_kali_sekali}
+                        if(data.anggota_sakit){anggota_sakit=data.anggota_sakit}
+                        if(data.list_barang){
+                          list_barang=data.list_barang;
+                          list_barang_array = list_barang.split('|');
+                          list_barang_array[list_barang_array.length-1]=list_barang_array[list_barang_array.length-1].split('|')[0];
+                          console.log(list_barang_array);
+                        }
+
+                        if(data.kredit_usaha){kredit_usaha=data.kredit_usaha}
+                        if(data.status_bangunan){status_bangunan=data.status_bangunan}
+
+
+                        var arrayData = [
+                            {title:'Luas lantai bangunan tempat tinggal dengan satuan', content:luas_lantai,options:optionObject.area,name:'area'},
+                            {title:'Jenis lantai tempat tinggal yang terluas', content:jenis_lantai,options:optionObject.floor,name:'floor'},
+                            {title:'Jenis dinding tempat tinggal yang terluas', content:jenis_dinding,options:optionObject.wall,name:'wall'},
+                            {title:'Fasilitas tempat buang air besar', content:fasilitas,options:optionObject.facility,name:'facility'},
+                            {title:'Sumber air minum', content:sumber_air,options:optionObject.water,name:'water'},
+                            {title:'Sumber penerangan utama', content:sumber_penerangan,options:optionObject.electricity,name:'electricity'},
+                            {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu,options:optionObject.meat,name:'meat'},
+                            {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali,options:optionObject.meal,name:'meal'},
+                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:'',options:optionObject.clothing,name:'clothing'},
+                            {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit,options:optionObject.affirmative,name:'sickness'},
+                            {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang_array,options:optionObject.goods, type:'multiple',name:'goods'},
+                            {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha,options:optionObject.affirmative,name:'credit'},
+                            {title:'Status penguasaan bangunan tempat tinggal yang ditempati', content:status_bangunan,options:optionObject.houseStatus,name:'house_status'},
+                        ];
+
+                        var toAppend = '';
+                        arrayData.forEach((data)=>{
+                            var options = '';
+                            var selectOption = '';
+
+                            if(data.type=='multiple'){
+                              data.options.forEach((option)=>{
+                                  if(contains(data.content,option)){
+                                    options+='<label><input type="checkbox" value="'+option+'" checked="checked" name="'+data.name+'">'+option+'</label><br>';
+                                  }
+                                  else{
+                                    options+='<label><input type="checkbox" value="'+option+'" name="'+data.name+'">'+option+'</label><br>';
+                                  }
+                              });
+                              selectOption = '<div class="form-group">'+options+'</div>'
+
+                            }
+                            else{
+                              data.options.forEach((option)=>{
+                                if(option.toLowerCase()==data.content.toLowerCase()){
+                                  options+='<option selected>'+option+'</option>';
+                                }
+                                else{
+                                  options+='<option>'+option+'</option>';
+                                }
+                              });
+                              selectOption = '<select name="'+data.name+'" class="select2 form-control">'+options+'</select>';
+                            }
+
+                            toAppend+='<div class="row form-group">'+
+                                        '<label class="control-label col-md-6">'+data.title+'</label>'+
+                                        '<div class="col-md-6">'
+                                            +selectOption+
+                                        '</div>'+
+                                    '</div><hr>';
+                        });
+
+                        assetInfo.html('');
+                        assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
+                    }
+
+                    else{
+                      assetInfo.html('');
+                      assetInfo.append('<h4 class="text-center">'+
+                        'Tidak ada data rumah'+
+                      '</h4>');
+                    }
+                }).catch((error)=>{
+                  assetInfo.html('');
+                  assetInfo.append('<h4 class="text-center">'+
+                    'Tidak ada data rumah'+
+                  '</h4>');
+                });
+
+                assetImage.get().then((doc)=>{
+                    if(doc && doc.exists){
+                        assetInfo.append(
+                            '<form action="/penduduk-asset-img-save" method="POST"><input type="hidden" value="'+id+'">'+
+                            '<br>'+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Kepala Keluarga</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="photo_head" class="form-control">'+
+                                '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
+                            '</div><hr>'+
+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Depan Rumah</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="photo_terrace" class="form-control">'+
+                                '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
+                            '</div><hr>'+
+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Ruang Tamu</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="photo_livingroom" class="form-control">'+
+                                '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
+                            '</div><hr>'+
+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Dapur</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="photo_kitchen" class="form-control">'+
+
+                                '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
+                            '</div><hr>'+
+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Belakang Rumah</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="photo_backyard" class="form-control">'+
+                                '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
+                            '</div>'+
+                            '<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
+                        );
+
+                        var data = doc.data();
+
+                        var photoFamilyHead = data.foto_kepala_keluarga;
+                        var photoTerrace = data.foto_depan_rumah;
+                        var photoLivingroom = data.foto_ruang_tamu;
+                        var photoKitchen = data.foto_dapur;
+                        var photoBackyard = data.foto_belakang_rumah;
+
+                        storageRef.child(photoFamilyHead).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoFamilyHead');
+                            image.attr('src',url);
+                        });
+
+                        storageRef.child(photoTerrace).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoTerrace');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoLivingroom).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoLivingroom');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoKitchen).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoKitchen');
+                            image.attr('src',url);
+
+                        });
+
+                        storageRef.child(photoBackyard).getDownloadURL().then((url)=>{
+                            var image = assetInfo.find('#photoBackyard');
+                            image.attr('src',url);
+
+                        });
+                    }
+
+                    else{
+                      assetInfo.append('<hr><h4 class="text-center">'+
+                        'Tidak ada gambar rumah'+
+                      '</h4>');
+                    }
+                }).catch((error)=>{
+                  assetInfo.append('<h4 class="text-center">'+
+                    'Tidak ada gambar rumah'+
+                  '</h4>')
+                });
+
+
+        });
+
+
+        $('#documentInfoBtn').on('click',function(){
+
+                var documents = person.collection('dokumen');
+
+                documents.get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=>{
+                        var data = doc.data();
+                        var arrayData = [
+                            {title:'Nomor Kartu Keluarga', content:data.nomor_kk},
+                            {title:'Provinsi', content:data.provinsi},
+                            {title:'Kota / Kabupaten', content:data.kota},
+                            {title:'Kecamatan', content:data.kecamatan},
+                            {title:'Kelurahan', content:data.kelurahan},
+                            {title:'RW', content:data.rw},
+                            {title:'RT', content:data.rt},
+                            {title:'Alamat', content:data.alamat}
+                        ];
+
+                        var toAppend = '';
+                        arrayData.forEach((data)=>{
+                            toAppend+='<div class="row form-group">'+
+                                        '<label class="control-label col-md-5">'+data.title+'</label>'+
+                                        '<p class="col-md-7">'
+                                            +'<input class="form-control" value="'+data.content+'"'+
+                                        '</p>'+
+                                    '</div>';
+                        });
+
+
+
+                        documentInfo.html('');
+
+                        var kkPhoto = '<br>'+
+                            '<div class="form-group">'+
+                                '<label class="control-label">Foto Kartu Keluarga</label>'+
+                                '<br>'+
+                                '<br>'+
+                                '<input type="file" name="kk_photo" class="form-control">'+
+                                '<img src="/images/no-image.png" id="kkPhoto" style="width:40%;display:block"/>'+
+                            '</div><hr>';
+
+                        documentInfo.append(
+                          '<form action="/penduduk-document-save" method="POST">'+
+                              '<input type="hidden" value="'+id+'" name="id">'+
+                                toAppend+
+                                kkPhoto+
+                              '<input style="margin:20px" class="btn btn-success pull-right" type="submit" value="Simpan">'+
+                            '</form>'
+                        );
+
+                        storageRef.child(data.foto_kk).getDownloadURL().then((url)=>{
+                            var image = documentInfo.find('#kkPhoto');
+                            image.attr('src',url);
+                        });
+                    });
+                });
+
+        });
+
+        $(document).on('change','input[type="file"]',function(){
+            var ext=$(this).val().split('.');
+            ext=ext[ext.length-1].toLowerCase();
+            var allowedExt="jpg";
+            if(ext!=allowedExt){
+                alert('You can only upload jpg file!');
+                $(this).val('');
+            }
+            var maxSize = 5024288;
+            var fileSize = this.files[0].size;
+            if(fileSize>maxSize){
+                alert('You cannot upload file with size more than 5 MB!');
+                $(this).val('');
+            }
+        });
+
+        function init(){
+          $('#profileInfoBtn').click();
+        }
+
+        function contains(array,string){
+          var contain = false;
+          array.forEach((item)=>{
+            if(item.toLowerCase()==string.toLowerCase()){
+              contain = true;
+              return contain;
+            }
+          });
+          return contain;
+        }
+
+        function addData(id,name,count){
+            dataContainer.append(
+            '<tr>'+
+                '<th  scope="row">'+counter+'</th>'+
+                '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
+                '<td>'+count+'</td>'+
+            '</tr>'
+            );
+            counter++;
+        }
     </script>
 {% endblock %}

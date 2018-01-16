@@ -19,6 +19,8 @@
     <link href="/css/widgets.min.css" rel="stylesheet" type="text/css">
     <link href="/node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="/vendor/css/select2.min.css" rel="stylesheet" type="text/css">
+    <script src="/vendor/js/select2.min.js"></script>
+
 
 
     <!-- Theme -->
@@ -42,6 +44,11 @@
       }
       body,h1,h2,h3,h4,h5,h6,p,label,a,small{
         font-family:nunito !important;
+      }
+      .page-profile-v1-avatar{
+        object-fit:cover;
+        width:160px;
+        height:160px;
       }
     </style>
 
@@ -341,10 +348,15 @@
     <!-- Core scripts -->
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/pixeladmin.min.js"></script>
-    <script src="/vendor/js/select2.min.js"></script>
 
     <!-- Your scripts -->
     <script src="/js/app.js"></script>
+    <!-- <script  type="text/javascript">
+    $(function(){
+      $(document).find('select').select2();
+      console.log('masuk');
+    });
+    </script> -->
 
     {% block inlinejs  %}
     {% endblock %}

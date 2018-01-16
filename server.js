@@ -138,6 +138,26 @@ app.get('/penduduk-edit/:id',function(req,res){
 	res.render('penduduk-edit.html',{id:id});
 });
 
+app.post('/penduduk-personal-save',function(req,res){
+  var id = req.body.id;
+  res.redirect('/penduduk-edit/'+id);
+});
+
+app.post('/penduduk-asset-save',function(req,res){
+  var id = req.body.id;
+  res.redirect('/penduduk-edit/'+id);
+});
+
+app.post('/penduduk-asset-img-save',function(req,res){
+  var id = req.body.id;
+  res.redirect('/penduduk-edit/'+id);
+});
+app.post('/penduduk-document-save',function(req,res){
+  var id = req.body.id;
+  res.redirect('/penduduk-edit/'+id);
+});
+
+
 app.get('/anggota-detail/:kkId/:id',function(req,res){
 	var id = req.params.id;
 	var kkId = req.params.kkId;
