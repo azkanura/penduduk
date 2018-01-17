@@ -36,7 +36,7 @@ if(!firebase){
 var db = firebase.firestore();
 var users = db.collection('users');
 // var storage = firebase.storage();
-// var penduduk = db.collection('penduduk');
+var penduduk = db.collection('penduduk');
 // initialize firebase in serverside
 // app.configure(function() {
   // app.use(express.cookieParser('keyboard cat'));
@@ -140,11 +140,68 @@ app.get('/penduduk-edit/:id',function(req,res){
 
 app.post('/penduduk-personal-save',function(req,res){
   var id = req.body.id;
+  var resident = penduduk.doc(id);
+  resident.set({
+    agama:req.body.religion,
+    bidang_pekerjaan:req.body.job_field,
+    golongan_darah:req.body.blood_type,
+    jenis_kelamin:req.body.gender,
+    kecamatan:req.body.district,
+    kelurahan:req.body.subdistrict,
+    kewarganegaraan:req.body.nationality,
+    kirasan_penghasilan:req.body.income,
+    kota:req.body.city,
+    nama_lengkap:req.body.name,
+    pekerjaan:req.body.job,
+    pendidikan:req.body.education,
+    provinsi:req.body.province,
+    rt:req.body.rt,
+    rw:req.body.rw,
+    status_perkawinan:req.body.marriage,
+    tanggal_lahir:req.body.birth_date,
+    tempat_lahir:req.body.birth_place
+  }).then(function() {
+    console.log('Data pribadi berhasil diubah');
+  })
+  .catch(function(error) {
+    console.log('Data pribadi gagal diubah, terjadi kesalahan teknis');
+  });
+
   res.redirect('/penduduk-edit/'+id);
 });
 
 app.post('/penduduk-asset-save',function(req,res){
   var id = req.body.id;
+  var resident = penduduk.doc(id);
+  var asset = resident.collection('rumah').doc('data');
+  var goods = req.body.goods;
+  var goodText ='';
+  goods.forEach((good)=>{
+    if(good){
+      goodText+=good+'|';
+    }
+  });
+  asset.set({
+    luas_lantai:req.body.area,
+    jenis_lantai:req.body.floor,
+    jenis_dinding:req.body.wall,
+    fasilitas:req.body.facility,
+    sumber_air:req.body.water,
+    sumber_penerangan:req.body.electricity,
+    berapa_kali_sekali:req.body.meal,
+    berapa_kali_seminggu:req.body.meat,
+    berapa_kali_sepekan:req.body.clothing,
+    anggota_sakit:req.body.sickness,
+    list_barang:goodText,
+    kredit_usaha:req.body.credit,
+    status_bangunan:req.body.house_status
+  }).then(function() {
+    console.log('Data aset berhasil diubah');
+  })
+  .catch(function(error) {
+    console.log('Data aset gagal diubah, terjadi kesalahan teknis');
+  });
+
   res.redirect('/penduduk-edit/'+id);
 });
 
@@ -154,7 +211,36 @@ app.post('/penduduk-asset-img-save',function(req,res){
 });
 app.post('/penduduk-document-save',function(req,res){
   var id = req.body.id;
-  res.redirect('/penduduk-edit/'+id);
+  var resident = penduduk.doc(id);
+  var documents = resident.collection('dokumen');
+
+  documents.get().then((querySnapshot)=>{
+    querySnapshot.forEach((doc)=>{
+      var doc_id = doc.id;
+      var kkPhoto = doc.data().foto_kk;
+      var coordinate = doc.data().koordinat;
+      var document = documents.doc(doc_id);
+      document.set({
+        nomor_kk:req.body.kk_number,
+        provinsi:req.body.province,
+        kota:req.body.city,
+        kecamatan:req.body.district,
+        kelurahan:req.body.subdistrict,
+        rw:req.body.rw,
+        rt:req.body.rt,
+        alamat:req.body.address,
+        foto_kk:kkPhoto,
+        koordinat:coordinate
+      }).then(function(){
+        console.log('Data aset berhasil diubah');
+
+      }).catch(function(error){
+        console.log('Data aset gagal diubah, terjadi kesalahan teknis');
+      });
+      res.redirect('/penduduk-edit/'+id);
+
+    });
+  });
 });
 
 

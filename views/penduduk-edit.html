@@ -111,6 +111,11 @@
         var selectArray = [];
         var result = null;
 
+        var districtOption = ["Kepulauan Seribu Selatan","Kepulauan Seribu Utara"];
+
+        var subdistrictOptionU = ["Pulau Panggang","Pulau Kelapa","Pulau Harapan"];
+        var subdistrictOptionS = ["Pulau Tidung","Pulau Pari","Pulau Untung Jawa"];
+
         var optionObject = {
           affirmative: ['Iya','Tidak'],
           marriage : ['Belum Kawin','Kawin','Cerai Hidup','Cerai Mati'],
@@ -118,11 +123,11 @@
           status : ['Suami','Istri','Anak Laki-Laki','Anak Perempuan'],
           religion : ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Kong Hu Cu'],
           bloodType : ['A','B','AB','O'],
-          gender:['Pria','wanita'],
+          gender:['Pria','Wanita'],
           jobField : ['Pelayanan Jasa Kesehatan','Pelayanan Jasa Transportasi','Jasa Perbaikan Alat Transportasi','Usaha Pariwisata','Jasa Pos dan Telekomunikasi','Jasa Penyediaan Tenaga Listrik','Jasa Jaringan Pelayanan Air Bersih (PAM)','Jasa Penyediaan Bahan Bakar Minyak dan Gas Bumi','Usaha Swalayan, Pusat Perbelanjaan, dan sejenisnya','Usaha Pusat Perbelanjaan, dan sejenisnya','Media Masa','Pengamanan','Lembaga Konservasi'],
           income:['Tidak Berpenghasilan','Dibawah Rp. 500.000','Rp 500.001 hingga Rp 2.000.000','Rp 2.000.001 hingga Rp 5.000.000','Rp 5.000.001 hingga Rp 10.000.000','Rp 10.000.001 hingga Rp 25.000.000','Diatas Rp 25.000.000'],
           nationality:['Indonesia','Warga Negara Asing'],
-          area : ['0 – 100 m2 ','101 – 500 m2','501 – 1000m2 ','>1001m2'],
+          area : ['0 – 100 m2 ','101 – 500 m2','501 – 1000m2','>1001m2'],
           floor : ['Keramik','Semen','Kayu keadaan jelek','Kayu keadaan bagus','Bambu kualitas rendah','Bambu kualitas tinggi'],
           wall : ['Bambu','Tembok','Kayu keadaan jelek','Kayu keadaan bagus'],
           goods: ['Tabungan','Ternak','Emas','Sepeda Motor','Tv Berwarna','Tidak mempunyai satupun'],
@@ -219,7 +224,13 @@
                       });
                     }
 
-
+                    subdistrictOption=[];
+                    if(district=='Kepulauan Seribu Selatan'){
+                      subdistrictOption = subdistrictOptionS;
+                    }
+                    else{
+                      subdistrictOption = subdistrictOptionU;
+                    }
                     var arrayData = [
                         {title:'Nama Lengkap',name:'name', content:name},
                         {title:'Jenis Kelamin', name:'gender',content:gender,options:optionObject.gender},
@@ -236,10 +247,10 @@
                         {title:'Status Perkawinan', name:'marriage', content:marriage,options:optionObject.marriage},
                         {title:'Tempat Lahir', name:'birth_place', content:birthPlace},
                         {title:'Tanggal Lahir', name:'birth_date', content:birthDate},
-                        {title:'Provinsi', name:'province', content:province},
-                        {title:'Kota/Kabupaten', name:'city', content:city},
-                        {title:'Kecamatan', name:'district', content:district},
-                        {title:'Kelurahan', name:'subdistrict', content:subdistrict},
+                        {title:'Provinsi', name:'province', content:province,options:['Dki Jakarta']},
+                        {title:'Kota/Kabupaten', name:'city', content:city,options:['Kab. Kepulauan Seribu']},
+                        {title:'Kecamatan', name:'district', content:district,options:districtOption},
+                        {title:'Kelurahan', name:'subdistrict', content:subdistrict,options:subdistrictOption},
                         {title:'RW', name:'rw', content:rw},
                         {title:'RT', name:'rt', content:rt},
                     ];
@@ -368,13 +379,14 @@
                 assetData.get().then((doc)=>{
                     if(doc && doc.exists){
                         var data = doc.data();
-                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan='-';
+                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,berapa_kali_sepekan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan='-';
                         if(data.luas_lantai){luas_lantai=data.luas_lantai}
                         if(data.jenis_lantai){jenis_lantai=data.jenis_lantai}
                         if(data.jenis_dinding){jenis_dinding=data.jenis_dinding}
                         if(data.fasilitas){fasilitas=data.fasilitas}
                         if(data.sumber_air){sumber_air=data.sumber_air}
                         if(data.sumber_penerangan){sumber_penerangan=data.sumber_penerangan}
+                        if(data.berapa_kali_sepekan){berapa_kali_sepekan=data.berapa_kali_sepekan}
                         if(data.berapa_kali_seminggu){berapa_kali_seminggu=data.berapa_kali_seminggu}
                         if(data.berapa_kali_sekali){berapa_kali_sekali=data.berapa_kali_sekali}
                         if(data.anggota_sakit){anggota_sakit=data.anggota_sakit}
@@ -398,7 +410,7 @@
                             {title:'Sumber penerangan utama', content:sumber_penerangan,options:optionObject.electricity,name:'electricity'},
                             {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu,options:optionObject.meat,name:'meat'},
                             {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali,options:optionObject.meal,name:'meal'},
-                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:'',options:optionObject.clothing,name:'clothing'},
+                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:berapa_kali_sepekan,options:optionObject.clothing,name:'clothing'},
                             {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit,options:optionObject.affirmative,name:'sickness'},
                             {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang_array,options:optionObject.goods, type:'multiple',name:'goods'},
                             {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha,options:optionObject.affirmative,name:'credit'},
@@ -443,7 +455,7 @@
                         });
 
                         assetInfo.html('');
-                        assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
+                        assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
                     }
 
                     else{
@@ -462,13 +474,13 @@
                 assetImage.get().then((doc)=>{
                     if(doc && doc.exists){
                         assetInfo.append(
-                            '<form action="/penduduk-asset-img-save" method="POST"><input type="hidden" value="'+id+'">'+
+                            '<form action="/penduduk-asset-img-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+
                             '<br>'+
                             '<div class="form-group">'+
                                 '<label class="control-label">Foto Kepala Keluarga</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="photo_head" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -476,7 +488,7 @@
                                 '<label class="control-label">Foto Depan Rumah</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="photo_terrace" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -484,7 +496,7 @@
                                 '<label class="control-label">Foto Ruang Tamu</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="photo_livingroom" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -492,7 +504,7 @@
                                 '<label class="control-label">Foto Dapur</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="photo_kitchen" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
 
                                 '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
                             '</div><hr>'+
@@ -501,10 +513,10 @@
                                 '<label class="control-label">Foto Belakang Rumah</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="photo_backyard" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
-                            '</div>'+
-                            '<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
+                            '</div>'
+                            // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
                         );
 
                         var data = doc.data();
@@ -568,22 +580,71 @@
                     querySnapshot.forEach((doc)=>{
                         var data = doc.data();
                         var arrayData = [
-                            {title:'Nomor Kartu Keluarga', content:data.nomor_kk},
-                            {title:'Provinsi', content:data.provinsi},
-                            {title:'Kota / Kabupaten', content:data.kota},
-                            {title:'Kecamatan', content:data.kecamatan},
-                            {title:'Kelurahan', content:data.kelurahan},
-                            {title:'RW', content:data.rw},
-                            {title:'RT', content:data.rt},
-                            {title:'Alamat', content:data.alamat}
+                            {title:'Nomor Kartu Keluarga', content:data.nomor_kk,type:'input',name:'kk_number'},
+                            {title:'Provinsi', content:data.provinsi,type:'select',name:'province'},
+                            {title:'Kota / Kabupaten', content:data.kota,type:'select',name:'city'},
+                            {title:'Kecamatan', content:data.kecamatan,type:'select',name:'district'},
+                            {title:'Kelurahan', content:data.kelurahan,type:'select',name:'subdistrict'},
+                            {title:'RW', content:data.rw,type:'input',name:'rw'},
+                            {title:'RT', content:data.rt,type:'input',name:'rt'},
+                            {title:'Alamat', content:data.alamat,type:'input',name:'address'}
                         ];
 
                         var toAppend = '';
-                        arrayData.forEach((data)=>{
+                        arrayData.forEach((item)=>{
+                          var input = '';
+
+                           if(item.type=='select'){
+                             var options='';
+                             switch(item.name){
+                               case 'province':
+                                  options+='<option selected>Dki Jakarta</option>';
+                                  break;
+                               case 'city':
+                                  options+='<option selected>Kab. Kepulauan Seribu</option>';
+                                  break;
+                               case 'district':
+                                  districtOption.forEach((option)=>{
+                                    if(option.toLowerCase()==item.content.toLowerCase()){
+                                      options+='<option selected>'+option+'</option>';
+                                    }
+                                    else{
+                                      options+='<option>'+option+'</option>';
+                                    }
+                                  });
+                                  break;
+                              case 'subdistrict':
+                                  if(data.kecamatan=='Kepulauan Seribu Selatan'){
+                                    subdistrictOptionS.forEach((option)=>{
+                                      if(option.toLowerCase()==item.content.toLowerCase()){
+                                        options+='<option selected>'+option+'</option>';
+                                      }
+                                      else{
+                                        options+='<option>'+option+'</option>';
+                                      }
+                                    });
+                                  }
+                                  else if (data.kecamatan=='Kepulauan Seribu Utara') {
+                                    subdistrictOptionU.forEach((option)=>{
+                                      if(option.toLowerCase()==item.content.toLowerCase()){
+                                        options+='<option selected>'+option+'</option>';
+                                      }
+                                      else{
+                                        options+='<option>'+option+'</option>';
+                                      }
+                                    });
+                                  }
+                             }
+                             input = '<select name="'+item.name+'" class="form-control">'+options+'</select>';
+
+                           }
+                           else{
+                             input='<input class="form-control" value="'+item.content+'" name="'+item.name+'">'
+                           }
                             toAppend+='<div class="row form-group">'+
-                                        '<label class="control-label col-md-5">'+data.title+'</label>'+
+                                        '<label class="control-label col-md-5">'+item.title+'</label>'+
                                         '<p class="col-md-7">'
-                                            +'<input class="form-control" value="'+data.content+'"'+
+                                            +input+
                                         '</p>'+
                                     '</div>';
                         });
@@ -597,7 +658,7 @@
                                 '<label class="control-label">Foto Kartu Keluarga</label>'+
                                 '<br>'+
                                 '<br>'+
-                                '<input type="file" name="kk_photo" class="form-control">'+
+                                //'<input type="file" name="" class="form-control">'+
                                 '<img src="/images/no-image.png" id="kkPhoto" style="width:40%;display:block"/>'+
                             '</div><hr>';
 
@@ -633,6 +694,25 @@
                 alert('You cannot upload file with size more than 5 MB!');
                 $(this).val('');
             }
+        });
+
+        $(document).on('change','select[name="district"]',function(){
+          var options = '';
+          var select = $('select[name="district"]');
+          var selectSubdistrict = $('select[name="subdistrict"]');
+          selectSubdistrict.html('');
+          if(select.val()=='Kepulauan Seribu Selatan'){
+            subdistrictOptionS.forEach((option)=>{
+              options+='<option>'+option+'</option>';
+            });
+            selectSubdistrict.append(options);
+          }
+          else if (select.val()=='Kepulauan Seribu Utara') {
+            subdistrictOptionU.forEach((option)=>{
+              options+='<option>'+option+'</option>';
+            });
+            selectSubdistrict.append(options);
+          }
         });
 
         function init(){
