@@ -9,6 +9,7 @@
   "author": "Yoza Wiratama <yoza@wiratama.id>",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^1.5.2",
     "connect": "^3.6.5",
     "cors": "^2.8.4",
     "express": "^4.16.2",

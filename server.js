@@ -12,7 +12,7 @@ var cors = require('cors')({origin:true});
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
 var bodyParser = require('body-parser');
-var flash = require('connect-flash');
+// var flash = require('connect-flash');
 // initialize firebase in serverside
 var firebase = require("firebase");
 require("firebase/firestore");
