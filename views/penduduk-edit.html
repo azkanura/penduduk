@@ -15,24 +15,35 @@
 {% block content %}
 <div class="row m-t-1">
     <div class="col-md-4 col-lg-3">
-        <div class="text-xs-center">
-            <img src="/demo/avatars/account.png" alt="" class="page-profile-v1-avatar border-round" id="profilePicture">
-        </div>
+        <br>
         <div class="panel panel-transparent">
             <div class="panel-heading p-x-1">
                 <p class="text-center" id="profileSummary">
                     <span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profilnya</span>
                 </p>
+                <div class="badge badge-success" style="display:block">
+                    Kepala Keluarga</div>
             </div>
         </div>
-        <div class="m-y-3 text-xs-center">
-            <span class="badge badge-success">
-                Kepala Keluarga</span>
+
+        <div class="text-xs-center">
+            <h4 class="text-center" style="margin-top:0;margin-bottom:12px">Ubah Foto Profil</h4>
+            <img src="/demo/avatars/account.png" alt="" style="width:60%;border-radius:5px" id="profilePicture">
+            <br>
+            <br>
+            <input type="file" id="profileUpload" class="form-control">
+            <br>
+            <hr>
+            <h4 class="text-center" style="margin-top:0;margin-bottom:12px">Ubah Foto KTP</h4>
+            <img src="/images/card_container.png" alt="" style="width:80%;border-radius:5px" id="idPicture">
+            <br>
+            <br>
+            <input type="file" id="idUpload" class="form-control">
+            <br>
+            <button id="profileImgUploadBtn" class="btn btn-danger" style="width:100%">Unggah Gambar</button>
+
         </div>
-        <div class="m-y-3 text-xs-center">
-            <a href="/penduduk-detail/{{ id }}" class="btn btn-success">
-                <i class="fa fa-check fa-fw"></i> Selesai Ubah</a>
-        </div>
+        <hr>
 
     </div>
 
@@ -41,7 +52,8 @@
     <div class="col-md-8 col-lg-9">
         <h1 class="font-size-20 m-y-4">
             <span id="profileName">
-                Ubah Detail Penduduk
+                Ubah Detail Penduduk <a href="/penduduk-detail/{{ id }}" class="btn btn-success pull-right">
+                    <i class="fa fa-check fa-fw"></i> Selesai Ubah</a>
             </span>
         </h1>
 
@@ -239,6 +251,14 @@ async defer></script>
                       });
                     }
 
+                    if(idPicture){
+                      storageRef.child(idPicture).getDownloadURL().then((url)=>{
+                          var image = $('#idPicture');
+                          image.attr('src',url);
+                      }).catch(function(error){
+                          console.log('Cannot get picture!');
+                      });
+                    }
                     subdistrictOption=[];
                     if(district=='Kepulauan Seribu Selatan'){
                       subdistrictOption = subdistrictOptionS;
@@ -693,7 +713,7 @@ async defer></script>
           }
           setTimeout(function(){
             $(location).attr('href','/penduduk-edit/'+id);
-          },20000);
+          },10000);
         });
 
 
@@ -887,6 +907,50 @@ async defer></script>
             });
             selectSubdistrict.append(options);
           }
+        });
+
+        $('#profileImgUploadBtn').on('click',function(){
+          $('#modalLoading').modal('show');
+          var photoProfile = $('#profileUpload').prop('files')[0];
+          var photoId = $('#idUpload').prop('files')[0];
+          var resident = penduduk.doc(id);
+          if(photoProfile){
+            var pName = 'images/p-'+id+'.jpg';
+            var pStorageRef=firebase.storage().ref(pName);
+            var pTask = pStorageRef.put(photoProfile);
+            pTask.on('state_changed',
+              function complete(){
+                resident.update({
+                  foto_orang:pName
+                });
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+
+          if(photoId){
+            var iName = 'images/i-'+id+'.jpg';
+            var iStorageRef=firebase.storage().ref(iName);
+            var iTask = iStorageRef.put(photoId);
+            iTask.on('state_changed',
+              function complete(){
+                resident.update({
+                  foto_ktp:iName
+                });
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+
+          setTimeout(function(){
+            $(location).attr('href','/penduduk-edit/'+id);
+          },5000);
+
+
         });
 
         function init(){

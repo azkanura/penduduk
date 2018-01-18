@@ -14,35 +14,46 @@
 <!-- Content -->
 {% block content %}
 <div class="row m-t-1">
-    <div class="col-md-4 col-lg-3">
-        <div class="text-xs-center">
-            <img src="/demo/avatars/account.png" alt="" class="page-profile-v1-avatar border-round" id="profilePicture">
-        </div>
-        <div class="panel panel-transparent">
-            <div class="panel-heading p-x-1">
-                <p class="text-center" id="profileSummary">
-                    <span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profilnya</span>
-                </p>
-            </div>
-        </div>
-        <div class="m-y-3 text-xs-center">
-            <span class="badge badge-primary" id="memberStatus">
-                <span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profilnya</span>
-            </span>
-        </div>
-        <div class="m-y-3 text-xs-center">
-            <a href="/anggota-detail/{{kkId}}/{{ id }}" class="btn btn-success">
-                <i class="fa fa-check fa-fw"></i> Selesai Ubah</a>
-        </div>
+  <div class="col-md-4 col-lg-3">
+      <br>
+      <div class="panel panel-transparent">
+          <div class="panel-heading p-x-1">
+              <p class="text-center" id="profileSummary">
+                  <span style="background: #eeeeee;color:transparent;border-radius: 3px">Nama Penduduk Profilnya</span>
+              </p>
+              <div class="badge badge-success" style="display:block" id="memberStatus">
+                  Kepala Keluarga</div>
+          </div>
+      </div>
 
-    </div>
+      <div class="text-xs-center">
+          <h4 class="text-center" style="margin-top:0;margin-bottom:12px">Ubah Foto Profil</h4>
+          <img src="/demo/avatars/account.png" alt="" style="width:60%;border-radius:5px" id="profilePicture">
+          <br>
+          <br>
+          <input type="file" id="profileUpload" class="form-control">
+          <br>
+          <hr>
+          <h4 class="text-center" style="margin-top:0;margin-bottom:12px">Ubah Foto KTP</h4>
+          <img src="/images/card_container.png" alt="" style="width:80%;border-radius:5px" id="idPicture">
+          <br>
+          <br>
+          <input type="file" id="idUpload" class="form-control">
+          <br>
+          <button id="profileImgUploadBtn" class="btn btn-danger" style="width:100%">Unggah Gambar</button>
+
+      </div>
+      <hr>
+
+  </div>
 
     <hr class="page-wide-block visible-xs visible-sm">
 
     <div class="col-md-8 col-lg-9">
         <h1 class="font-size-20 m-y-4">
             <span id="profileName">
-                <a href="/penduduk-detail/{{kkId}}">Detail Penduduk</a> > Edit Anggota Keluarga
+                Edit Anggota Keluarga <a href="/anggota-detail/{{kkId}}/{{ id }}" class="btn btn-success pull-right">
+                    <i class="fa fa-check fa-fw"></i> Selesai Ubah</a>
             </span>
 
         </h1>
@@ -61,6 +72,21 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top: 15%; overflow-y: visible;" id="modalLoading">
+  <div class="modal-dialog modal-m">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="margin:0;">Sedang mengunggah gambar..</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom:0;">
+          <div class="progress-bar" style="width: 100%">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 {% block inlinejs  %}
@@ -94,21 +120,6 @@
           income:['Tidak Berpenghasilan','Dibawah Rp. 500.000','Rp 500.001 hingga Rp 2.000.000','Rp 2.000.001 hingga Rp 5.000.000','Rp 5.000.001 hingga Rp 10.000.000','Rp 10.000.001 hingga Rp 25.000.000','Diatas Rp 25.000.000'],
           nationality:['Indonesia','Warga Negara Asing']
         };
-
-        function init(){
-            $('#profileInfoBtn').click();
-        }
-
-        function addData(id,name,count){
-            dataContainer.append(
-            '<tr>'+
-                '<th  scope="row">'+counter+'</th>'+
-                '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
-                '<td>'+count+'</td>'+
-            '</tr>'
-            );
-            counter++;
-        }
 
         $('#profileInfoBtn').on('click',function(){
                 person.get().then((doc)=>{
@@ -175,6 +186,15 @@
                     if(profilePicture){
                       storageRef.child(profilePicture).getDownloadURL().then((url)=>{
                           var image = $('#profilePicture');
+                          image.attr('src',url);
+                      }).catch(function(error){
+                          console.log('Cannot get picture!');
+                      });
+                    }
+
+                    if(idPicture){
+                      storageRef.child(idPicture).getDownloadURL().then((url)=>{
+                          var image = $('#idPicture');
                           image.attr('src',url);
                       }).catch(function(error){
                           console.log('Cannot get picture!');
@@ -253,6 +273,65 @@
                 }
             });
         });
+
+        $('#profileImgUploadBtn').on('click',function(){
+          $('#modalLoading').modal('show');
+          var photoProfile = $('#profileUpload').prop('files')[0];
+          var photoId = $('#idUpload').prop('files')[0];
+          var resident = penduduk.doc(kkId).collection('anggota').doc(id);
+          if(photoProfile){
+            var pName = 'images/p-'+id+'.jpg';
+            var pStorageRef=firebase.storage().ref(pName);
+            var pTask = pStorageRef.put(photoProfile);
+            pTask.on('state_changed',
+              function complete(){
+                resident.update({
+                  foto_orang:pName
+                });
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+
+          if(photoId){
+            var iName = 'images/i-'+id+'.jpg';
+            var iStorageRef=firebase.storage().ref(iName);
+            var iTask = iStorageRef.put(photoId);
+            iTask.on('state_changed',
+              function complete(){
+                resident.update({
+                  foto_ktp:iName
+                });
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+
+          setTimeout(function(){
+            $(location).attr('href','/anggota-edit/'+kkId+'/'+id);
+          },5000);
+
+
+        });
+
+        function init(){
+            $('#profileInfoBtn').click();
+        }
+
+        function addData(id,name,count){
+            dataContainer.append(
+            '<tr>'+
+                '<th  scope="row">'+counter+'</th>'+
+                '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
+                '<td>'+count+'</td>'+
+            '</tr>'
+            );
+            counter++;
+        }
 
 
     </script>
