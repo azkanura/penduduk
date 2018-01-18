@@ -811,8 +811,8 @@ async defer></script>
                                 '<label class="control-label">Foto Kartu Keluarga</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
-                                '<img src="/images/no-image.png" id="kkPhoto" style="width:40%;display:block"/>'+
+                                '<input type="file" id="familyCardUpload" class="form-control">'+
+                                '<img src="/images/no-image.png" id="kkPhoto" style="width:70%;display:block"/>'+
                             '</div><hr>';
 
                         documentInfo.append(
@@ -906,6 +906,36 @@ async defer></script>
               options+='<option>'+option+'</option>';
             });
             selectSubdistrict.append(options);
+          }
+        });
+
+        $(document).on('change','#familyCardUpload',function(){
+          $('#modalLoading').modal('show');
+          var familyCard = $('#familyCardUpload').prop('files')[0];
+          var documents = penduduk.doc(id).collection('dokumen');
+
+          if(familyCard){
+            var pName = 'images/fc-'+id+'.jpg';
+            var pStorageRef=firebase.storage().ref(pName);
+            var pTask = pStorageRef.put(familyCard);
+            pTask.on('state_changed',
+              function complete(){
+                documents.get().then((querySnapshot)=>{
+                  querySnapshot.forEach((doc)=>{
+                    var docId = doc.id;
+                    var documentation = penduduk.doc(id).collection('dokumen').doc(docId);
+                    documentation.update({
+                      foto_kk:pName
+                    }).then(()=>{
+                      $(location).attr('href','/penduduk-edit/'+id);
+                    });
+                  });
+                });
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
           }
         });
 
