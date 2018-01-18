@@ -17,6 +17,9 @@
     <div class="col-md-4 col-lg-3">
         <div class="text-xs-center">
             <img src="/demo/avatars/account.png" alt="" class="page-profile-v1-avatar border-round" id="profilePicture">
+            <br>
+            <br>
+            <img src="/images/card_container.png" alt="" style="width:100%" id="idPicture">
         </div>
         <div class="panel panel-transparent">
             <div class="panel-heading p-x-1">
@@ -191,6 +194,15 @@ async defer></script>
                     if(profilePicture){
                       storageRef.child(profilePicture).getDownloadURL().then((url)=>{
                           var image = $('#profilePicture');
+                          image.attr('src',url);
+                      }).catch(function(error){
+                          console.log('Cannot get picture!');
+                      });
+                    }
+
+                    if(idPicture){
+                      storageRef.child(idPicture).getDownloadURL().then((url)=>{
+                          var image = $('#idPicture');
                           image.attr('src',url);
                       }).catch(function(error){
                           console.log('Cannot get picture!');

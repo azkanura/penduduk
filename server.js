@@ -8,6 +8,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var cors = require('cors')({origin:true});
+var fileUpload = require('express-fileupload');
 
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
@@ -16,6 +17,13 @@ var bodyParser = require('body-parser');
 // initialize firebase in serverside
 var firebase = require("firebase");
 require("firebase/firestore");
+const googleStorage = require('@google-cloud/storage');
+var storage = googleStorage({
+  projectId: "penduduk-app",
+  keyFileName: "service-account-credentials.json"
+});
+
+var bucket = storage.bucket("penduduk-app.appspot.com");
 
 // Initialize Firebase
 var config = {
@@ -54,6 +62,7 @@ nunjucks.configure('views',{
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(fileUpload());
 
 app.get('/',function(req,res){
 	res.render('index.html');
@@ -255,10 +264,83 @@ app.post('/penduduk-asset-save',function(req,res){
   res.redirect('/penduduk-edit/'+id);
 });
 
-app.post('/penduduk-asset-img-save',function(req,res){
-  var id = req.body.id;
-  res.redirect('/penduduk-edit/'+id);
-});
+// app.post('/penduduk-asset-img-save',function(req,res){
+//   var id = req.body.id;
+//   var resident = penduduk.doc(id);
+//   var assetImg = resident.collection('rumah').doc('gambar');
+//   var filePath;
+//   if(req.files.photo_family_head){
+//     var photoFamilyHead = req.files.photo_family_head;
+//     var fhName = 'images/kk-'+id+'.jpg';
+//     var fhStorageRef=firebase.storage().ref(fhName);
+//     var fhTask = fhStorageRef.put(photoFamilyHead);
+//     fhTask.on('state_changed',
+//       function complete(){
+//         assetImg.update({foto_kepala_keluarga:fhName});
+//       },
+//       function error(err){
+//         console.log('error: '+err);
+//       }
+//     );
+//   }
+//   if(req.files.photo_terrace){
+//     var photoTerrace = req.files.photo_terrace;
+//     var tName = 'images/dr-'+id+'.jpg';
+//     var tStorageRef=firebase.storage().ref(tName);
+//     var tTask = tStorageRef.put(photoTerrace);
+//     tTask.on('state_changed',
+//       function complete(){
+//         assetImg.update({foto_depan_rumah:tName});
+//       },
+//       function error(err){
+//         console.log('error: '+err);
+//       }
+//     );
+//   }
+//   if(req.files.photo_living_room){
+//     var photoLivingroom = req.files.photo_living_room;
+//     var lrName = 'images/rt-'+id+'.jpg';
+//     var lrStorageRef=firebase.storage().ref(lrName);
+//     var lrTask = lrStorageRef.put(photoLivingroom);
+//     lrTask.on('state_changed',
+//       function complete(){
+//         assetImg.update({foto_ruang_tamu:lrName});
+//       },
+//       function error(err){
+//         console.log('error: '+err);
+//       }
+//     );
+//   }
+//   if(req.files.photo_kitchen){
+//     var photoKitchen = req.files.photo_kitchen;
+//     var kName = 'images/d-'+id+'.jpg';
+//     var kStorageRef=firebase.storage().ref(kName);
+//     var kTask = kStorageRef.put(photoKitchen);
+//     kTask.on('state_changed',
+//       function complete(){
+//         assetImg.update({foto_dapur:kName});
+//       },
+//       function error(err){
+//         console.log('error: '+err);
+//       }
+//     );
+//   }
+//   if(req.files.photo_backyard){
+//     var photoBackyard = req.files.photo_backyard;
+//     var bName = 'images/br-'+id+'.jpg';
+//     var bStorageRef=firebase.storage().ref(bName);
+//     var bTask = bStorageRef.put(photoBackyard);
+//     bTask.on('state_changed',
+//       function complete(){
+//         assetImg.update({foto_belakang_rumah:bName});
+//       },
+//       function error(err){
+//         console.log('error: '+err);
+//       }
+//     );
+//   }
+//   res.redirect('/penduduk-edit/'+id);
+// });
 app.post('/penduduk-document-save',function(req,res){
   var id = req.body.id;
   var resident = penduduk.doc(id);

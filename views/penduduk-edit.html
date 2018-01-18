@@ -86,6 +86,23 @@
         </div>
     </div>
 </div>
+
+<div class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top: 15%; overflow-y: visible;" id="modalLoading">
+  <div class="modal-dialog modal-m">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="margin:0;">Sedang mengunggah gambar..</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress progress-striped active" style="margin-bottom:0;">
+          <div class="progress-bar" style="width: 100%">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 {% block inlinejs  %}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuZNWjvPHba3Trl2m_pNSPmYxRjxK8AR4"
@@ -490,13 +507,13 @@ async defer></script>
                 assetImage.get().then((doc)=>{
                     if(doc && doc.exists){
                         assetInfo.append(
-                            '<form action="/penduduk-asset-img-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+
+                            // '<form action="/penduduk-asset-img-save" enctype="multipart/form-data" method="POST"><input type="hidden" value="'+id+'" name="id">'+
                             '<br>'+
                             '<div class="form-group">'+
                                 '<label class="control-label">Foto Kepala Keluarga</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
+                                '<input type="file" name="photo_family_head" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -504,7 +521,7 @@ async defer></script>
                                 '<label class="control-label">Foto Depan Rumah</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
+                                '<input type="file" name="photo_terrace" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -512,7 +529,7 @@ async defer></script>
                                 '<label class="control-label">Foto Ruang Tamu</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
+                                '<input type="file" name="photo_living_room" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
                             '</div><hr>'+
 
@@ -520,7 +537,7 @@ async defer></script>
                                 '<label class="control-label">Foto Dapur</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
+                                '<input type="file" name="photo_kitchen" class="form-control">'+
 
                                 '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
                             '</div><hr>'+
@@ -529,9 +546,10 @@ async defer></script>
                                 '<label class="control-label">Foto Belakang Rumah</label>'+
                                 '<br>'+
                                 '<br>'+
-                                //'<input type="file" name="" class="form-control">'+
+                                '<input type="file" name="photo_backyard" class="form-control">'+
                                 '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
                             '</div>'
+                            +'<button id="saveAssetImgBtn" class="btn btn-success pull-right">Simpan Gambar</button>'
                             // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
                         );
 
@@ -596,6 +614,86 @@ async defer></script>
         $(document).on('click','.multiple-value',function(){
             $(this).siblings('.value-score').click();
             console.log('checked? :' +$(this).siblings('.value-score').is(':checked')+'value: '+$(this).siblings('.value-score').val());
+        });
+
+        $(document).on('click','#saveAssetImgBtn',function(){
+          $('#modalLoading').modal('show');
+          var resident = penduduk.doc(id);
+          var assetImg = resident.collection('rumah').doc('gambar');
+          var filePath;
+          if($(document).find('[name="photo_family_head"]').prop('files')[0]){
+            var photoFamilyHead = $(document).find('[name="photo_family_head"]').prop('files')[0];
+            var fhName = 'images/kk-'+id+'.jpg';
+            var fhStorageRef=firebase.storage().ref(fhName);
+            var fhTask = fhStorageRef.put(photoFamilyHead);
+            fhTask.on('state_changed',
+              function complete(){
+                assetImg.update({foto_kepala_keluarga:fhName});
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+          if($(document).find('[name="photo_terrace"]').prop('files')[0]){
+            var photoTerrace = $(document).find('[name="photo_terrace"]').prop('files')[0];
+            var tName = 'images/dr-'+id+'.jpg';
+            var tStorageRef=firebase.storage().ref(tName);
+            var tTask = tStorageRef.put(photoTerrace);
+            tTask.on('state_changed',
+              function complete(){
+                assetImg.update({foto_depan_rumah:tName});
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+          if($(document).find('[name="photo_living_room"]').prop('files')[0]){
+            var photoLivingroom = $(document).find('[name="photo_living_room"]').prop('files')[0];
+            var lrName = 'images/rt-'+id+'.jpg';
+            var lrStorageRef=firebase.storage().ref(lrName);
+            var lrTask = lrStorageRef.put(photoLivingroom);
+            lrTask.on('state_changed',
+              function complete(){
+                assetImg.update({foto_ruang_tamu:lrName});
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+          if($(document).find('[name="photo_kitchen"]').prop('files')[0]){
+            var photoKitchen = $(document).find('[name="photo_kitchen"]').prop('files')[0];
+            var kName = 'images/d-'+id+'.jpg';
+            var kStorageRef=firebase.storage().ref(kName);
+            var kTask = kStorageRef.put(photoKitchen);
+            kTask.on('state_changed',
+              function complete(){
+                assetImg.update({foto_dapur:kName});
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+          if($(document).find('[name="photo_backyard"]').prop('files')[0]){
+            var photoBackyard = $(document).find('[name="photo_backyard"]').prop('files')[0];
+            var bName = 'images/br-'+id+'.jpg';
+            var bStorageRef=firebase.storage().ref(bName);
+            var bTask = bStorageRef.put(photoBackyard);
+            bTask.on('state_changed',
+              function complete(){
+                assetImg.update({foto_belakang_rumah:bName});
+              },
+              function error(err){
+                console.log('error: '+err);
+              }
+            );
+          }
+          setTimeout(function(){
+            $(location).attr('href','/penduduk-edit/'+id);
+          },20000);
         });
 
 
