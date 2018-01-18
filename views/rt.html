@@ -53,7 +53,7 @@
     <div class="panel">
         <div class="panel-heading">
             <div class="panel-title">
-                Daftar Penduduk 
+                Daftar Penduduk
             </div>
         </div>
         <div class="panel-body">
@@ -64,6 +64,7 @@
                         <th>#</th>
                         <th>Nama Kepala Keluarga</th>
                         <th>Anggota</th>
+                        <th>Tindakan</th>
                     </tr>
                 </thead>
                 <tbody id="dataContainer">
@@ -72,6 +73,23 @@
             </table>
         </div>
     </div>
+
+    <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  Konfirmasi Menghapus
+              </div>
+              <div class="modal-body">
+                  Apakah anda yakin akan menghapus data?
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                  <a class="btn btn-danger btn-ok" id="confirmDeleteBtn">Hapus</a>
+              </div>
+          </div>
+      </div>
+  </div>
 {% endblock %}
 {% block inlinejs  %}
     <script type="text/javascript">
@@ -122,14 +140,14 @@
                     var name = data.nama_lengkap;
                     var id = doc.id;
                     var members = penduduk.doc(id).collection('anggota');
-                    members.get().then((query)=>{ 
+                    members.get().then((query)=>{
                         var count = query.size;
                         addData(id,name,count);
                     });
-                } 
+                }
              });
              $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province+' > '+city+' > '+district+' > '+subdistrict+' > RW '+rw+' > RT '+rt);
-        }); 
+        });
 
 
         function init(){
@@ -152,11 +170,11 @@
                     $('#filterDistrict').hide();
                     $('#filterSubdistrict').hide();
                     break;
-            }       
+            }
 
         }
 
-        
+
         selectProvince.on('change',function(){
             var selectedProvince = $(this).val();
             var arrayClause = [
@@ -243,11 +261,11 @@
                         var name = data.nama_lengkap;
                         var id = doc.id;
                         var members = penduduk.doc(id).collection('anggota');
-                        members.get().then((query)=>{ 
+                        members.get().then((query)=>{
                             var count = query.size;
                             addData(id,name,count);
                         });
-                    } 
+                    }
                  });
             });
 
@@ -328,7 +346,22 @@
                 });
             });
         }
-        //for filtering            
+        //for filtering
+        $(document).on('click','.delete-btn',function(){
+          $('#confirmDeleteBtn').attr('idDelete',$(this).attr('id'));
+          $('#confirmDelete').modal('show');
+        });
+
+        $('#confirmDeleteBtn').on('click',function(){
+          var idDelete = $(this).attr('idDelete');
+          penduduk.doc(idDelete).delete().then(function(){
+            console.log("Document successfully deleted!");
+            location.reload(true);
+          }).catch(function(error){
+            alert('Terjadi error: ', error);
+            console.error("Error removing document: ", error);
+          });
+        });
 
         function addData(id,name,count){
             dataContainer.append(
@@ -336,6 +369,7 @@
                 '<th  scope="row">'+counter+'</th>'+
                 '<td><a href="/penduduk-detail/'+id+'">'+name+'</a></td>'+
                 '<td>'+count+'</td>'+
+                '<td><a href="/penduduk-edit/'+id+'" class="btn btn-primary" class="edit-btn">Ubah</a>&nbsp;&nbsp;<a class="btn btn-danger delete-btn" id="'+id+'">Hapus</a></td>'+
             '</tr>'
             );
             counter++;
@@ -354,6 +388,6 @@
             }
             return exist;
         }
-        
+
     </script>
 {% endblock %}
