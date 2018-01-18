@@ -19,14 +19,14 @@
 
     <hr class="page-wide-block m-y-0">
 
-    
+
 </div>
 <div class="page-wide-block">
     <div>
 
     </div>
     <div class="box border-radius-0 m-a-0">
-        
+
         <div class="box-cell" style="height: 600px;">
             <div class="widget-maps" id="map"></div>
         </div>
@@ -35,25 +35,34 @@
 
 
 {% endblock %} {% block inlinejstop %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHtdj4L66c05v1UZm-nte1FzUEAN6GKBI&callback=initMap&sensor=false"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHtdj4L66c05v1UZm-nte1FzUEAN6GKBI&sensor=false"
     async defer></script> {% endblock %} {% block inlinejs %}
 <script>
+    var map = '';
+    var penduduk = db.collection('penduduk');
+    penduduk.get().then((querySnapshot)=>{
+      initMap();
+      var marker = new google.maps.Marker({
+          map: map,
+          position: { lat: 6.070446827312626, lng: 106.79143108427523 },
+          title: '',
+      });
+      querySnapshot.forEach((doc)=>{
+        var data = doc.data();
+      });
+    })
+
     function init() {
 
     }
-    function initMap() {
-        var coordinates = { lat: 34.151327, lng: -118.254657 };
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
+    function initMap() {
+        var coordinates = { lat: -6.070446827312626, lng: 106.79143108427523 };
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
             center: coordinates,
             scrollwheel: false,
-        });
-
-        var marker = new google.maps.Marker({
-            map: map,
-            position: coordinates,
-            title: '',
         });
     }
 

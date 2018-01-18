@@ -170,6 +170,34 @@ app.post('/penduduk-personal-save',function(req,res){
   res.redirect('/penduduk-edit/'+id);
 });
 
+app.post('/anggota-personal-save',function(req,res){
+  var id = req.body.id;
+  var kkId = req.body.kk_id;
+  var resident = penduduk.doc(kkId).collection('anggota').doc(id);
+  resident.set({
+    agama:req.body.religion,
+    bidang_pekerjaan:req.body.job_field,
+    golongan_darah:req.body.blood_type,
+    jenis:req.body.status,
+    jenis_kelamin:req.body.gender,
+    kewarganegaraan:req.body.nationality,
+    kirasan_penghasilan:req.body.income,
+    nama_lengkap:req.body.name,
+    pekerjaan:req.body.job,
+    pendidikan:req.body.education,
+    status_perkawinan:req.body.marriage,
+    tanggal_lahir:req.body.birth_date,
+    tempat_lahir:req.body.birth_place
+  }).then(function() {
+    console.log('Data anggota keluarga berhasil diubah');
+  })
+  .catch(function(error) {
+    console.log('Data anggota keluarga gagal diubah, terjadi kesalahan teknis');
+  });
+
+  res.redirect('/anggota-edit/'+kkId+'/'+id);
+});
+
 app.post('/penduduk-asset-save',function(req,res){
   var id = req.body.id;
   var resident = penduduk.doc(id);
@@ -188,6 +216,7 @@ app.post('/penduduk-asset-save',function(req,res){
     fasilitas:req.body.facility,
     sumber_air:req.body.water,
     sumber_penerangan:req.body.electricity,
+    bahan_bakar:req.body.cooking,
     berapa_kali_sekali:req.body.meal,
     berapa_kali_seminggu:req.body.meat,
     berapa_kali_sepekan:req.body.clothing,
@@ -230,7 +259,7 @@ app.post('/penduduk-document-save',function(req,res){
         rt:req.body.rt,
         alamat:req.body.address,
         foto_kk:kkPhoto,
-        koordinat:coordinate
+        koordinat:req.body.geolocation
       }).then(function(){
         console.log('Data aset berhasil diubah');
 
@@ -248,6 +277,12 @@ app.get('/anggota-detail/:kkId/:id',function(req,res){
 	var id = req.params.id;
 	var kkId = req.params.kkId;
 	res.render('anggota-detail.html',{kkId:kkId,id:id});
+});
+
+app.get('/anggota-edit/:kkId/:id',function(req,res){
+	var id = req.params.id;
+	var kkId = req.params.kkId;
+	res.render('anggota-edit.html',{kkId:kkId,id:id});
 });
 
 app.get('/user',function(req,res){

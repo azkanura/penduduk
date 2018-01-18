@@ -90,10 +90,13 @@
                 <h4 class="text-center">Loading Data..</h4>
             </div>
         </div>
+        <!-- <div id="map" style="width:100%;height:300px;"></div> -->
     </div>
 </div>
 {% endblock %}
 {% block inlinejs  %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuZNWjvPHba3Trl2m_pNSPmYxRjxK8AR4"
+async defer></script>
     <script type="text/javascript">
         var profileInfo = $('#profileInfo');
         var familyInfo = $('#familyInfo');
@@ -274,6 +277,7 @@
                                         '</div>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                        '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
                                     '</div>'
                                 );
                             }).catch((error)=>{
@@ -285,6 +289,7 @@
                                         '</div>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                        '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
                                     '</div>'
                                 );
                             });
@@ -298,6 +303,7 @@
                                         '</div>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
                                         '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                        '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
                                     '</div>'
                                 );
                         }
@@ -322,14 +328,16 @@
                 assetData.get().then((doc)=>{
                     if(doc && doc.exists){
                         var data = doc.data();
-                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan='-';
+                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,bahan_bakar,berapa_kali_sepekan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan='-';
                         if(data.luas_lantai){luas_lantai=data.luas_lantai}
                         if(data.jenis_lantai){jenis_lantai=data.jenis_lantai}
                         if(data.jenis_dinding){jenis_dinding=data.jenis_dinding}
                         if(data.fasilitas){fasilitas=data.fasilitas}
                         if(data.sumber_air){sumber_air=data.sumber_air}
                         if(data.sumber_penerangan){sumber_penerangan=data.sumber_penerangan}
+                        if(data.bahan_bakar){bahan_bakar=data.bahan_bakar}
                         if(data.berapa_kali_seminggu){berapa_kali_seminggu=data.berapa_kali_seminggu}
+                        if(data.berapa_kali_sepekan){berapa_kali_sepekan=data.berapa_kali_sepekan}
                         if(data.berapa_kali_sekali){berapa_kali_sekali=data.berapa_kali_sekali}
                         if(data.anggota_sakit){anggota_sakit=data.anggota_sakit}
                         if(data.list_barang){list_barang=data.list_barang}
@@ -343,9 +351,10 @@
                             {title:'Fasilitas tempat buang air besar', content:fasilitas},
                             {title:'Sumber air minum', content:sumber_air},
                             {title:'Sumber penerangan utama', content:sumber_penerangan},
+                            {title:'Bahan bakar utama untuk memasak sehari-hari', content:bahan_bakar},
                             {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu},
                             {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali},
-                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:''},
+                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:berapa_kali_sepekan},
                             {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit},
                             {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang},
                             {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha},
@@ -479,6 +488,10 @@
                 documents.get().then((querySnapshot)=>{
                     querySnapshot.forEach((doc)=>{
                         var data = doc.data();
+                        var coordinateText = data.koordinat;
+                        var coordinateArray = coordinateText.split(',');
+                        var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
+                        console.log(coordinate);
                         var arrayData = [
                             {title:'Nomor Kartu Keluarga', content:data.nomor_kk},
                             {title:'Provinsi', content:data.provinsi},
@@ -501,6 +514,40 @@
 
                         documentInfo.html('');
                         documentInfo.append(toAppend);
+                        documentInfo.append('<div class="row form-group">'+
+                                    '<label class="control-label col-md-12">Lokasi di Peta</label><br><br>'+
+                                    '<div id="map" style="width:100%;height:300px"></div>'+
+                                '</div>');
+
+                        initMap();
+                        function initMap(){
+                            var map = new google.maps.Map(document.getElementById('map'),{
+                              center: coordinate,
+                              zoom: 10
+                            });
+
+                            var marker = new google.maps.Marker({
+                              position:coordinate,
+                              map:map,
+                              // icon:'/images/marker.png'
+                            });
+
+                            var infoWindow = new google.maps.InfoWindow({
+                              content:'<p>Nomor KK: '+data.nomor_kk+'</p>'+
+                                '<p>Alamat: '+data.alamat+
+                                ',RT '+data.rt+
+                                '/RW '+data.rw+
+                                ' Kelurahan '+data.kelurahan+
+                                ', Kecamatan '+data.kecamatan+
+                                '<br> '+data.kota+','+data.provinsi+'</p>'
+                            });
+
+                            marker.addListener('click',function(){
+                              infoWindow.open(map,marker);
+                            });
+                        }
+
+                        // initMap();
 
                         documentInfo.append(
                             '<br>'+

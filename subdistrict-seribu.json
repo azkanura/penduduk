@@ -1,0 +1,32 @@
+[
+  {
+    "id": 3101010001,
+    "id_kecamatan": 3101010,
+    "nama": "Pulau Tidung"
+  },
+  {
+    "id": 3101010002,
+    "id_kecamatan": 3101010,
+    "nama": "Pulau Pari"
+  },
+  {
+    "id": 3101010003,
+    "id_kecamatan": 3101010,
+    "nama": "Pulau Untung Jawa"
+  },
+  {
+    "id": 3101020001,
+    "id_kecamatan": 3101020,
+    "nama": "Pulau Panggang"
+  },
+  {
+    "id": 3101020002,
+    "id_kecamatan": 3101020,
+    "nama": "Pulau Kelapa"
+  },
+  {
+    "id": 3101020003,
+    "id_kecamatan": 3101020,
+    "nama": "Pulau Harapan"
+  }
+]
