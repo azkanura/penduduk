@@ -141,7 +141,7 @@ app.get('/penduduk-edit/:id',function(req,res){
 app.post('/penduduk-personal-save',function(req,res){
   var id = req.body.id;
   var resident = penduduk.doc(id);
-  resident.set({
+  resident.update({
     agama:req.body.religion,
     bidang_pekerjaan:req.body.job_field,
     golongan_darah:req.body.blood_type,
@@ -174,7 +174,7 @@ app.post('/anggota-personal-save',function(req,res){
   var id = req.body.id;
   var kkId = req.body.kk_id;
   var resident = penduduk.doc(kkId).collection('anggota').doc(id);
-  resident.set({
+  resident.update({
     agama:req.body.religion,
     bidang_pekerjaan:req.body.job_field,
     golongan_darah:req.body.blood_type,
@@ -209,7 +209,14 @@ app.post('/penduduk-asset-save',function(req,res){
       goodText+=good+'|';
     }
   });
-  asset.set({
+  var scoreGoods = req.body.score_goods;
+  var score_goodText ='';
+  scoreGoods.forEach((scoreGood)=>{
+    if(scoreGood){
+      score_goodText+=scoreGood+'|';
+    }
+  });
+  asset.update({
     luas_lantai:req.body.area,
     jenis_lantai:req.body.floor,
     jenis_dinding:req.body.wall,
@@ -223,7 +230,21 @@ app.post('/penduduk-asset-save',function(req,res){
     anggota_sakit:req.body.sickness,
     list_barang:goodText,
     kredit_usaha:req.body.credit,
-    status_bangunan:req.body.house_status
+    status_bangunan:req.body.house_status,
+    skor_luas_lantai:req.body.score_area,
+    skor_jenis_lantai:req.body.score_floor,
+    skor_jenis_dinding:req.body.score_wall,
+    skor_fasilitas:req.body.score_facility,
+    skor_sumber_air:req.body.score_water,
+    skor_sumber_penerangan:req.body.score_electricity,
+    skor_bahan_bakar:req.body.score_cooking,
+    skor_berapa_kali_sekali:req.body.score_meal,
+    skor_berapa_kali_seminggu:req.body.score_meat,
+    skor_berapa_kali_sepekan:req.body.score_clothing,
+    skor_anggota_sakit:req.body.score_sickness,
+    skor_list_barang:score_goodText,
+    skor_kredit_usaha:req.body.score_credit,
+    skor_status_bangunan:req.body.score_house_status,
   }).then(function() {
     console.log('Data aset berhasil diubah');
   })
@@ -249,7 +270,7 @@ app.post('/penduduk-document-save',function(req,res){
       var kkPhoto = doc.data().foto_kk;
       var coordinate = doc.data().koordinat;
       var document = documents.doc(doc_id);
-      document.set({
+      document.update({
         nomor_kk:req.body.kk_number,
         provinsi:req.body.province,
         kota:req.body.city,
@@ -346,12 +367,6 @@ app.post('/save-user',function(req,res){
 		    console.error("Error adding document: ", error);
 		});
 	}).catch(function(error) {
-	  // Handle Errors here.
-	  // var errorCode = error.code;
-	  // var errorMessage = error.message;
-	  // alert('Error '+errorCode+': '+errorMessage);
-	  // ...
-	  // req.flash('info', 'Flash is back!');
   	  res.redirect('/');
 	});
 });
