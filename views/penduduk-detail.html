@@ -300,8 +300,12 @@ async defer></script>
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
             // if(members && members.exists){
+
                 members.get().then((query)=>{
                     familyInfo.html('');
+                    familyInfo.append(
+                      '<div class="row form-group"><div class="col-md-12" style="padding:15px 24px 0"><a id="addMember" href="/anggota-create/'+kkId+'"class="btn btn-success pull-right">Tambah Anggota</a></div></div><hr>'
+                    );
                     query.forEach((doc)=>{
                         data=doc.data();
                         var anggotaId = doc.id;
@@ -611,8 +615,6 @@ async defer></script>
                 });
 
         });
-
-
 
         $(document).on('click','.delete-btn',function(){
           $('#confirmDeleteMemberBtn').attr('kkIdDelete',$(this).attr('id'));

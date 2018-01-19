@@ -63,11 +63,11 @@
                     Data Pribadi
                 </a>
             </li>
-            <!-- <li>
+            <li>
                 <a href="#familyInfo" data-toggle="tab" id="familyInfoBtn">
                     Data Keluarga
                 </a>
-            </li> -->
+            </li>
             <li>
                 <a href="#assetInfo" data-toggle="tab" id="assetInfoBtn">
                     Data Aset
@@ -112,6 +112,22 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div class="modal fade" id="confirmDeleteMember" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              Konfirmasi Menghapus
+          </div>
+          <div class="modal-body">
+              Apakah anda yakin akan menghapus data anggota keluarga ini?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+              <a class="btn btn-danger btn-ok" id="confirmDeleteMemberBtn">Hapus</a>
+          </div>
+      </div>
   </div>
 </div>
 
@@ -346,8 +362,12 @@ async defer></script>
         $('#familyInfoBtn').on('click',function(){
             var members = person.collection('anggota');
             // if(members && members.exists){
+
                 members.get().then((query)=>{
                     familyInfo.html('');
+                    familyInfo.append(
+                      '<div class="row form-group"><div class="col-md-12" style="padding:15px 24px 0"><a id="addMember" href="/anggota-create/'+kkId+'"class="btn btn-success pull-right">Tambah Anggota</a></div></div><hr>'
+                    );
                     query.forEach((doc)=>{
                         data=doc.data();
                         var anggotaId = doc.id;
@@ -359,38 +379,42 @@ async defer></script>
                         if(profilePicture){
                             storageRef.child(profilePicture).getDownloadURL().then((url)=>{
                                 familyInfo.append(
-                                    '<div class="widget-followers-item">'+
-                                        '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
-                                        '<div class="widget-followers-controls">'+
-                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                        '</div>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
-                                    '</div>'
+                                  '<div class="widget-followers-item">'+
+                                      '<img src="'+url+'" alt="" class="widget-followers-avatar">'+
+                                      '<div class="widget-followers-controls">'+
+                                          '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                      '</div>'+
+                                      '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                      '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                      '<a class="btn btn-sm delete-btn btn-danger pull-right" id="'+id+'" anggotaId="'+anggotaId+'" style="margin-left:5px;"><i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>'+
+                                      '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah</a>'+
+                                  '</div>'
                                 );
                             }).catch((error)=>{
                                 familyInfo.append(
-                                    '<div class="widget-followers-item">'+
-                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
-                                        '<div class="widget-followers-controls">'+
-                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                        '</div>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
-                                    '</div>'
+                                  '<div class="widget-followers-item">'+
+                                      '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                      '<div class="widget-followers-controls">'+
+                                          '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                      '</div>'+
+                                      '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                      '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                      '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
+                                  '</div>'
                                 );
                             });
                         }
                         else{
                             familyInfo.append(
-                                    '<div class="widget-followers-item">'+
-                                        '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
-                                        '<div class="widget-followers-controls">'+
-                                            '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
-                                        '</div>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
-                                        '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
-                                    '</div>'
+                              '<div class="widget-followers-item">'+
+                                  '<img src="/demo/avatars/account.png" alt="" class="widget-followers-avatar">'+
+                                  '<div class="widget-followers-controls">'+
+                                      '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="btn btn-sm btn-outline">'+type+'</a>'+
+                                  '</div>'+
+                                  '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
+                                  '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
+                                  '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
+                              '</div>'
                                 );
                         }
 
@@ -986,6 +1010,24 @@ async defer></script>
           },5000);
 
 
+        });
+
+        $(document).on('click','.delete-btn',function(){
+          $('#confirmDeleteMemberBtn').attr('kkIdDelete',$(this).attr('id'));
+          $('#confirmDeleteMemberBtn').attr('idDelete',$(this).attr('anggotaId'));
+          $('#confirmDeleteMember').modal('show');
+        });
+
+        $('#confirmDeleteMemberBtn').on('click',function(){
+          var idDelete = $(this).attr('idDelete');
+          var kkIdDelete = $(this).attr('kkIdDelete');
+          penduduk.doc(kkIdDelete).collection('anggota').doc(idDelete).delete().then(function(){
+            console.log("Document successfully deleted!");
+            location.reload(true);
+          }).catch(function(error){
+            alert('Terjadi error: ', error);
+            console.error("Error removing document: ", error);
+          });
         });
 
         function init(){

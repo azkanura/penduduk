@@ -388,6 +388,11 @@ app.get('/anggota-edit/:kkId/:id',function(req,res){
 	res.render('anggota-edit.html',{kkId:kkId,id:id});
 });
 
+app.get('/anggota-create/:kkId',function(req,res){
+	var kkId = req.params.kkId;
+	res.render('anggota-create.html',{kkId:kkId});
+});
+
 app.get('/user',function(req,res){
 	res.render('user.html');
 });
