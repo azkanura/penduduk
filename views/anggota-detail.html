@@ -36,6 +36,8 @@
         <div class="m-y-3 text-xs-center">
             <a href="/anggota-edit/{{kkId}}/{{ id }}" class="btn btn-default">
                 <i class="fa fa-pencil fa-fw"></i> Ubah</a>
+                &nbsp;&nbsp;<a class="btn btn-danger" name="delete_btn" kkId="{{kkId}}" id="{{id}}">
+                <i class="fa fa-trash fa-fw"></i> Hapus</a>
         </div>
 
     </div>
@@ -65,6 +67,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              Konfirmasi Menghapus
+          </div>
+          <div class="modal-body">
+              Apakah anda yakin akan menghapus data?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+              <a class="btn btn-danger btn-ok" id="confirmDeleteBtn">Hapus</a>
+          </div>
+      </div>
+  </div>
+</div>
 {% endblock %}
 {% block inlinejs  %}
     <script type="text/javascript">
@@ -85,6 +103,24 @@
         var result = null;
 
         console.log(dataArray);
+
+        $(document).on('click','[name="delete_btn"]',function(){
+          $('#confirmDeleteBtn').attr('idDelete',$(this).attr('id'));
+          $('#confirmDeleteBtn').attr('kkIdDelete',$(this).attr('kkId'));
+          $('#confirmDelete').modal('show');
+        });
+
+        $('#confirmDeleteBtn').on('click',function(){
+          var idDelete = $(this).attr('idDelete');
+          var kkIdDelete = $(this).attr('kkIdDelete');
+          penduduk.doc(kkIdDelete).collection('anggota').doc(idDelete).delete().then(function(){
+            console.log("Document successfully deleted!");
+            $(location).attr('href','/penduduk-detail/'+kkIdDelete);
+          }).catch(function(error){
+            alert('Terjadi error: ', error);
+            console.error("Error removing document: ", error);
+          });
+        });
 
         function init(){
             $('#profileInfoBtn').click();
@@ -236,6 +272,8 @@
                 }
             });
         });
+
+
 
 
     </script>

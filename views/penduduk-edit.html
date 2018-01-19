@@ -40,7 +40,7 @@
             <br>
             <input type="file" id="idUpload" class="form-control">
             <br>
-            <button id="profileImgUploadBtn" class="btn btn-danger" style="width:100%">Unggah Gambar</button>
+            <button id="profileImgUploadBtn" class="btn btn-warning" style="width:100%">Unggah Gambar</button>
 
         </div>
         <hr>
@@ -804,25 +804,28 @@ async defer></script>
                         var mapArea = '<div class="row form-group">'+
                                     '<input type="hidden" name="geolocation" value="'+coordinateText+'">'+
                                     '<label class="control-label col-md-12">Lokasi di Peta</label><br><br>'+
-                                    '<div id="map" style="width:100%;height:300px"></div>'+
+                                    '<div id="map" class="col-md-12"style="width:100%;height:300px"></div>'+
                                 '</div>';
-                        var kkPhoto = '<br>'+
-                            '<div class="form-group">'+
+                        var kkPhoto = '<div class="form-group">'+
                                 '<label class="control-label">Foto Kartu Keluarga</label>'+
                                 '<br>'+
                                 '<br>'+
                                 '<input type="file" id="familyCardUpload" class="form-control">'+
-                                '<img src="/images/no-image.png" id="kkPhoto" style="width:70%;display:block"/>'+
-                            '</div><hr>';
+                                '<img src="/images/no-image.png" id="kkPhoto" style="width:100%;display:block"/>'+
+                            '</div>'+
+                            '<div class="row form-group"><div class="col-md-12"><button id="savePhotoKK" class="btn btn-warning pull-right">Simpan Foto KK</button></div></div>'+
+                            '<hr>';
 
                         documentInfo.append(
+                          '<div class="form-group">'+
                           '<form action="/penduduk-document-save" method="POST">'+
                               '<input type="hidden" value="'+id+'" name="id">'+
                                 toAppend+
                                 mapArea+
-                                kkPhoto+
-                              '<input style="margin:20px" class="btn btn-success pull-right" type="submit" value="Simpan">'+
-                            '</form>'
+                              '<div class="row form-group"><input style="margin:20px" class="btn btn-success pull-right" type="submit" value="Simpan"></div>'+
+                            '</form>'+
+                            '</div><hr>'+
+                            kkPhoto
                         );
 
                         initMap();
@@ -909,12 +912,11 @@ async defer></script>
           }
         });
 
-        $(document).on('change','#familyCardUpload',function(){
-          $('#modalLoading').modal('show');
+        $(document).on('click','#savePhotoKK',function(){
           var familyCard = $('#familyCardUpload').prop('files')[0];
-          var documents = penduduk.doc(id).collection('dokumen');
-
           if(familyCard){
+            $('#modalLoading').modal('show');
+            var documents = penduduk.doc(id).collection('dokumen');
             var pName = 'images/fc-'+id+'.jpg';
             var pStorageRef=firebase.storage().ref(pName);
             var pTask = pStorageRef.put(familyCard);
@@ -936,6 +938,9 @@ async defer></script>
                 console.log('error: '+err);
               }
             );
+          }
+          else{
+            alert('Anda belum memilih foto');
           }
         });
 
