@@ -400,7 +400,8 @@ async defer></script>
                                       '</div>'+
                                       '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-name">'+name+'</a>'+
                                       '<a href="/anggota-detail/'+id+'/'+anggotaId+'" class="widget-followers-username">'+gender+'</a>'+
-                                      '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah Data</a>'+
+                                      '<a class="btn btn-sm delete-btn btn-danger pull-right" id="'+id+'" anggotaId="'+anggotaId+'" style="margin-left:5px;"><i class="fa fa-trash fa-fw"></i>&nbsp;Hapus</a>'+
+                                      '<a href="/anggota-edit/'+id+'/'+anggotaId+'" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil fa-fw"></i>&nbsp;Ubah</a>'+
                                   '</div>'
                                 );
                             });
