@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-     Detail Penduduk
+     Menambah Anggota Keluarga
 {% endblock %}
 
 {% block inlinecss %}
@@ -89,6 +89,9 @@
         var selectArray = [];
         var result = null;
 
+        var ppName = '';
+        var idName = '';
+
         console.log(dataArray);
         var optionObject = {
           affirmative: ['Iya','Tidak'],
@@ -156,16 +159,17 @@
                           '</tr>';
               });
               profileInfo.append(
-                  '<form>'+
+                  // '<form>'+
                   '<input type="hidden" value="'+kkId+'" name="kk_id">'+
                   '<table class="page-messages-items table m-a-0">'+
                           '<tbody>'+
                               toAppend+
                           '</tbody>'+
                   '</table>'+
-                  '<input style="margin:20px" class="btn btn-success pull-right" type="submit" value="Simpan" id="saveMember">'+
-                  '</form>'
+                  '<button style="margin:20px" class="btn btn-success pull-right" type="submit" id="saveMember">Simpan</button>'
+                  // '</form>'
               );
+              $(document).find('[name="birth_date"]').datepicker({format: 'dd/mm/yyyy'});
 
         });
 
@@ -214,14 +218,81 @@
         });
 
         $(document).on('click','#saveMember',function(){
-          console.log('hahahahah');
-          // location.reload(true);
+          var isComplete = true;
+          $(document).find('.form-control').each(function(input){
+            if(!$(this).val()){
+              isComplete = isComplete && false;
+            }
+          });
+          if(isComplete){
+            if($(document).find('#profileUpload').prop('files')[0]){
+              var photoProfile = $(document).find('#profileUpload').prop('files')[0];
+              ppName = 'images/pp-member-'+generateUid()+'.jpg';
+              var ppStorageRef=firebase.storage().ref(ppName);
+              var ppTask = ppStorageRef.put(photoProfile);
+              ppTask.on('state_changed',
+                function complete(){
+                  if($(document).find('#idUpload').prop('files')[0]){
+                    var photoId = $(document).find('#idUpload').prop('files')[0];
+                    idName = 'images/id-member-'+generateUid()+'.jpg';
+                    var idStorageRef=firebase.storage().ref(idName);
+                    var idTask = idStorageRef.put(photoId);
+                    idTask.on('state_changed',
+                      function complete(){
+                        saveData();
+                      },
+                      function error(err){
+                        console.log(err);
+                      }
+                    );
+                  }
+                },
+                function error(err){
+                  console.log(err);
+                }
+              );
+            }
+          }
+          else{
+            console.log('berhasil');
+            alert('Lengkapi semua data terlebih dahulu!');
+          }
         });
 
         function init(){
             $('#profileInfoBtn').click();
         }
 
+        function generateUid(){
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+        }
+
+        function saveData(){
+          penduduk.doc(kkId).collection('anggota').add({
+            agama:$(document).find('[name="religion"]').val(),
+            bidang_pekerjaan:$(document).find('[name="job_field"]').val(),
+            foto_ktp:idName,
+            foto_orang:ppName,
+            golongan_darah:$(document).find('[name="blood_type"]').val(),
+            jenis:$(document).find('[name="status"]').val(),
+            jenis_kelamin:$(document).find('[name="gender"]').val(),
+            kewarganegaraan:$(document).find('[name="nationality"]').val(),
+            kirasan_penghasilan:$(document).find('[name="income"]').val(),
+            nama_lengkap:$(document).find('[name="name"]').val(),
+            pekerjaan:$(document).find('[name="job"]').val(),
+            pendidikan:$(document).find('[name="education"]').val(),
+            status_perkawinan:$(document).find('[name="marriage"]').val(),
+            tanggal_lahir:$(document).find('[name="birth_date"]').val(),
+            tempat_lahir:$(document).find('[name="birth_place"]').val()
+          }).then(function(){
+            $(location).attr('href','/penduduk-detail/'+kkId);
+          }).catch(function(error){
+            alert(error+': Gagal menambahkan anggota keluarga!')
+          });
+        }
 
     </script>
 {% endblock %}
