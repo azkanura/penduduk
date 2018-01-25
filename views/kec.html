@@ -32,7 +32,7 @@
 
     <div class="panel">
         <div class="panel-heading">
-            <div class="panel-title">Daftar Penduduk</div>
+            <div class="panel-title">Daftar Penduduk <a href="/penduduk-create"><button class="btn btn-primary pull-right" >Tambah Penduduk</button></a></div>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
@@ -89,7 +89,7 @@
                     if(!exist){
                         addData(data.kelurahan, dataArray);
                     }
-                } 
+                }
              });
 
             dataContainer.html('');
@@ -107,7 +107,7 @@
             });
 
              $('#pageTitle').html('<strong>Cakupan Wilayah : </strong> '+province+' > '+city+' > '+district);
-        });    
+        });
 
         function init(){
             console.log('current User: '+currentUser.email);
@@ -130,7 +130,7 @@
                     $(location).attr('href','/kelurahan/'+province+'/'+city+'/'+district+'/'+subdistrict);
                     break;
             }
-                
+
         }
 
         selectProvince.on('change',function(){
@@ -160,7 +160,7 @@
                 {title:'provinsi',value:selectedProvince},
                 {title:'kota',value:selectedCity},
                 {title:'kecamatan',value:selectedDistrict}
-            ];            
+            ];
             whereClause(penduduk,arrayClause).get().then((querySnapshot)=>{
                  counter = 1;
                  dataContainer.html('');
@@ -172,7 +172,7 @@
                         if(!exist){
                             addData(data.kelurahan,dataArray);
                         }
-                    } 
+                    }
                  });
 
                 dataContainer.html('');
@@ -266,7 +266,7 @@
                 });
             });
         }
-        //for filtering            
+        //for filtering
 
         function exists(name,array){
             var size = array.length;

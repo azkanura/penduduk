@@ -137,6 +137,10 @@ app.get('/penduduk',function(req,res){
 	res.render('penduduk.html');
 });
 
+app.get('/penduduk-create',function(req,res){
+	res.render('penduduk-create.html');
+});
+
 app.get('/penduduk-detail/:id',function(req,res){
 	var id = req.params.id;
 	res.render('penduduk-detail.html',{id:id});

@@ -437,11 +437,11 @@ async defer></script>
                 console.log(assetData);
                 console.log('asset image:');
                 console.log(assetImage);
+                var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,bahan_bakar,berapa_kali_sepekan,berapa_kali_seminggu,berapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan,skor_anggota_sakit,skor_bahan_bakar,skor_berapa_kali_sekali,skor_berapa_kali_seminggu,skor_berapa_kali_sepekan,skor_fasilitas,skor_jenis_dinding,skor_jenis_lantai,skor_kredit_usaha,skor_list_barang,skor_luas_lantai,skor_status_bangunan,skor_sumber_air,skor_sumber_penerangan='';
+                var list_barang_array=[];
                 assetData.get().then((doc)=>{
                     if(doc && doc.exists){
                         var data = doc.data();
-                        var luas_lantai,jenis_lantai,jenis_dinding,fasilitas,sumber_air,sumber_penerangan,bahan_bakar,berapa_kali_sepekan,berapa_kali_seminggu,beberapa_kali_sekali,anggota_sakit,list_barang,kredit_usaha,status_bangunan,skor_anggota_sakit,skor_bahan_bakar,skor_berapa_kali_sekali,skor_berapa_kali_seminggu,skor_berapa_kali_sepekan,skor_fasilitas,skor_jenis_dinding,skor_jenis_lantai,skor_kredit_usaha,skor_list_barang,skor_luas_lantai,skor_status_bangunan,skor_sumber_air,skor_sumber_penerangan='-';
-
                         if(data.luas_lantai){luas_lantai=data.luas_lantai}
                         if(data.jenis_lantai){jenis_lantai=data.jenis_lantai}
                         if(data.jenis_dinding){jenis_dinding=data.jenis_dinding}
@@ -477,128 +477,166 @@ async defer></script>
                         if(data.skor_status_bangunan){skor_status_bangunan=data.skor_status_bangunan}
                         if(data.skor_sumber_air){skor_sumber_air=data.skor_sumber_air}
                         if(data.skor_sumber_penerangan){skor_sumber_penerangan=data.skor_sumber_penerangan}
+                    }
 
-                        var arrayData = [
-                            {title:'Luas lantai bangunan tempat tinggal dengan satuan', content:luas_lantai,options:optionObject.area,name:'area',score:skor_luas_lantai},
-                            {title:'Jenis lantai tempat tinggal yang terluas', content:jenis_lantai,options:optionObject.floor,name:'floor',score:skor_jenis_lantai},
-                            {title:'Jenis dinding tempat tinggal yang terluas', content:jenis_dinding,options:optionObject.wall,name:'wall',score:skor_jenis_dinding},
-                            {title:'Fasilitas tempat buang air besar', content:fasilitas,options:optionObject.facility,name:'facility',score:skor_fasilitas},
-                            {title:'Sumber air minum', content:sumber_air,options:optionObject.water,name:'water',score:skor_sumber_air},
-                            {title:'Sumber penerangan utama', content:sumber_penerangan,options:optionObject.electricity,name:'electricity',score:skor_sumber_penerangan},
-                            {title:'Bahan bakar utama untuk memasak sehari-hari', content:bahan_bakar,options:optionObject.cooking,name:'cooking',score:skor_bahan_bakar},
-                            {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu,options:optionObject.meat,name:'meat',score:skor_berapa_kali_seminggu},
-                            {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali,options:optionObject.meal,name:'meal',score:skor_berapa_kali_sekali},
-                            {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:berapa_kali_sepekan,options:optionObject.clothing,name:'clothing',score:skor_berapa_kali_sepekan},
-                            {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit,options:optionObject.sickness,name:'sickness',score:skor_anggota_sakit},
-                            {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang_array,options:optionObject.goods, type:'multiple',name:'goods',score:skor_list_barang},
-                            {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha,options:optionObject.credit,name:'credit',score:skor_kredit_usaha},
-                            {title:'Status penguasaan bangunan tempat tinggal yang ditempati', content:status_bangunan,options:optionObject.houseStatus,name:'house_status',score:skor_status_bangunan},
-                        ];
+                    var arrayData = [
+                        {title:'Luas lantai bangunan tempat tinggal dengan satuan', content:luas_lantai,options:optionObject.area,name:'area',score:skor_luas_lantai},
+                        {title:'Jenis lantai tempat tinggal yang terluas', content:jenis_lantai,options:optionObject.floor,name:'floor',score:skor_jenis_lantai},
+                        {title:'Jenis dinding tempat tinggal yang terluas', content:jenis_dinding,options:optionObject.wall,name:'wall',score:skor_jenis_dinding},
+                        {title:'Fasilitas tempat buang air besar', content:fasilitas,options:optionObject.facility,name:'facility',score:skor_fasilitas},
+                        {title:'Sumber air minum', content:sumber_air,options:optionObject.water,name:'water',score:skor_sumber_air},
+                        {title:'Sumber penerangan utama', content:sumber_penerangan,options:optionObject.electricity,name:'electricity',score:skor_sumber_penerangan},
+                        {title:'Bahan bakar utama untuk memasak sehari-hari', content:bahan_bakar,options:optionObject.cooking,name:'cooking',score:skor_bahan_bakar},
+                        {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu,options:optionObject.meat,name:'meat',score:skor_berapa_kali_seminggu},
+                        {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali,options:optionObject.meal,name:'meal',score:skor_berapa_kali_sekali},
+                        {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:berapa_kali_sepekan,options:optionObject.clothing,name:'clothing',score:skor_berapa_kali_sepekan},
+                        {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit,options:optionObject.sickness,name:'sickness',score:skor_anggota_sakit},
+                        {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang_array,options:optionObject.goods, type:'multiple',name:'goods',score:skor_list_barang},
+                        {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha,options:optionObject.credit,name:'credit',score:skor_kredit_usaha},
+                        {title:'Status penguasaan bangunan tempat tinggal yang ditempati', content:status_bangunan,options:optionObject.houseStatus,name:'house_status',score:skor_status_bangunan},
+                    ];
 
-                        var toAppend = '';
-                        arrayData.forEach((data)=>{
-                            var options = '';
-                            var selectOption = '';
+                    var toAppend = '';
+                    arrayData.forEach((data)=>{
+                        var options = '';
+                        var selectOption = '';
 
-                            if(data.type=='multiple'){
-                              data.options.forEach((option)=>{
-                                  if(contains(data.content,option.value)){
-                                    options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" checked="checked" class="value-score"><input type="checkbox" value="'+option.value+'" checked="checked" name="'+data.name+'" class="multiple-value">'+option.value+'</label><br>';
-                                  }
-                                  else{
-                                    options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" class="value-score"><input type="checkbox" value="'+option.value+'" name="'+data.name+'"  class="multiple-value">'+option.value+'</label><br>';
-                                  }
-                              });
-                              selectOption = '<div class="form-group">'+options+'</div>'
+                        if(data.type=='multiple'){
+                          data.options.forEach((option)=>{
+                              if(contains(data.content,option.value)){
+                                options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" checked="checked" class="value-score"><input type="checkbox" value="'+option.value+'" checked="checked" name="'+data.name+'" class="multiple-value">'+option.value+'</label><br>';
+                              }
+                              else{
+                                options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" class="value-score"><input type="checkbox" value="'+option.value+'" name="'+data.name+'"  class="multiple-value">'+option.value+'</label><br>';
+                              }
+                          });
+                          selectOption = '<div class="form-group">'+options+'</div>'
 
+                        }
+                        else{
+                          data.options.forEach((option)=>{
+                            if(option.value.toLowerCase()==data.content.toLowerCase()){
+                              options+='<option  score="'+option.score+'" selected>'+option.value+'</option>';
                             }
                             else{
-                              data.options.forEach((option)=>{
-                                if(option.value.toLowerCase()==data.content.toLowerCase()){
-                                  options+='<option  score="'+option.score+'" selected>'+option.value+'</option>';
-                                }
-                                else{
-                                  options+='<option score="'+option.score+'">'+option.value+'</option>';
-                                }
-                              });
-                              selectOption = '<input type="hidden" value="'+data.score+'" name="score_'+data.name+'" class="value-score"><select name="'+data.name+'" class="select2 form-control select-value">'+options+'</select>';
+                              options+='<option score="'+option.score+'">'+option.value+'</option>';
                             }
+                          });
+                          selectOption = '<input type="hidden" value="'+data.score+'" name="score_'+data.name+'" class="value-score"><select name="'+data.name+'" class="select2 form-control select-value">'+options+'</select>';
+                        }
 
-                            toAppend+='<div class="row form-group">'+
-                                        '<label class="control-label col-md-6">'+data.title+'</label>'+
-                                        '<div class="col-md-6">'
-                                            +selectOption+
-                                        '</div>'+
-                                    '</div><hr>';
-                        });
+                        toAppend+='<div class="row form-group">'+
+                                    '<label class="control-label col-md-6">'+data.title+'</label>'+
+                                    '<div class="col-md-6">'
+                                        +selectOption+
+                                    '</div>'+
+                                '</div><hr>';
+                    });
 
-                        assetInfo.html('');
-                        assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
-                    }
+                    assetInfo.html('');
+                    assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
 
-                    else{
-                      assetInfo.html('');
-                      assetInfo.append('<h4 class="text-center">'+
-                        'Tidak ada data rumah'+
-                      '</h4>');
-                    }
                 }).catch((error)=>{
+                  var arrayData = [
+                      {title:'Luas lantai bangunan tempat tinggal dengan satuan', content:luas_lantai,options:optionObject.area,name:'area',score:skor_luas_lantai},
+                      {title:'Jenis lantai tempat tinggal yang terluas', content:jenis_lantai,options:optionObject.floor,name:'floor',score:skor_jenis_lantai},
+                      {title:'Jenis dinding tempat tinggal yang terluas', content:jenis_dinding,options:optionObject.wall,name:'wall',score:skor_jenis_dinding},
+                      {title:'Fasilitas tempat buang air besar', content:fasilitas,options:optionObject.facility,name:'facility',score:skor_fasilitas},
+                      {title:'Sumber air minum', content:sumber_air,options:optionObject.water,name:'water',score:skor_sumber_air},
+                      {title:'Sumber penerangan utama', content:sumber_penerangan,options:optionObject.electricity,name:'electricity',score:skor_sumber_penerangan},
+                      {title:'Bahan bakar utama untuk memasak sehari-hari', content:bahan_bakar,options:optionObject.cooking,name:'cooking',score:skor_bahan_bakar},
+                      {title:'Berapa kali dalam seminggu rumah tangga membeli daging/ayam/susu', content:berapa_kali_seminggu,options:optionObject.meat,name:'meat',score:skor_berapa_kali_seminggu},
+                      {title:'Berapa kali dalam sehari biasanya anggota rumah tangga makan', content:berapa_kali_sekali,options:optionObject.meal,name:'meal',score:skor_berapa_kali_sekali},
+                      {title:'Berapa stel pakaian baru dalam setahun biasanya dibeli oleh / untuk setiap / sebagian besar anggota rumah tangga', content:berapa_kali_sepekan,options:optionObject.clothing,name:'clothing',score:skor_berapa_kali_sepekan},
+                      {title:'Apabila ada anggota keluarga yang sakit, apakah mampu berobat ke puskesmas, atau poliklinik', content:anggota_sakit,options:optionObject.sickness,name:'sickness',score:skor_anggota_sakit},
+                      {title:'Barang yang dimiliki rumah tangga yang masing-masing bernilai paling sedikit Rp. 500.000,-', content:list_barang_array,options:optionObject.goods, type:'multiple',name:'goods',score:skor_list_barang},
+                      {title:'Apakah rumah tangga pernah menerima kredit usaha ( seperti UKM/UMKM ) setahun yang lalu', content:kredit_usaha,options:optionObject.credit,name:'credit',score:skor_kredit_usaha},
+                      {title:'Status penguasaan bangunan tempat tinggal yang ditempati', content:status_bangunan,options:optionObject.houseStatus,name:'house_status',score:skor_status_bangunan},
+                  ];
+
+                  var toAppend = '';
+                  arrayData.forEach((data)=>{
+                      var options = '';
+                      var selectOption = '';
+
+                      if(data.type=='multiple'){
+                        data.options.forEach((option)=>{
+                            if(contains(data.content,option.value)){
+                              options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" checked="checked" class="value-score"><input type="checkbox" value="'+option.value+'" checked="checked" name="'+data.name+'" class="multiple-value">'+option.value+'</label><br>';
+                            }
+                            else{
+                              options+='<label><input type="checkbox" style="display:none" value="'+option.score+'" name="score_'+data.name+'" class="value-score"><input type="checkbox" value="'+option.value+'" name="'+data.name+'"  class="multiple-value">'+option.value+'</label><br>';
+                            }
+                        });
+                        selectOption = '<div class="form-group">'+options+'</div>'
+
+                      }
+                      else{
+                        data.options.forEach((option)=>{
+                            options+='<option score="'+option.score+'">'+option.value+'</option>';
+                        });
+                        selectOption = '<input type="hidden" value="'+data.score+'" name="score_'+data.name+'" class="value-score"><select name="'+data.name+'" class="select2 form-control select-value">'+options+'</select>';
+                      }
+
+                      toAppend+='<div class="row form-group">'+
+                                  '<label class="control-label col-md-6">'+data.title+'</label>'+
+                                  '<div class="col-md-6">'
+                                      +selectOption+
+                                  '</div>'+
+                              '</div><hr>';
+                  });
+
                   assetInfo.html('');
-                  assetInfo.append('<h4 class="text-center">'+
-                    'Tidak ada data rumah'+
-                  '</h4>');
-                  console.log('error: '+error);
+                  assetInfo.append('<form action="/penduduk-asset-save" method="POST"><input type="hidden" value="'+id+'" name="id">'+toAppend+'<div class="row form-group"><div class="col-md-12"><input type="submit" value="Simpan Data" class="btn btn-success pull-right"></div></div><hr></form>');
                 });
 
                 assetImage.get().then((doc)=>{
-                    if(doc && doc.exists){
-                        assetInfo.append(
-                            // '<form action="/penduduk-asset-img-save" enctype="multipart/form-data" method="POST"><input type="hidden" value="'+id+'" name="id">'+
+                    assetInfo.append(
+                        '<br>'+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Kepala Keluarga</label>'+
                             '<br>'+
-                            '<div class="form-group">'+
-                                '<label class="control-label">Foto Kepala Keluarga</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" name="photo_family_head" class="form-control">'+
-                                '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
-                            '</div><hr>'+
+                            '<br>'+
+                            '<input type="file" name="photo_family_head" class="form-control">'+
+                            '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
+                        '</div><hr>'+
 
-                            '<div class="form-group">'+
-                                '<label class="control-label">Foto Depan Rumah</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" name="photo_terrace" class="form-control">'+
-                                '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
-                            '</div><hr>'+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Depan Rumah</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<input type="file" name="photo_terrace" class="form-control">'+
+                            '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
+                        '</div><hr>'+
 
-                            '<div class="form-group">'+
-                                '<label class="control-label">Foto Ruang Tamu</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" name="photo_living_room" class="form-control">'+
-                                '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
-                            '</div><hr>'+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Ruang Tamu</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<input type="file" name="photo_living_room" class="form-control">'+
+                            '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
+                        '</div><hr>'+
 
-                            '<div class="form-group">'+
-                                '<label class="control-label">Foto Dapur</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" name="photo_kitchen" class="form-control">'+
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Dapur</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<input type="file" name="photo_kitchen" class="form-control">'+
 
-                                '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
-                            '</div><hr>'+
+                            '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
+                        '</div><hr>'+
 
-                            '<div class="form-group">'+
-                                '<label class="control-label">Foto Belakang Rumah</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" name="photo_backyard" class="form-control">'+
-                                '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
-                            '</div>'
-                            +'<button id="saveAssetImgBtn" class="btn btn-success pull-right">Simpan Gambar</button>'
-                            // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
-                        );
-
+                        '<div class="form-group">'+
+                            '<label class="control-label">Foto Belakang Rumah</label>'+
+                            '<br>'+
+                            '<br>'+
+                            '<input type="file" name="photo_backyard" class="form-control">'+
+                            '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
+                        '</div>'
+                        +'<button id="saveAssetImgBtn" class="btn btn-success pull-right">Simpan Gambar</button>'
+                        // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
+                    );
+                    if(doc && doc.exists){
                         var data = doc.data();
 
                         var photoFamilyHead = data.foto_kepala_keluarga;
@@ -636,16 +674,52 @@ async defer></script>
 
                         });
                     }
-
-                    else{
-                      assetInfo.append('<hr><h4 class="text-center">'+
-                        'Tidak ada gambar rumah'+
-                      '</h4>');
-                    }
                 }).catch((error)=>{
-                  assetInfo.append('<h4 class="text-center">'+
-                    'Tidak ada gambar rumah'+
-                  '</h4>')
+                  assetInfo.append(
+                      '<br>'+
+                      '<div class="form-group">'+
+                          '<label class="control-label">Foto Kepala Keluarga</label>'+
+                          '<br>'+
+                          '<br>'+
+                          '<input type="file" name="photo_family_head" class="form-control">'+
+                          '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
+                      '</div><hr>'+
+
+                      '<div class="form-group">'+
+                          '<label class="control-label">Foto Depan Rumah</label>'+
+                          '<br>'+
+                          '<br>'+
+                          '<input type="file" name="photo_terrace" class="form-control">'+
+                          '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
+                      '</div><hr>'+
+
+                      '<div class="form-group">'+
+                          '<label class="control-label">Foto Ruang Tamu</label>'+
+                          '<br>'+
+                          '<br>'+
+                          '<input type="file" name="photo_living_room" class="form-control">'+
+                          '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
+                      '</div><hr>'+
+
+                      '<div class="form-group">'+
+                          '<label class="control-label">Foto Dapur</label>'+
+                          '<br>'+
+                          '<br>'+
+                          '<input type="file" name="photo_kitchen" class="form-control">'+
+
+                          '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
+                      '</div><hr>'+
+
+                      '<div class="form-group">'+
+                          '<label class="control-label">Foto Belakang Rumah</label>'+
+                          '<br>'+
+                          '<br>'+
+                          '<input type="file" name="photo_backyard" class="form-control">'+
+                          '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
+                      '</div>'
+                      +'<button id="saveAssetImgBtn" class="btn btn-success pull-right">Simpan Gambar</button>'
+                      // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
+                  );
                 });
 
 
@@ -746,11 +820,12 @@ async defer></script>
         $('#documentInfoBtn').on('click',function(){
 
                 var documents = person.collection('dokumen');
-
+                var coordinateText = "0,0";
+                var nomor_kk,provinsi,kota,kecamatan,kelurahan,rw,rt,alamat = '';
                 documents.get().then((querySnapshot)=>{
                     querySnapshot.forEach((doc)=>{
                         var data = doc.data();
-                        var coordinateText = data.koordinat;
+                        coordinateText = data.koordinat;
                         var coordinateArray = coordinateText.split(',');
                         var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
                         console.log(coordinate);
@@ -768,7 +843,6 @@ async defer></script>
                         var toAppend = '';
                         arrayData.forEach((item)=>{
                           var input = '';
-
                            if(item.type=='select'){
                              var options='';
                              switch(item.name){

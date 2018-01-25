@@ -18,7 +18,7 @@
     <div class="col-md-12 col-lg-12">
         <h1 class="font-size-20 m-y-4">
             <span id="profileName">
-                Tambah Anggota Keluarga
+                Tambah Penduduk
             </span>
 
         </h1>
@@ -77,7 +77,7 @@
         var familyInfo = $('#familyInfo');
         var assetInfo = $('#assetInfo');
         // var id = '{{id}}';
-        var kkId = '{{kkId}}';
+        // var kkId = '{{kkId}}';
 
         var penduduk = db.collection('penduduk');
         // var person = penduduk.doc(kkId).collection('anggota').doc(id);
@@ -91,6 +91,12 @@
 
         var ppName = '';
         var idName = '';
+
+        var districtOption = ["Kepulauan Seribu Selatan","Kepulauan Seribu Utara"];
+
+        var subdistrictOptionU = ["Pulau Panggang","Pulau Kelapa","Pulau Harapan"];
+        var subdistrictOptionS = ["Pulau Tidung","Pulau Pari","Pulau Untung Jawa"];
+
 
         console.log(dataArray);
         var optionObject = {
@@ -112,7 +118,6 @@
               var arrayData = [
                   {title:'Nama Lengkap', name:'name'},
                   {title:'Jenis Kelamin', options:optionObject.gender,name:'gender'},
-                  {title:'Status dalam Keluarga',options:optionObject.status,name:'status'},
                   {title:'Kisaran Penghasilan', options:optionObject.income,name:'income'},
                   {title:'Bidang Pekerjaan', options:optionObject.jobField,name:'job_field'},
                   {title:'Pekerjaan', name:'job'},
@@ -126,7 +131,13 @@
 
                   {title:'Status Perkawinan', options:optionObject.marriage,name:'marriage'},
                   {title:'Tempat Lahir', name:'birth_place'},
-                  {title:'Tanggal Lahir', name:'birth_date'}
+                  {title:'Tanggal Lahir', name:'birth_date'},
+                  {title:'Provinsi', name:'province', options:['Dki Jakarta']},
+                  {title:'Kota/Kabupaten', name:'city', options:['Kab. Kepulauan Seribu']},
+                  {title:'Kecamatan', name:'district', options:districtOption},
+                  {title:'Kelurahan', name:'subdistrict',options:subdistrictOptionS},
+                  {title:'RW', name:'rw'},
+                  {title:'RT', name:'rt'}
               ];
 
               console.log(arrayData);
@@ -160,7 +171,6 @@
               });
               profileInfo.append(
                   // '<form>'+
-                  '<input type="hidden" value="'+kkId+'" name="kk_id">'+
                   '<table class="page-messages-items table m-a-0">'+
                           '<tbody>'+
                               toAppend+
@@ -172,7 +182,6 @@
               $(document).find('[name="birth_date"]').datepicker({format: 'dd/mm/yyyy'});
 
         });
-
 
         $(document).on('click','#saveMember',function(){
           var isComplete = true;
@@ -221,20 +230,20 @@
         }
 
         function generateUid(){
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          return 'xxxxyxxxxyxxxxyxxxxy'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
           });
         }
 
         function saveData(){
-          penduduk.doc(kkId).collection('anggota').add({
+          var id = generateUid();
+          penduduk.doc(id).set({
             agama:$(document).find('[name="religion"]').val(),
             bidang_pekerjaan:$(document).find('[name="job_field"]').val(),
             foto_ktp:idName,
             foto_orang:ppName,
             golongan_darah:$(document).find('[name="blood_type"]').val(),
-            jenis:$(document).find('[name="status"]').val(),
             jenis_kelamin:$(document).find('[name="gender"]').val(),
             kewarganegaraan:$(document).find('[name="nationality"]').val(),
             kirasan_penghasilan:$(document).find('[name="income"]').val(),
@@ -243,13 +252,38 @@
             pendidikan:$(document).find('[name="education"]').val(),
             status_perkawinan:$(document).find('[name="marriage"]').val(),
             tanggal_lahir:$(document).find('[name="birth_date"]').val(),
-            tempat_lahir:$(document).find('[name="birth_place"]').val()
+            tempat_lahir:$(document).find('[name="birth_place"]').val(),
+            provinsi:$(document).find('[name="province"]').val(),
+            kota:$(document).find('[name="city"]').val(),
+            kecamatan:$(document).find('[name="district"]').val(),
+            kelurahan:$(document).find('[name="subdistrict"]').val(),
+            rw:$(document).find('[name="rw"]').val(),
+            rt:$(document).find('[name="rt"]').val()
           }).then(function(){
-            $(location).attr('href','/penduduk-detail/'+kkId);
+            $(location).attr('href','/penduduk-edit/'+id);
           }).catch(function(error){
             alert(error+': Gagal menambahkan anggota keluarga!')
           });
         }
+
+        $(document).on('change','select[name="district"]',function(){
+          var options = '';
+          var select = $('select[name="district"]');
+          var selectSubdistrict = $('select[name="subdistrict"]');
+          selectSubdistrict.html('');
+          if(select.val()=='Kepulauan Seribu Selatan'){
+            subdistrictOptionS.forEach((option)=>{
+              options+='<option>'+option+'</option>';
+            });
+            selectSubdistrict.append(options);
+          }
+          else if (select.val()=='Kepulauan Seribu Utara') {
+            subdistrictOptionU.forEach((option)=>{
+              options+='<option>'+option+'</option>';
+            });
+            selectSubdistrict.append(options);
+          }
+        });
 
     </script>
 {% endblock %}
