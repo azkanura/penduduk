@@ -260,7 +260,28 @@
             rw:$(document).find('[name="rw"]').val(),
             rt:$(document).find('[name="rt"]').val()
           }).then(function(){
-            $(location).attr('href','/penduduk-edit/'+id);
+            penduduk.doc(id).collection('rumah').doc('gambar').set({
+              foto_belakang_rumah:"images/no-image.png",
+              foto_dapur:"images/no-image.png",
+              foto_depan_rumah:"images/no-image.png",
+              foto_kepala_keluarga:"images/no-image.png",
+              foto_ruang_tamu:"images/no-image.png"
+            }).then(function(){
+              penduduk.doc(id).collection('dokumen').add({
+                alamat:"-",
+                foto_kk:"images/no-image.png",
+                provinsi:$(document).find('[name="province"]').val(),
+                kota:$(document).find('[name="city"]').val(),
+                kecamatan:$(document).find('[name="district"]').val(),
+                kelurahan:$(document).find('[name="subdistrict"]').val(),
+                koordinat:"-6,107",
+                nomor_kk:"-",
+                rw:$(document).find('[name="rw"]').val(),
+                rt:$(document).find('[name="rt"]').val()
+              }).then(function(){
+                $(location).attr('href','/penduduk-edit/'+id);
+              });
+            });
           }).catch(function(error){
             alert(error+': Gagal menambahkan anggota keluarga!')
           });

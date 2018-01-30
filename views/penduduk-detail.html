@@ -653,7 +653,7 @@ async defer></script>
 
               penduduk.doc(idDelete).delete().then(function(){
                 console.log("Document successfully deleted!");
-                $(location).attr('href','rt/'+province+'/'+city+'/'+district+'/'+subdistrict+'/'+rw+'/'+rt);
+                $(location).attr('href','/rt/'+province+'/'+city+'/'+district+'/'+subdistrict+'/'+rw+'/'+rt);
               }).catch(function(error){
                 alert('Terjadi error: ', error);
                 console.error("Error removing document: ", error);

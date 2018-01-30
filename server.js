@@ -229,7 +229,7 @@ app.post('/penduduk-asset-save',function(req,res){
       score_goodText+=scoreGood+'|';
     }
   });
-  asset.update({
+  var data = {
     luas_lantai:req.body.area,
     jenis_lantai:req.body.floor,
     jenis_dinding:req.body.wall,
@@ -258,11 +258,16 @@ app.post('/penduduk-asset-save',function(req,res){
     skor_list_barang:score_goodText,
     skor_kredit_usaha:req.body.score_credit,
     skor_status_bangunan:req.body.score_house_status,
-  }).then(function() {
+  };
+  asset.update(data).then(function() {
     console.log('Data aset berhasil diubah');
   })
   .catch(function(error) {
-    console.log('Data aset gagal diubah, terjadi kesalahan teknis');
+    asset.set(data).then(function(){
+      console.log('Data aset berhasil ditambahkan');
+    }).catch(function(error){
+      console.log('Data aset gagal diubah/ditambahkan, terjadi kesalahan teknis');
+    });
   });
 
   res.redirect('/penduduk-edit/'+id);

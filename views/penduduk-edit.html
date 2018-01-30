@@ -648,6 +648,7 @@ async defer></script>
                         storageRef.child(photoFamilyHead).getDownloadURL().then((url)=>{
                             var image = assetInfo.find('#photoFamilyHead');
                             image.attr('src',url);
+                            console.log('Menampilkan foto kepala keluarga');
                         });
 
                         storageRef.child(photoTerrace).getDownloadURL().then((url)=>{
@@ -671,58 +672,11 @@ async defer></script>
                         storageRef.child(photoBackyard).getDownloadURL().then((url)=>{
                             var image = assetInfo.find('#photoBackyard');
                             image.attr('src',url);
-
                         });
                     }
                 }).catch((error)=>{
-                  assetInfo.append(
-                      '<br>'+
-                      '<div class="form-group">'+
-                          '<label class="control-label">Foto Kepala Keluarga</label>'+
-                          '<br>'+
-                          '<br>'+
-                          '<input type="file" name="photo_family_head" class="form-control">'+
-                          '<img src="/images/no-image.png" id="photoFamilyHead" style="width:40%;display:block"/>'+
-                      '</div><hr>'+
-
-                      '<div class="form-group">'+
-                          '<label class="control-label">Foto Depan Rumah</label>'+
-                          '<br>'+
-                          '<br>'+
-                          '<input type="file" name="photo_terrace" class="form-control">'+
-                          '<img src="/images/no-image.png" id="photoTerrace" style="width:40%;display:block"/>'+
-                      '</div><hr>'+
-
-                      '<div class="form-group">'+
-                          '<label class="control-label">Foto Ruang Tamu</label>'+
-                          '<br>'+
-                          '<br>'+
-                          '<input type="file" name="photo_living_room" class="form-control">'+
-                          '<img src="/images/no-image.png" id="photoLivingroom" style="width:40%;display:block"/>'+
-                      '</div><hr>'+
-
-                      '<div class="form-group">'+
-                          '<label class="control-label">Foto Dapur</label>'+
-                          '<br>'+
-                          '<br>'+
-                          '<input type="file" name="photo_kitchen" class="form-control">'+
-
-                          '<img src="/images/no-image.png" id="photoKitchen" style="width:40%;display:block"/>'+
-                      '</div><hr>'+
-
-                      '<div class="form-group">'+
-                          '<label class="control-label">Foto Belakang Rumah</label>'+
-                          '<br>'+
-                          '<br>'+
-                          '<input type="file" name="photo_backyard" class="form-control">'+
-                          '<img src="/images/no-image.png" id="photoBackyard" style="width:40%;display:block"/>'+
-                      '</div>'
-                      +'<button id="saveAssetImgBtn" class="btn btn-success pull-right">Simpan Gambar</button>'
-                      // +'<input type="submit" value="Simpan Gambar" class="btn btn-success pull-right"></form>'
-                  );
+                  console.log('Tidak dapat menampilkan gambar');
                 });
-
-
         });
 
         $(document).on('change','.select-value',function(){
@@ -748,7 +702,11 @@ async defer></script>
             var fhTask = fhStorageRef.put(photoFamilyHead);
             fhTask.on('state_changed',
               function complete(){
-                assetImg.update({foto_kepala_keluarga:fhName});
+                assetImg.update({foto_kepala_keluarga:fhName}).then(function(){
+                  console.log('Berhasil mengunggah gambar');
+                }).catch(function(error){
+                    console.log('Gagal mengunggah gambar, terjadi kesalahan teknis.');
+                });
               },
               function error(err){
                 console.log('error: '+err);
@@ -762,7 +720,11 @@ async defer></script>
             var tTask = tStorageRef.put(photoTerrace);
             tTask.on('state_changed',
               function complete(){
-                assetImg.update({foto_depan_rumah:tName});
+                assetImg.update({foto_depan_rumah:tName}).then(function(){
+                  console.log('Berhasil mengunggah gambar');
+                }).catch(function(error){
+                  console.log('Gagal mengunggah gambar, terjadi kesalahan teknis.');
+                });
               },
               function error(err){
                 console.log('error: '+err);
@@ -776,7 +738,11 @@ async defer></script>
             var lrTask = lrStorageRef.put(photoLivingroom);
             lrTask.on('state_changed',
               function complete(){
-                assetImg.update({foto_ruang_tamu:lrName});
+                assetImg.update({foto_ruang_tamu:lrName}).then(function(){
+                  console.log('Berhasil mengunggah gambar');
+                }).catch(function(error){
+                  console.log('Gagal mengunggah gambar, terjadi kesalahan teknis.');
+                });
               },
               function error(err){
                 console.log('error: '+err);
@@ -790,7 +756,11 @@ async defer></script>
             var kTask = kStorageRef.put(photoKitchen);
             kTask.on('state_changed',
               function complete(){
-                assetImg.update({foto_dapur:kName});
+                assetImg.update({foto_dapur:kName}).then(function(){
+                  console.log('Berhasil mengunggah gambar');
+                }).catch(function(error){
+                  console.log('Gagal mengunggah gambar, terjadi kesalahan teknis.');
+                });
               },
               function error(err){
                 console.log('error: '+err);
@@ -804,7 +774,11 @@ async defer></script>
             var bTask = bStorageRef.put(photoBackyard);
             bTask.on('state_changed',
               function complete(){
-                assetImg.update({foto_belakang_rumah:bName});
+                assetImg.update({foto_belakang_rumah:bName}).then(function(){
+                  console.log('Berhasil mengunggah gambar');
+                }).catch(function(error){
+                  console.log('Gagal mengunggah gambar, terjadi kesalahan teknis.');
+                });
               },
               function error(err){
                 console.log('error: '+err);
@@ -840,81 +814,10 @@ async defer></script>
                             {title:'Alamat', content:data.alamat,type:'input',name:'address'}
                         ];
 
-                        var toAppend = '';
-                        arrayData.forEach((item)=>{
-                          var input = '';
-                           if(item.type=='select'){
-                             var options='';
-                             switch(item.name){
-                               case 'province':
-                                  options+='<option selected>Dki Jakarta</option>';
-                                  break;
-                               case 'city':
-                                  options+='<option selected>Kab. Kepulauan Seribu</option>';
-                                  break;
-                               case 'district':
-                                  districtOption.forEach((option)=>{
-                                    if(option.toLowerCase()==item.content.toLowerCase()){
-                                      options+='<option selected>'+option+'</option>';
-                                    }
-                                    else{
-                                      options+='<option>'+option+'</option>';
-                                    }
-                                  });
-                                  break;
-                              case 'subdistrict':
-                                  if(data.kecamatan=='Kepulauan Seribu Selatan'){
-                                    subdistrictOptionS.forEach((option)=>{
-                                      if(option.toLowerCase()==item.content.toLowerCase()){
-                                        options+='<option selected>'+option+'</option>';
-                                      }
-                                      else{
-                                        options+='<option>'+option+'</option>';
-                                      }
-                                    });
-                                  }
-                                  else if (data.kecamatan=='Kepulauan Seribu Utara') {
-                                    subdistrictOptionU.forEach((option)=>{
-                                      if(option.toLowerCase()==item.content.toLowerCase()){
-                                        options+='<option selected>'+option+'</option>';
-                                      }
-                                      else{
-                                        options+='<option>'+option+'</option>';
-                                      }
-                                    });
-                                  }
-                             }
-                             input = '<select name="'+item.name+'" class="form-control">'+options+'</select>';
-
-                           }
-                           else{
-                             input='<input class="form-control" value="'+item.content+'" name="'+item.name+'">'
-                           }
-                            toAppend+='<div class="row form-group">'+
-                                        '<label class="control-label col-md-5">'+item.title+'</label>'+
-                                        '<p class="col-md-7">'
-                                            +input+
-                                        '</p>'+
-                                    '</div>';
-                        });
-
-
-
+                        var toAppend = getDocEditor(arrayData,data.kecamatan);
                         documentInfo.html('');
-                        var mapArea = '<div class="row form-group">'+
-                                    '<input type="hidden" name="geolocation" value="'+coordinateText+'">'+
-                                    '<label class="control-label col-md-12">Lokasi di Peta</label><br><br>'+
-                                    '<div id="map" class="col-md-12"style="width:100%;height:300px"></div>'+
-                                '</div>';
-                        var kkPhoto = '<div class="form-group">'+
-                                '<label class="control-label">Foto Kartu Keluarga</label>'+
-                                '<br>'+
-                                '<br>'+
-                                '<input type="file" id="familyCardUpload" class="form-control">'+
-                                '<img src="/images/no-image.png" id="kkPhoto" style="width:100%;display:block"/>'+
-                            '</div>'+
-                            '<div class="row form-group"><div class="col-md-12"><button id="savePhotoKK" class="btn btn-warning pull-right">Simpan Foto KK</button></div></div>'+
-                            '<hr>';
+                        var mapArea = getMapArea(coordinateText);
+                        var kkPhoto = getFamilyHeadPhoto();
 
                         documentInfo.append(
                           '<div class="form-group">'+
@@ -927,46 +830,14 @@ async defer></script>
                             '</div><hr>'+
                             kkPhoto
                         );
-
-                        initMap();
-                        function initMap(){
-                            var map = new google.maps.Map(document.getElementById('map'),{
-                              center: coordinate,
-                              zoom: 10
-                            });
-
-                            var marker = new google.maps.Marker({
-                              position:coordinate,
-                              map:map,
-                              draggable:true,
-                              animation: google.maps.Animation.DROP,
-                              // position:results[0].geometry.location
-                              // icon:'/images/marker.png'
-                            });
-
-                            google.maps.event.addListener(marker,'dragend',function(){
-                                var geolocation = marker.getPosition();
-                                var inputGeo = $(document).find('input[name="geolocation"]');
-
-                                inputGeo.val(geolocation.lat()+','+geolocation.lng());
-
-                                console.log(inputGeo.val());
-                            });
-
-                            var infoWindow = new google.maps.InfoWindow({
-                              content:'<p>Nomor KK: '+data.nomor_kk+'</p>'+
-                                '<p>Alamat: '+data.alamat+
-                                ',RT '+data.rt+
-                                '/RW '+data.rw+
-                                ' Kelurahan '+data.kelurahan+
-                                ', Kecamatan '+data.kecamatan+
-                                '<br> '+data.kota+','+data.provinsi+'</p>'
-                            });
-
-                            marker.addListener('click',function(){
-                              infoWindow.open(map,marker);
-                            });
-                        }
+                        var content = '<p>Nomor KK: '+data.nomor_kk+'</p>'+
+                          '<p>Alamat: '+data.alamat+
+                          ',RT '+data.rt+
+                          '/RW '+data.rw+
+                          ' Kelurahan '+data.kelurahan+
+                          ', Kecamatan '+data.kecamatan+
+                          '<br> '+data.kota+','+data.provinsi+'</p>';
+                        initMap(coordinate,content);
 
                         storageRef.child(data.foto_kk).getDownloadURL().then((url)=>{
                             var image = documentInfo.find('#kkPhoto');
@@ -995,8 +866,8 @@ async defer></script>
 
         $(document).on('change','select[name="district"]',function(){
           var options = '';
-          var select = $('select[name="district"]');
-          var selectSubdistrict = $('select[name="subdistrict"]');
+          var select = $(document).find('select[name="district"]');
+          var selectSubdistrict = $(document).find('select[name="subdistrict"]');
           selectSubdistrict.html('');
           if(select.val()=='Kepulauan Seribu Selatan'){
             subdistrictOptionS.forEach((option)=>{
@@ -1130,6 +1001,130 @@ async defer></script>
             '</tr>'
             );
             counter++;
+        }
+
+        function initMap(coordinate,content){
+            var map = new google.maps.Map(document.getElementById('map'),{
+              center: coordinate,
+              zoom: 10
+            });
+
+            var marker = new google.maps.Marker({
+              position:coordinate,
+              map:map,
+              draggable:true,
+              animation: google.maps.Animation.DROP,
+              // position:results[0].geometry.location
+              // icon:'/images/marker.png'
+            });
+
+            google.maps.event.addListener(marker,'dragend',function(){
+                var geolocation = marker.getPosition();
+                var inputGeo = $(document).find('input[name="geolocation"]');
+
+                inputGeo.val(geolocation.lat()+','+geolocation.lng());
+
+                console.log(inputGeo.val());
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+              content:content
+            });
+
+            marker.addListener('click',function(){
+              infoWindow.open(map,marker);
+            });
+        }
+
+        function getDocEditor(arrayData,kecamatan){
+          var toAppend = '';
+          arrayData.forEach((item)=>{
+            var input = '';
+             if(item.type=='select'){
+               var options='';
+               switch(item.name){
+                 case 'province':
+                    options+='<option selected>Dki Jakarta</option>';
+                    break;
+                 case 'city':
+                    options+='<option selected>Kab. Kepulauan Seribu</option>';
+                    break;
+                 case 'district':
+                    districtOption.forEach((option)=>{
+                      if(option.toLowerCase()==item.content.toLowerCase()){
+                        options+='<option selected>'+option+'</option>';
+                      }
+                      else{
+                        options+='<option>'+option+'</option>';
+                      }
+                    });
+                    break;
+                case 'subdistrict':
+                    if(kecamatan=='Kepulauan Seribu Selatan'){
+                      subdistrictOptionS.forEach((option)=>{
+                        if(option.toLowerCase()==item.content.toLowerCase()){
+                          options+='<option selected>'+option+'</option>';
+                        }
+                        else{
+                          options+='<option>'+option+'</option>';
+                        }
+                      });
+                    }
+                    else if (data.kecamatan=='Kepulauan Seribu Utara') {
+                      subdistrictOptionU.forEach((option)=>{
+                        if(option.toLowerCase()==item.content.toLowerCase()){
+                          options+='<option selected>'+option+'</option>';
+                        }
+                        else{
+                          options+='<option>'+option+'</option>';
+                        }
+                      });
+                    }
+                    else{
+                      subdistrictOptionS.forEach((option)=>{
+                        if(option.toLowerCase()==item.content.toLowerCase()){
+                          options+='<option selected>'+option+'</option>';
+                        }
+                        else{
+                          options+='<option>'+option+'</option>';
+                        }
+                      });
+                    }
+               }
+               input = '<select name="'+item.name+'" class="form-control">'+options+'</select>';
+
+             }
+             else{
+               input='<input class="form-control" value="'+item.content+'" name="'+item.name+'">'
+             }
+              toAppend+='<div class="row form-group">'+
+                          '<label class="control-label col-md-5">'+item.title+'</label>'+
+                          '<p class="col-md-7">'
+                              +input+
+                          '</p>'+
+                      '</div>';
+          });
+          return toAppend;
+        }
+
+        function getMapArea(coordinateText){
+          return '<div class="row form-group">'+
+                      '<input type="hidden" name="geolocation" value="'+coordinateText+'">'+
+                      '<label class="control-label col-md-12">Lokasi di Peta</label><br><br>'+
+                      '<div id="map" class="col-md-12"style="width:100%;height:300px"></div>'+
+                  '</div>';
+        }
+
+        function getFamilyHeadPhoto(){
+          return '<div class="form-group">'+
+                  '<label class="control-label">Foto Kartu Keluarga</label>'+
+                  '<br>'+
+                  '<br>'+
+                  '<input type="file" id="familyCardUpload" class="form-control">'+
+                  '<img src="/images/no-image.png" id="kkPhoto" style="width:100%;display:block"/>'+
+              '</div>'+
+              '<div class="row form-group"><div class="col-md-12"><button id="savePhotoKK" class="btn btn-warning pull-right">Simpan Foto KK</button></div></div>'+
+              '<hr>';
         }
     </script>
 {% endblock %}
