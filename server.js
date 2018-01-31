@@ -75,6 +75,11 @@ app.get('/laporan',function(req,res){
 app.get('/survey',function(req,res){
 	res.render('survey.html');
 });
+// app.get('/survey/search',function(req,res){
+//   var keyword = req.body.s;
+//   var resRef = penduduk.where("nama_lengkap",keyword);
+// 	res.render('survey.html',{keyword:keyword,resident:resident});
+// });
 
 app.get('/login',function(req,res){
 	res.render('login.html');
