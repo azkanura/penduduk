@@ -40,19 +40,9 @@
     async defer></script> {% endblock %} {% block inlinejs %}
 <script>
     var map = '';
+    var markers =[];
     var penduduk = db.collection('penduduk');
     var keyword;
-    penduduk.get().then((querySnapshot)=>{
-      initMap();
-      var marker = new google.maps.Marker({
-          map: map,
-          position: { lat: 6.070446827312626, lng: 106.79143108427523 },
-          title: '',
-      });
-      querySnapshot.forEach((doc)=>{
-        var data = doc.data();
-      });
-    });
 
     $('#searchBtn').on('click',function(){
       search();
@@ -67,6 +57,10 @@
     function search(){
       console.log('wuehehehe');
       var keyword = $('[name="s"]').val();
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];
       penduduk.where('nama_lengkap','==',keyword).get().then((querySnapshot)=>{
         querySnapshot.forEach((doc)=>{
           if(doc && doc.exists){
@@ -99,24 +93,59 @@
 
 
     function init() {
-
+      initMap();
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];
+      penduduk.get().then((querySnapshot)=>{
+        querySnapshot.forEach((doc)=>{
+          if(doc && doc.exists){
+            var data = doc.data();
+            var id=doc.id;
+            var name = data.nama_lengkap;
+            penduduk.doc(doc.id).collection('dokumen').get().then((query)=>{
+              query.forEach((dokumen)=>{
+                  var dok = dokumen.data();
+                  var coordinateText = dok.koordinat;
+                  var coordinateArray = coordinateText.split(',');
+                  var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
+                  addMarker(name,id,dok,coordinate);
+              });
+            }).catch((error)=>{
+              // console.log('Tidak dapat menemukan lokasi penduduk dengan nama <strong>'+name+'</strong>');
+            });
+            // $('#resultText').html('Menampilkan hasil pencarian penduduk dengan nama <strong>'+keyword+'</strong>');
+          }
+          else{
+            console.log('Yuhu');
+            // $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+          }
+        });
+      }).catch((error)=>{
+        console.log(error);
+        // $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+      });
     }
 
     function initMap() {
         var coordinates = { lat: -6.070446827312626, lng: 106.79143108427523 };
 
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
+            zoom: 8,
             center: coordinates,
-            scrollwheel: false,
+            // scrollwheel: false,
         });
     }
 
     function addMarker(name,id,doc,coordinate){
       var marker = new google.maps.Marker({
         position:coordinate,
-        map:map
+        map:map,
+        label:name
       });
+
+      markers.push(marker);
 
       var infoWindow = new google.maps.InfoWindow({
         content:'<a href="/penduduk-detail/'+id+'"><h3 style="margin:10px 0"><strong>'+name+'<strong></h4></a>'+
