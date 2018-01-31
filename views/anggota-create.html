@@ -186,28 +186,21 @@
               var photoProfile = $(document).find('#profileUpload').prop('files')[0];
               ppName = 'images/pp-member-'+generateUid()+'.jpg';
               var ppStorageRef=firebase.storage().ref(ppName);
-              var ppTask = ppStorageRef.put(photoProfile);
-              ppTask.on('state_changed',
-                function complete(){
-                  if($(document).find('#idUpload').prop('files')[0]){
-                    var photoId = $(document).find('#idUpload').prop('files')[0];
-                    idName = 'images/id-member-'+generateUid()+'.jpg';
-                    var idStorageRef=firebase.storage().ref(idName);
-                    var idTask = idStorageRef.put(photoId);
-                    idTask.on('state_changed',
-                      function complete(){
-                        saveData();
-                      },
-                      function error(err){
-                        console.log(err);
-                      }
-                    );
-                  }
-                },
-                function error(err){
-                  console.log(err);
+              // var ppTask =
+              ppStorageRef.put(photoProfile).then(function(){
+                if($(document).find('#idUpload').prop('files')[0]){
+                  var photoId = $(document).find('#idUpload').prop('files')[0];
+                  idName = 'images/id-member-'+generateUid()+'.jpg';
+                  var idStorageRef=firebase.storage().ref(idName);
+                  idStorageRef.put(photoId).then(function(){
+                    saveData();
+                  }).catch(function(error){
+                    console.log(error);
+                  });
                 }
-              );
+              }).catch(function(error){
+                console.log(error);
+              });
             }
           }
           else{
