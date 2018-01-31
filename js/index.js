@@ -3,6 +3,7 @@
 // });
 var storageRef=storage.ref();
 var currentUser;
+var pr,ct,ds,sd='';
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
@@ -26,6 +27,10 @@ firebase.auth().onAuthStateChanged(function(user) {
                $('#userMenu').show();
             }
             setCurrentUser(data);
+            pr=data.area.province;
+            ct=data.area.city;
+            ds=data.area.district;
+            sd=data.area.subdistrict;
             init();
             storageRef.child(data.photo_url).getDownloadURL().then((url)=>{
                 $('.profile-picture').attr('src',url);

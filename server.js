@@ -90,7 +90,8 @@ app.get('/analitik',function(req,res){
 });
 
 app.get('/cari',function(req,res){
-	res.render('cari.html');
+  // res.render('cari.html');
+	res.render('search.html');
 });
 
 app.get('/rt/:provinsi/:kota/:kecamatan/:kelurahan/:rw/:rt',function(req,res){
