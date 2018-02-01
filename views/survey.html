@@ -98,7 +98,6 @@
       //   $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
       // });
 
-
       index.search({query:keyword},function searchDone(err,content){
         if(err){
           console.error(err);
@@ -121,7 +120,6 @@
           var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
           addMarker(name,id,data,coordinate);
         }
-
       });
     }
 
@@ -147,13 +145,13 @@
                   addMarker(name,id,dok,coordinate);
               });
             }).catch((error)=>{
-              // console.log('Tidak dapat menemukan lokasi penduduk dengan nama <strong>'+name+'</strong>');
+              console.log('Tidak dapat menemukan lokasi penduduk dengan nama <strong>'+name+'</strong>');
             });
             // $('#resultText').html('Menampilkan hasil pencarian penduduk dengan nama <strong>'+keyword+'</strong>');
           }
           else{
             console.log('Yuhu');
-            // $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+            $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
           }
         });
       }).catch((error)=>{
