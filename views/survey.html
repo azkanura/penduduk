@@ -181,12 +181,14 @@
 
       var infoWindow = new google.maps.InfoWindow({
         content:'<a href="/penduduk-detail/'+id+'"><h3 style="margin:10px 0"><strong>'+name+'<strong></h4></a>'+
-          '<p>Alamat: '+
+          '<p>Nomor KK: '+doc.nomor_kk+'</p>'+
+          '<p>Alamat: <br>'+
+          doc.alamat+', '+
           'RT '+doc.rt+
           '/RW '+doc.rw+
-          ' Kelurahan '+doc.kelurahan+
+          ', Kelurahan '+doc.kelurahan+
           ', Kecamatan '+doc.kecamatan+
-          '<br> '+doc.kota+','+doc.provinsi+'</p>'
+          '<br> '+doc.kota+', '+doc.provinsi+'</p>'
       });
 
       marker.addListener('click',function(){
