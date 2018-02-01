@@ -17,6 +17,17 @@ var bodyParser = require('body-parser');
 // initialize firebase in serverside
 var firebase = require("firebase");
 require("firebase/firestore");
+// var dotenv = require('dotenv');
+var algoliasearch = require('algoliasearch');
+// dotenv.load();
+//
+// var algolia = algoliasearch(
+//   process.env.ALGOLIA_APP_ID,
+//   process.env.ALGOLIA_API_KEY
+// );
+//
+// var index = algolia.initIndex(process.env.ALGOLIA_INDEX_NAME);
+
 const googleStorage = require('@google-cloud/storage');
 var storage = googleStorage({
   projectId: "penduduk-app",
@@ -45,6 +56,54 @@ var db = firebase.firestore();
 var users = db.collection('users');
 // var storage = firebase.storage();
 var penduduk = db.collection('penduduk');
+
+// var algolia = algoliasearch(
+//   'HD3FUMIQJF',
+//   '632cd6090f2f70f2ac2da1ba9421b1ad'
+// );
+//
+// var index = algolia.initIndex('penduduk');
+// var records = [];
+//
+// penduduk.get().then((query)=>{
+//   query.forEach((doc)=>{
+//     if(doc && doc.exists){
+//       var childKey = doc.id;
+//       var childData = doc.data();
+//       childData.objectID = childKey;
+//       childData.koordinat="0,0";
+//       penduduk.doc(childKey).collection('dokumen').get().then((q)=>{
+//         q.forEach((d)=>{
+//           if(d && d.exists){
+//             childData.koordinat=d.data().koordinat;
+//           }
+//         });
+//         console.log(childData.koordinat);
+//         console.log(records);
+//         records.push(childData);
+//       }).catch((error)=>{
+//         console.log('Tidak dapat menemukan koordinat!');
+//         records.push(childData);
+//       });
+//     }
+//   });
+//
+//   setTimeout(function(){
+//     if(records.length){
+//       index.saveObjects(records).then(()=>{
+//         console.log('Penduduk imported into Algolia');
+//       }).catch((error)=>{
+//         console.error('Error when importing penduduk into Algolia', error);
+//         process.exit(1);
+//       });
+//     }
+//     else{
+//       console.log('Error when importing penduduk into Algolia, no records found');
+//     }
+//   },20000);
+//
+// });
+
 // initialize firebase in serverside
 // app.configure(function() {
   // app.use(express.cookieParser('keyboard cat'));

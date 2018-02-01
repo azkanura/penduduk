@@ -44,50 +44,84 @@
     var penduduk = db.collection('penduduk');
     var keyword;
 
+    var client = algoliasearch(
+      'HD3FUMIQJF',
+      '632cd6090f2f70f2ac2da1ba9421b1ad'
+    );
+
+    var index = client.initIndex('penduduk');
+
     $('#searchBtn').on('click',function(){
-      search();
+      searchData();
     });
 
     $(document).keypress(function(e) {
         if(e.which == 13) {
-            search();
+            searchData();
         }
     });
 
-    function search(){
+    function searchData(){
       console.log('wuehehehe');
       var keyword = $('[name="s"]').val();
       for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
       }
       markers = [];
-      penduduk.where('nama_lengkap','==',keyword).get().then((querySnapshot)=>{
-        querySnapshot.forEach((doc)=>{
-          if(doc && doc.exists){
-            var data = doc.data();
-            var id=doc.id;
-            var name = data.nama_lengkap;
-            penduduk.doc(doc.id).collection('dokumen').get().then((query)=>{
-              query.forEach((dokumen)=>{
-                  var dok = dokumen.data();
-                  var coordinateText = dok.koordinat;
-                  var coordinateArray = coordinateText.split(',');
-                  var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
-                  addMarker(name,id,dok,coordinate);
-              });
-            }).catch((error)=>{
-              console.log('Tidak dapat menemukan lokasi penduduk dengan nama <strong>'+name+'</strong>');
-            });
-            $('#resultText').html('Menampilkan hasil pencarian penduduk dengan nama <strong>'+keyword+'</strong>');
-          }
-          else{
-            console.log('Yuhu');
-            $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
-          }
-        });
-      }).catch((error)=>{
-        console.log(error);
-        $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+
+      // penduduk.where('nama_lengkap','==',keyword).get().then((querySnapshot)=>{
+      //   querySnapshot.forEach((doc)=>{
+      //     if(doc && doc.exists){
+      //       var data = doc.data();
+      //       var id=doc.id;
+      //       var name = data.nama_lengkap;
+      //       penduduk.doc(doc.id).collection('dokumen').get().then((query)=>{
+      //         query.forEach((dokumen)=>{
+      //             var dok = dokumen.data();
+      //             var coordinateText = dok.koordinat;
+      //             var coordinateArray = coordinateText.split(',');
+      //             var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
+      //             addMarker(name,id,dok,coordinate);
+      //         });
+      //       }).catch((error)=>{
+      //         console.log('Tidak dapat menemukan lokasi penduduk dengan nama <strong>'+name+'</strong>');
+      //       });
+      //       $('#resultText').html('Menampilkan hasil pencarian penduduk dengan nama <strong>'+keyword+'</strong>');
+      //     }
+      //     else{
+      //       console.log('Yuhu');
+      //       $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+      //     }
+      //   });
+      // }).catch((error)=>{
+      //   console.log(error);
+      //   $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+      // });
+
+
+      index.search({query:keyword},function searchDone(err,content){
+        if(err){
+          console.error(err);
+          $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+          return;
+        }
+        if(!content.hits.length){
+          $('#resultText').html('Tidak dapat menemukan penduduk dengan nama <strong>'+keyword+'</strong>');
+        }
+        else{
+          $('#resultText').html('Menampilkan hasil pencarian penduduk dengan nama <strong>'+keyword+'</strong>');
+        }
+
+        for ( var h in content.hits){
+          var data=content.hits[h];
+          var name=data.nama_lengkap;
+          var id=data.objectID;
+          var coordinateText = data.koordinat;
+          var coordinateArray = coordinateText.split(',');
+          var coordinate = {lat:parseFloat(coordinateArray[0]),lng:parseFloat(coordinateArray[1])};
+          addMarker(name,id,data,coordinate);
+        }
+
       });
     }
 
@@ -149,9 +183,8 @@
 
       var infoWindow = new google.maps.InfoWindow({
         content:'<a href="/penduduk-detail/'+id+'"><h3 style="margin:10px 0"><strong>'+name+'<strong></h4></a>'+
-          '<p>Nomor KK: '+doc.nomor_kk+'</p>'+
-          '<p>Alamat: '+doc.alamat+
-          ',RT '+doc.rt+
+          '<p>Alamat: '+
+          'RT '+doc.rt+
           '/RW '+doc.rw+
           ' Kelurahan '+doc.kelurahan+
           ', Kecamatan '+doc.kecamatan+
