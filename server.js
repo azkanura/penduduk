@@ -18,7 +18,9 @@ var bodyParser = require('body-parser');
 var firebase = require("firebase");
 require("firebase/firestore");
 // var dotenv = require('dotenv');
+var functions = require('firebase-functions');
 var algoliasearch = require('algoliasearch');
+var algoliaSync = require('algolia-firestore-sync');
 // dotenv.load();
 //
 // var algolia = algoliasearch(
@@ -63,6 +65,7 @@ var algolia = algoliasearch(
 );
 
 var index = algolia.initIndex('penduduk');
+
 setInterval(function(){
   var records = [];
   index.clearIndex(function(err, content) {
@@ -110,7 +113,7 @@ setInterval(function(){
     },20000);
 
   });
-},360000);
+},48000000);
 
 
 // initialize firebase in serverside
@@ -347,6 +350,17 @@ app.post('/penduduk-asset-save',function(req,res){
   res.redirect('/penduduk-edit/'+id);
 });
 
+app.get('/profile',function(req,res){
+  res.render('profile.html');
+});
+
+app.get('/profile-edit',function(req,res){
+  res.render('profile-edit.html');
+});
+
+app.get('/profile/change-password',function(req,res){
+  res.render('change-password.html');
+});
 // app.post('/penduduk-asset-img-save',function(req,res){
 //   var id = req.body.id;
 //   var resident = penduduk.doc(id);

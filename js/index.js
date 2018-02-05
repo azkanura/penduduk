@@ -4,6 +4,7 @@
 var storageRef=storage.ref();
 var currentUser;
 var pr,ct,ds,sd='';
+var id;
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
@@ -14,6 +15,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         querySnapshot.forEach((doc)=>{
 
             data = doc.data();
+            id = doc.id;
             var firstname=data.full_name.split(" ")[0];
 
             $('#displayFirstname').html(firstname);
