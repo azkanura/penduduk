@@ -9,6 +9,7 @@ var app = express();
 var path = require('path');
 var cors = require('cors')({origin:true});
 var fileUpload = require('express-fileupload');
+var port = process.env.PORT || 8080;
 
 // var reload = require('../../reload');
 var nunjucks=require('nunjucks');
@@ -561,7 +562,7 @@ app.get('/test',function(req,res){
 
 
 // reload(app);
-app.listen(5000,function(){
+app.listen(port,function(){
 	console.log('App Running on port 8080');
 	// console.log(firebase);
 });
