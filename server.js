@@ -561,7 +561,7 @@ app.get('/test',function(req,res){
 
 
 // reload(app);
-app.listen(8080,function(){
+app.listen(5000,function(){
 	console.log('App Running on port 8080');
 	// console.log(firebase);
 });
