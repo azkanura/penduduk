@@ -174,7 +174,7 @@ setInterval(function(){
     },20000);
 
   });
-},1800000);
+},300000);
 
 
 // initialize firebase in serverside
