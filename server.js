@@ -66,6 +66,54 @@ var algolia = algoliasearch(
 );
 
 var index = algolia.initIndex('penduduk');
+var records = [];
+index.clearIndex(function(err, content) {
+  console.log(content);
+});
+
+penduduk.get().then((query)=>{
+  query.forEach((doc)=>{
+    if(doc && doc.exists){
+      var childKey = doc.id;
+      var childData = doc.data();
+      childData.objectID = childKey;
+      childData.koordinat="0,0";
+      childData.alamat="-";
+      childData.nomor_kk="-";
+      penduduk.doc(childKey).collection('dokumen').get().then((q)=>{
+        q.forEach((d)=>{
+          if(d && d.exists){
+            childData.koordinat=d.data().koordinat;
+            childData.alamat=d.data().alamat;
+            childData.nomor_kk=d.data().nomor_kk;
+          }
+        });
+        console.log(childData.koordinat);
+        records.push(childData);
+        console.log(records);
+      }).catch((error)=>{
+        console.log('Tidak dapat menemukan koordinat!');
+        records.push(childData);
+        console.log(records);
+      });
+    }
+  });
+
+  setTimeout(function(){
+    if(records.length){
+      index.saveObjects(records).then(()=>{
+        console.log('Penduduk imported into Algolia');
+      }).catch((error)=>{
+        console.error('Error when importing penduduk into Algolia', error);
+        process.exit(1);
+      });
+    }
+    else{
+      console.log('Error when importing penduduk into Algolia, no records found');
+    }
+  },20000);
+
+});
 
 setInterval(function(){
   var records = [];
@@ -90,11 +138,12 @@ setInterval(function(){
             }
           });
           console.log(childData.koordinat);
-          console.log(records);
           records.push(childData);
+          console.log(records);
         }).catch((error)=>{
           console.log('Tidak dapat menemukan koordinat!');
           records.push(childData);
+          console.log(records);
         });
       }
     });
@@ -114,7 +163,7 @@ setInterval(function(){
     },20000);
 
   });
-},3600000);
+},300000);
 
 
 // initialize firebase in serverside
