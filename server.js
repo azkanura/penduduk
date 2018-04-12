@@ -67,9 +67,20 @@ var algolia = algoliasearch(
 
 var index = algolia.initIndex('penduduk');
 var records = [];
-index.clearIndex(function(err, content) {
-  console.log(content);
-});
+// index.clearIndex(function(err, content) {
+//   console.log(content);
+// });
+
+// exports.updatePenduduk = functions.firestore.document('penduduk/{pendudukId}').onCreate((snap,context) => {
+//   console.log(snap.data());
+// }).onUpdate((change,context)=>{
+//   const document = change.after.exists ? change.after.data() : null;
+//   const oldDocument = change.before.data();
+//   console.log(document);
+// }).onDelete((snap,context)=>{
+//   console.log(snap.data());
+// });
+
 
 penduduk.get().then((query)=>{
   query.forEach((doc)=>{
@@ -117,9 +128,9 @@ penduduk.get().then((query)=>{
 
 setInterval(function(){
   var records = [];
-  index.clearIndex(function(err, content) {
-    console.log(content);
-  });
+  // index.clearIndex(function(err, content) {
+  //   console.log(content);
+  // });
   penduduk.get().then((query)=>{
     query.forEach((doc)=>{
       if(doc && doc.exists){
