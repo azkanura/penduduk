@@ -37,6 +37,11 @@ var storage = googleStorage({
   keyFileName: "service-account-credentials.json"
 });
 
+var http = require("http");
+setInterval(function() {
+    http.get("http://penduduk.herokuapp.com");
+}, 300000); // every 5 minutes (300000)
+
 var bucket = storage.bucket("penduduk-app.appspot.com");
 
 // Initialize Firebase
